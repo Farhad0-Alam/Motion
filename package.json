@@ -4,7 +4,8 @@
   "description": "Motion graphics videos built with HyperFrames",
   "scripts": {
     "setup": "bash scripts/setup.sh",
-    "doctor": "hyperframes doctor"
+    "doctor": "hyperframes doctor",
+    "tts": "python3 scripts/tts.py"
   },
   "repository": {
     "type": "git",

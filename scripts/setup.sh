@@ -57,7 +57,7 @@ if [ -z "${SKIP_PYTHON:-}" ]; then
   echo "==> Installing Kokoro TTS and MusicGen dependencies"
   pip install --break-system-packages -q \
     torch torchaudio kokoro-onnx soundfile transformers numpy accelerate scipy librosa \
-    elevenlabs google-genai
+    elevenlabs google-genai "misaki[ja,zh]"
 fi
 
 if [ -z "${SKIP_MODELS:-}" ]; then
@@ -73,6 +73,8 @@ if [ -z "${SKIP_MODELS:-}" ]; then
   [ -f "$bg" ] || curl -fsSL -o "$bg" \
     https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2net_human_seg.onnx
   # Whisper models and MusicGen weights come from huggingface.co.
+  python3 -c "from transformers import AutoProcessor, MusicgenForConditionalGeneration as M; AutoProcessor.from_pretrained('facebook/musicgen-small'); M.from_pretrained('facebook/musicgen-small')" \
+    || echo "warning: could not download MusicGen (is huggingface.co reachable?)"
   for m in $WHISPER_MODELS; do
     f="$HF_CACHE/whisper/models/ggml-$m.bin"
     [ -f "$f" ] || curl -fsSL -o "$f" \
