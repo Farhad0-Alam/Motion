@@ -1,0 +1,144 @@
+<template id="captions-template">
+  <div
+    data-composition-id="captions"
+    data-width="1920"
+    data-height="1080"
+    data-duration="14.5"
+  >
+    <div id="caption-container"></div>
+
+    <style>
+      [data-composition-id="captions"] {
+        width: 1920px;
+        height: 1080px;
+        position: relative;
+        font-family: "Helvetica", "Arial", sans-serif;
+        font-weight: bold;
+        overflow: hidden;
+      }
+
+      [data-composition-id="captions"] #caption-container {
+        position: absolute;
+        bottom: 120px; /* Consistent bottom positioning */
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+      }
+
+      [data-composition-id="captions"] .caption-box {
+        background-color: #0a1e3d; /* Solid navy */
+        padding: 20px 40px;
+        display: none; /* Hidden by default, shown via GSAP */
+        justify-content: center;
+        align-items: center;
+        /* Swiss Grid: sharp corners, solid block */
+      }
+
+      [data-composition-id="captions"] .caption-text {
+        color: #f2f2f2; /* Off-white */
+        font-size: 72px;
+        text-transform: uppercase; /* Swiss style often uses uppercase for impact */
+        letter-spacing: -2px;
+        line-height: 1;
+        white-space: nowrap;
+        text-align: center;
+        max-width: 1600px;
+        overflow: hidden;
+      }
+    </style>
+
+    <script src="../vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const TRANSCRIPT = [
+          { text: "We", start: 0.216, end: 0.362 },
+          { text: "asked", start: 0.375, end: 0.631 },
+          { text: "what", start: 0.654, end: 0.873 },
+          { text: "you", start: 0.892, end: 1.076 },
+          { text: "needed.", start: 1.092, end: 1.385 },
+          { text: "Forty-seven", start: 2.041, end: 2.527 },
+          { text: "percent", start: 2.569, end: 2.934 },
+          { text: "of", start: 2.966, end: 3.128 },
+          { text: "you", start: 3.142, end: 3.345 },
+          { text: "said", start: 3.362, end: 3.605 },
+          { text: "motion", start: 3.627, end: 3.951 },
+          { text: "graphics.", start: 3.979, end: 4.384 },
+          { text: "Sixty-two", start: 4.799, end: 5.256 },
+          { text: "percent", start: 5.296, end: 5.708 },
+          { text: "said", start: 5.744, end: 6.019 },
+          { text: "static", start: 6.042, end: 6.409 },
+          { text: "content", start: 6.441, end: 6.852 },
+          { text: "was", start: 6.888, end: 7.117 },
+          { text: "costing", start: 7.137, end: 7.549 },
+          { text: "you", start: 7.585, end: 7.814 },
+          { text: "attention.", start: 7.834, end: 8.337 },
+          { text: "And", start: 8.989, end: 9.17 },
+          { text: "three", start: 9.186, end: 9.439 },
+          { text: "out", start: 9.461, end: 9.642 },
+          { text: "of", start: 9.658, end: 9.803 },
+          { text: "four", start: 9.815, end: 10.033 },
+          { text: "said", start: 10.051, end: 10.269 },
+          { text: "you", start: 10.287, end: 10.468 },
+          { text: "know", start: 10.484, end: 10.701 },
+          { text: "the", start: 10.72, end: 10.901 },
+          { text: "look", start: 10.917, end: 11.134 },
+          { text: "you", start: 11.153, end: 11.334 },
+          { text: "want,", start: 11.349, end: 11.567 },
+          { text: "but", start: 11.585, end: 11.766 },
+          { text: "don't", start: 11.782, end: 11.999 },
+          { text: "have", start: 12.018, end: 12.235 },
+          { text: "the", start: 12.254, end: 12.435 },
+          { text: "editing", start: 12.451, end: 12.777 },
+          { text: "skills.", start: 12.805, end: 13.094 },
+        ];
+        const container = document.getElementById("caption-container");
+        const tl = gsap.timeline({ paused: true });
+
+        if (!TRANSCRIPT || TRANSCRIPT.length === 0) {
+          window.__timelines = window.__timelines || {};
+          window.__timelines["captions"] = tl;
+          return;
+        }
+
+        // Group transcript into max 5 words per group
+        const groups = [];
+        let currentGroup = [];
+
+        TRANSCRIPT.forEach((word, index) => {
+          currentGroup.push(word);
+          // Group by 5 words OR if it's the last word
+          if (currentGroup.length === 5 || index === TRANSCRIPT.length - 1) {
+            groups.push([...currentGroup]);
+            currentGroup = [];
+          }
+        });
+
+        // Create DOM elements and timeline for each group
+        groups.forEach((group, i) => {
+          const box = document.createElement("div");
+          box.className = "caption-box";
+          box.id = `group-${i}`;
+
+          const text = document.createElement("div");
+          text.className = "caption-text";
+          text.textContent = group.map((w) => w.text).join(" ");
+
+          box.appendChild(text);
+          container.appendChild(box);
+
+          const startTime = group[0].start;
+          const endTime = group[group.length - 1].end;
+
+          // Hard cut animation (no fades) as requested
+          tl.set(box, { display: "flex" }, startTime);
+          tl.set(box, { display: "none" }, endTime);
+        });
+
+        window.__timelines["captions"] = tl;
+      })();
+    </script>
+  </div>
+</template>

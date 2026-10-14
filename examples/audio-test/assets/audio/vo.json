@@ -1,0 +1,30 @@
+[
+  {
+    "file": "assets/audio/vo_1.wav",
+    "start": 0.15,
+    "duration": 1.429,
+    "speed": 1.0,
+    "text": "We asked what you needed."
+  },
+  {
+    "file": "assets/audio/vo_2.wav",
+    "start": 1.95,
+    "duration": 2.539,
+    "speed": 1.1,
+    "text": "Forty-seven percent of you said motion graphics."
+  },
+  {
+    "file": "assets/audio/vo_3.wav",
+    "start": 4.75,
+    "duration": 3.733,
+    "speed": 1.0,
+    "text": "Sixty-two percent said static content was costing you attention."
+  },
+  {
+    "file": "assets/audio/vo_4.wav",
+    "start": 8.95,
+    "duration": 4.245,
+    "speed": 1.0,
+    "text": "And three out of four said you know the look you want, but don't have the editing skills."
+  }
+]
