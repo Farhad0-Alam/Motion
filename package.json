@@ -1,0 +1,24 @@
+{
+  "name": "motion",
+  "version": "1.0.0",
+  "description": "Motion graphics videos built with HyperFrames",
+  "scripts": {
+    "setup": "bash scripts/setup.sh",
+    "doctor": "hyperframes doctor"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Farhad0-Alam/Motion.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Farhad0-Alam/Motion/issues"
+  },
+  "homepage": "https://github.com/Farhad0-Alam/Motion#readme",
+  "dependencies": {
+    "hyperframes": "0.8.158"
+  },
+  "private": true
+}
