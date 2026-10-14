@@ -5,7 +5,8 @@
 #   - Media tools: ImageMagick, SoX, MediaInfo, Inkscape, Blender, x264/x265, ...
 #   - Multilingual fonts (Noto incl. CJK/Arabic/Indic/Thai, emoji) + common UI fonts
 #   - whisper.cpp (transcription), Kokoro (local TTS), MusicGen deps (local BGM)
-#   - Whisper / Kokoro model files
+#   - Whisper / Kokoro / background-removal model files
+#   - espeak-ng (non-English Kokoro voices), ElevenLabs and Gemini SDKs
 # Set SKIP_APT=1, SKIP_WHISPER=1, SKIP_PYTHON=1 or SKIP_MODELS=1 to skip a stage.
 set -euo pipefail
 
@@ -24,7 +25,7 @@ if [ -z "${SKIP_APT:-}" ]; then
   apt-get update -qq
   apt-get install -y -qq --no-install-recommends \
     imagemagick sox libsox-fmt-all mediainfo gifsicle webp librsvg2-bin potrace \
-    inkscape blender x264 x265 fontconfig cmake build-essential \
+    inkscape blender x264 x265 fontconfig cmake build-essential espeak-ng \
     fonts-noto-core fonts-noto-extra fonts-noto-ui-core fonts-noto-cjk \
     fonts-noto-cjk-extra fonts-noto-color-emoji fonts-noto-mono \
     fonts-liberation2 fonts-dejavu fonts-roboto fonts-open-sans fonts-inter \
@@ -55,7 +56,8 @@ fi
 if [ -z "${SKIP_PYTHON:-}" ]; then
   echo "==> Installing Kokoro TTS and MusicGen dependencies"
   pip install --break-system-packages -q \
-    torch torchaudio kokoro-onnx soundfile transformers numpy accelerate scipy librosa
+    torch torchaudio kokoro-onnx soundfile transformers numpy accelerate scipy librosa \
+    elevenlabs google-genai
 fi
 
 if [ -z "${SKIP_MODELS:-}" ]; then
@@ -66,6 +68,10 @@ if [ -z "${SKIP_MODELS:-}" ]; then
     curl -fsSL -o "$HF_CACHE/tts/models/kokoro-v1.0.onnx" "$kokoro/kokoro-v1.0.onnx"
   [ -f "$HF_CACHE/tts/voices/voices-v1.0.bin" ] ||
     curl -fsSL -o "$HF_CACHE/tts/voices/voices-v1.0.bin" "$kokoro/voices-v1.0.bin"
+  bg="$HF_CACHE/background-removal/models/u2net_human_seg.onnx"
+  mkdir -p "$(dirname "$bg")"
+  [ -f "$bg" ] || curl -fsSL -o "$bg" \
+    https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2net_human_seg.onnx
   # Whisper models and MusicGen weights come from huggingface.co.
   for m in $WHISPER_MODELS; do
     f="$HF_CACHE/whisper/models/ggml-$m.bin"
