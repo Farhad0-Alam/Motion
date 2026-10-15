@@ -25,6 +25,7 @@ for f in out/*.png; do
   magick "out/.p-$n-640.png" \( "out/.p-$n-320.png" "out/.p-$n-168.png" -background '#202020' -gravity north -append \) \
     -background '#202020' -gravity north +append -bordercolor '#202020' -border 12 "out/.row-$n.png"
 done
+python3 make_standalone.py >/dev/null
 magick out/.row-*.png -background '#202020' -append out/preview-sheet.png
 rm -f out/.p-* out/.row-*
 ls -la out
