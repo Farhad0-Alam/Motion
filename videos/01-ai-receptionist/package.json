@@ -1,0 +1,9 @@
+{
+  "name": "ep01-ai-receptionist",
+  "private": true,
+  "scripts": {
+    "build": "python3 build.py",
+    "check": "python3 build.py && npx --prefix ../.. hyperframes lint",
+    "render": "python3 build.py && npx --prefix ../.. hyperframes render -q delivery -o renders/ep01.mp4"
+  }
+}

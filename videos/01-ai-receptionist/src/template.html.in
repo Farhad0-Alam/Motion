@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EP.01 - How an AI receptionist answers customers 24/7</title>
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Instrument Sans"; font-weight: 400 700; src: url("assets/fonts/InstrumentSans-400_700.woff2") format("woff2"); }
+      @font-face { font-family: "IBM Plex Mono"; font-weight: 400; src: url("assets/fonts/IBMPlexMono-400.woff2") format("woff2"); }
+      @font-face { font-family: "IBM Plex Mono"; font-weight: 500; src: url("assets/fonts/IBMPlexMono-500.woff2") format("woff2"); }
+      @font-face { font-family: "IBM Plex Mono"; font-weight: 600; src: url("assets/fonts/IBMPlexMono-600.woff2") format("woff2"); }
+      :root {
+        --bg: #0a0d0b; --fg: #e8ede6; --muted: #8a948b; --faint: #5c665d;
+        --lime: #c8f04f; --gold: #f0c05f; --dawn: #f7a63b; --dusk: #ff6b57;
+        --night: #9385ff; --teal: #4ecdc4; --red: #ff6b6b;
+        --slate: #101215; --slate2: #181b20; --slate3: #1e2228;
+        --hair: #ffffff14; --hair2: #ffffff24;
+        --sans: "Instrument Sans", "Noto Sans", sans-serif;
+        --mono: "IBM Plex Mono", monospace;
+      }
+      html, body { margin: 0; padding: 0; width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); }
+      #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: var(--bg);
+        font-family: var(--sans); color: var(--fg); }
+      .grid { position: absolute; inset: 0;
+        background-image: linear-gradient(var(--hair) 1px, transparent 1px), linear-gradient(90deg, var(--hair) 1px, transparent 1px);
+        background-size: 96px 96px; background-position: -1px -1px; opacity: 0.5; }
+      .vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, transparent 40%, #000000aa 100%); }
+      .abs { position: absolute; }
+      .mono { font-family: var(--mono); letter-spacing: 0.04em; }
+      .label { font-family: var(--mono); font-size: 22px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; }
+      .scene { position: absolute; inset: 0; visibility: hidden; opacity: 0; }
+
+      /* HUD */
+      #hud-left { left: 64px; top: 52px; display: flex; align-items: center; gap: 18px; }
+      #hud-right { right: 64px; top: 60px; }
+      .scn-label { left: 152px; top: 60px; color: var(--lime); }
+
+      /* Bubbles and cards */
+      .bubble { font-size: 34px; line-height: 1.3; padding: 22px 30px; border-radius: 26px; background: var(--slate3);
+        border: 1px solid var(--hair2); max-width: 560px; }
+      .bubble.out { background: #1f2a12; border-color: #c8f04f55; }
+      .bubble.bad { background: #2a1414; border-color: #ff6b6b66; }
+      .chip { display: flex; align-items: center; gap: 18px; padding: 18px 28px; border-radius: 18px; background: var(--slate2);
+        border: 1px solid var(--hair2); font-size: 34px; font-weight: 600; }
+      .chip svg { width: 44px; height: 44px; }
+      .card { background: var(--slate); border: 1px solid var(--hair2); border-radius: 22px; }
+
+      /* Scene 1 */
+      #phone { left: 250px; top: 150px; width: 470px; height: 760px; border-radius: 56px; background: var(--slate);
+        border: 2px solid var(--hair2); box-shadow: 0 40px 120px #00000088; overflow: hidden; }
+      #phone .top { height: 110px; border-bottom: 1px solid var(--hair); display: flex; align-items: flex-end; padding: 0 34px 18px; gap: 16px; }
+      #phone .avatar { width: 52px; height: 52px; border-radius: 50%; background: var(--slate3); border: 1px solid var(--hair2); }
+      #s1-msg { left: 28px; top: 160px; font-size: 30px; max-width: 360px; }
+      #s1-status { left: 34px; top: 330px; font-size: 22px; color: var(--muted); }
+      #s1-timer { left: 34px; top: 380px; font-size: 24px; color: var(--red); }
+      #clock { left: 900px; top: 150px; font-family: var(--mono); font-size: 190px; font-weight: 500; color: var(--night); line-height: 1; }
+      #clock small { font-size: 60px; color: var(--muted); margin-left: 16px; }
+      #clock-sub { left: 906px; top: 360px; }
+      #rival { left: 900px; top: 520px; width: 760px; padding: 30px 34px; }
+      #rival .who { font-size: 24px; color: var(--teal); font-family: var(--mono); letter-spacing: 0.08em; }
+      #rival .txt { font-size: 36px; margin-top: 12px; }
+      #rival .t { font-size: 22px; color: var(--muted); margin-top: 14px; font-family: var(--mono); }
+      #title-card { left: 0; right: 0; top: 330px; text-align: center; }
+      #title-card .ep { color: var(--lime); }
+      #title-card h1 { font-size: 104px; line-height: 1.05; margin: 26px auto 0; max-width: 1500px; font-weight: 700; letter-spacing: -0.02em; }
+      #title-line { left: 560px; top: 640px; width: 800px; height: 8px; border-radius: 4px; background: var(--lime); transform-origin: left center; }
+
+      /* Scene 2 */
+      #ring { left: 230px; top: 150px; width: 700px; height: 700px; }
+      #ring-center { left: 230px; top: 150px; width: 700px; height: 700px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+      .big-num { font-size: 150px; font-weight: 700; line-height: 1; letter-spacing: -0.03em; }
+      .rc { position: absolute; text-align: center; width: 700px; left: 0; }
+      #s2-chips { left: 1110px; top: 300px; display: flex; flex-direction: column; gap: 28px; }
+      #s2-head { left: 1110px; top: 200px; }
+
+      /* Scene 3 diagram */
+      .block-h { font-family: var(--mono); font-size: 22px; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 18px; }
+      #b-ch { left: 110px; top: 210px; width: 420px; }
+      #b-ch .chip { margin-bottom: 22px; }
+      #brain { left: 790px; top: 230px; width: 340px; height: 340px; }
+      #brain-core { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 50% 45%, #c8f04f33, #c8f04f0a 60%, transparent 70%);
+        border: 2px solid #c8f04f88; }
+      #brain-label { position: absolute; left: 0; right: 0; top: 136px; text-align: center; font-size: 40px; font-weight: 700; }
+      #brain-sub { position: absolute; left: 0; right: 0; top: 196px; text-align: center; }
+      #b-kb { left: 700px; top: 650px; width: 520px; padding: 22px 26px; }
+      .docs { display: flex; gap: 14px; margin-top: 14px; }
+      .doc { flex: 1; height: 120px; border-radius: 12px; background: var(--slate3); border: 2px solid var(--hair2); position: relative; padding: 14px 12px; box-sizing: border-box; }
+      .doc .n { font-size: 22px; font-weight: 600; }
+      .doc .ln { height: 6px; border-radius: 3px; background: #ffffff1f; margin-top: 10px; }
+      .doc .hl { position: absolute; inset: -2px; border-radius: 12px; border: 3px solid var(--lime); box-shadow: 0 0 30px #c8f04f66; opacity: 0; }
+      #b-act { left: 1450px; top: 230px; width: 380px; }
+      #inbox { width: 220px; height: 170px; position: relative; }
+      #inbox-badge { position: absolute; right: -6px; top: -14px; width: 56px; height: 56px; border-radius: 50%; background: var(--lime);
+        color: var(--bg); font-size: 32px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+      .wire { position: absolute; height: 4px; border-radius: 2px; background: linear-gradient(90deg, #c8f04f00, #c8f04fcc); transform-origin: left center; }
+      .vwire { position: absolute; width: 4px; border-radius: 2px; background: linear-gradient(0deg, #c8f04f00, #c8f04fcc); transform-origin: center bottom; }
+      #lead { left: 1260px; top: 540px; width: 420px; padding: 24px 28px; font-size: 26px; }
+      #lead .row { display: flex; gap: 14px; margin-top: 10px; }
+      #lead .k { width: 120px; color: var(--muted); font-family: var(--mono); font-size: 20px; padding-top: 4px; }
+      #rag { left: 0; right: 0; top: 104px; text-align: center; }
+      #rag span { display: inline-block; padding: 10px 22px; border: 1px solid #c8f04f66; border-radius: 999px; color: var(--lime); }
+      .stamp { font-family: var(--mono); font-weight: 600; font-size: 30px; color: var(--red); border: 4px solid var(--red); border-radius: 10px;
+        padding: 4px 16px; transform: rotate(-8deg); }
+
+      /* Scene 4 */
+      .col { top: 200px; width: 780px; }
+      .col h2 { font-family: var(--mono); font-size: 30px; letter-spacing: 0.18em; margin: 0 0 30px; }
+      .item { display: flex; gap: 22px; align-items: flex-start; padding: 26px 28px; border-radius: 20px; background: var(--slate);
+        border: 1px solid var(--hair2); margin-bottom: 22px; font-size: 34px; line-height: 1.25; }
+      .item .ic { flex: 0 0 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        font-family: var(--mono); font-weight: 600; font-size: 26px; }
+      .bad .ic { background: #ff6b6b22; color: var(--red); }
+      .good .ic { background: #c8f04f22; color: var(--lime); }
+
+      /* Scene 5 */
+      #cf-logo { left: 880px; top: 120px; width: 160px; height: 160px; }
+      #cf-name { left: 0; right: 0; top: 300px; text-align: center; font-size: 84px; font-weight: 700; letter-spacing: -0.02em; }
+      #cf-by { left: 0; right: 0; top: 400px; text-align: center; }
+      #cf-chips { left: 0; right: 0; top: 490px; display: flex; justify-content: center; gap: 22px; }
+      #cf-flow { left: 0; right: 0; top: 650px; display: flex; justify-content: center; align-items: center; gap: 30px; font-size: 32px; }
+      #url { left: 0; right: 0; top: 330px; text-align: center; }
+      #url .u { display: inline-block; font-size: 110px; font-weight: 700; color: var(--lime); letter-spacing: -0.02em; }
+      #endcard { inset: 0; }
+      .slot { position: absolute; width: 760px; height: 428px; border-radius: 20px; border: 2px dashed var(--hair2); background: #ffffff05;
+        display: flex; align-items: center; justify-content: center; }
+      #sub-btn { left: 1000px; top: 620px; padding: 20px 46px; border-radius: 999px; background: var(--lime); color: var(--bg); font-size: 40px; font-weight: 700; }
+
+      /* Captions */
+      #captions { left: 0; right: 0; bottom: 54px; height: 90px; }
+      .cap { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); white-space: nowrap; font-size: 46px; font-weight: 600;
+        padding: 14px 30px; border-radius: 16px; background: #0a0d0bd9; border: 1px solid var(--hair2); visibility: hidden; opacity: 0; }
+      .cap span { opacity: 0.45; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="master" data-width="1920" data-height="1080" data-start="0" data-duration="__TOTAL__">
+      <div class="grid"></div>
+
+      <!-- ===== Scene 1: hook ===== -->
+      <div id="sc1" class="scene">
+        <div id="phone" class="abs">
+          <div class="top"><div class="avatar"></div><div><div style="font-size:26px;font-weight:600">Customer</div>
+            <div class="mono" style="font-size:18px;color:var(--muted)">WhatsApp · your business</div></div></div>
+          <div id="s1-msg" class="abs bubble">Hi, are you open tomorrow? I need a quote.</div>
+          <div id="s1-status" class="abs mono">✓✓ Delivered · 03:02</div>
+          <div id="s1-timer" class="abs mono">No reply · opens 09:00 (6h 58m)</div>
+        </div>
+        <div id="clock" class="abs">03:02<small>AM</small></div>
+        <div id="clock-sub" class="abs label">Local time · business closed</div>
+        <div id="rival" class="abs card">
+          <div class="who">COMPETITOR · REPLIED IN 4 S</div>
+          <div class="txt">"Yes, we're open! Here's your quote →"</div>
+          <div class="t">03:02 · ✓✓ Read</div>
+        </div>
+        <div id="title-card" class="abs">
+          <div class="label ep">[EP.01 // AI RECEPTIONIST]</div>
+          <h1>How an AI receptionist answers customers 24/7</h1>
+        </div>
+        <div id="title-line" class="abs"></div>
+      </div>
+
+      <!-- ===== Scene 2: the problem ===== -->
+      <div id="sc2" class="scene">
+        <svg id="ring" class="abs" viewBox="0 0 600 600">
+          <circle cx="300" cy="300" r="230" fill="none" stroke="#1e2228" stroke-width="46" />
+          <circle id="ring-open" cx="300" cy="300" r="230" fill="none" stroke="#f0c05f" stroke-width="46"
+            stroke-dasharray="481.71 1445.13" stroke-dashoffset="481.71" transform="rotate(45 300 300)" />
+          <circle id="ring-all" cx="300" cy="300" r="230" fill="none" stroke="#c8f04f" stroke-width="46"
+            stroke-dasharray="1445.13 1445.13" stroke-dashoffset="1445.13" transform="rotate(-90 300 300)" />
+          <g font-family="IBM Plex Mono" font-size="20" fill="#8a948b" text-anchor="middle">
+            <text x="300" y="34">00</text><text x="574" y="306">06</text><text x="300" y="584">12</text><text x="26" y="306">18</text>
+          </g>
+          <g id="dots"></g>
+        </svg>
+        <div id="ring-center" class="abs">
+          <div id="rc-40" class="rc" style="top:250px"><div class="big-num" style="color:var(--gold)">40 h</div><div class="label" style="margin-top:14px">open per week</div></div>
+          <div id="rc-168" class="rc" style="top:250px"><div class="big-num">168 h</div><div class="label" style="margin-top:14px">customers message</div></div>
+          <div id="rc-247" class="rc" style="top:250px"><div class="big-num" style="color:var(--lime)">24/7</div><div class="label" style="margin-top:14px">always on shift</div></div>
+        </div>
+        <div id="s2-head" class="abs label">Every channel, every hour</div>
+        <div id="s2-chips" class="abs">
+          <div id="ch-web" class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#e8ede6" stroke-width="1.8"><rect x="3" y="4" width="18" height="13" rx="3"/><path d="M8 21l4-4h0"/></svg>Website chat</div>
+          <div id="ch-wa" class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#e8ede6" stroke-width="1.8"><path d="M4 20l1.5-4A8 8 0 1 1 9 19.5z"/></svg>WhatsApp</div>
+          <div id="ch-ph" class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#e8ede6" stroke-width="1.8"><path d="M6 3h4l2 5-3 2a11 11 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 4 5a2 2 0 0 1 2-2z"/></svg>Phone</div>
+        </div>
+      </div>
+
+      <!-- ===== Scene 3: the four parts ===== -->
+      <div id="sc3" class="scene">
+        <div id="rag" class="abs label"><span>RAG · retrieval-augmented generation</span></div>
+        <div id="w1" class="wire" style="left:540px;top:400px;width:250px"></div>
+        <div id="w2" class="wire" style="left:1130px;top:400px;width:300px"></div>
+        <div id="w3" class="vwire" style="left:958px;top:574px;height:72px"></div>
+
+        <div id="b-ch" class="abs">
+          <div class="block-h">01 · CHANNELS</div>
+          <div id="c-chat" class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#c8f04f" stroke-width="1.8"><rect x="3" y="4" width="18" height="13" rx="3"/><path d="M8 21l4-4"/></svg>Web chat</div>
+          <div id="c-voice" class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#c8f04f" stroke-width="1.8"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>Browser voice</div>
+          <div id="c-wa" class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#c8f04f" stroke-width="1.8"><path d="M4 20l1.5-4A8 8 0 1 1 9 19.5z"/></svg>WhatsApp</div>
+        </div>
+        <div id="msg-messy" class="abs bubble" style="left:110px;top:640px;font-size:30px">hiii r u open sundy??</div>
+        <div id="msg-q" class="abs bubble" style="left:110px;top:640px;font-size:30px">Are you open on Sundays?</div>
+
+        <div id="brain" class="abs">
+          <div id="brain-core"></div>
+          <div class="block-h" style="position:absolute;left:0;right:0;top:-46px;text-align:center">02 · BRAIN</div>
+          <div id="brain-label">Language<br />model</div>
+        </div>
+
+        <div id="b-kb" class="abs card">
+          <div class="block-h" style="margin:0">03 · KNOWLEDGE BASE</div>
+          <div class="docs">
+            <div id="d-serv" class="doc"><div class="n">Services</div><div class="ln"></div><div class="ln" style="width:70%"></div><div class="hl"></div></div>
+            <div id="d-price" class="doc"><div class="n">Prices</div><div class="ln"></div><div class="ln" style="width:60%"></div><div class="hl"></div></div>
+            <div id="d-hours" class="doc"><div class="n">Hours</div><div class="ln"></div><div class="ln" style="width:80%"></div><div id="hours-hl" class="hl"></div></div>
+            <div id="d-pol" class="doc"><div class="n">Policies</div><div class="ln"></div><div class="ln" style="width:50%"></div><div class="hl"></div></div>
+          </div>
+        </div>
+        <div id="snippet" class="abs mono" style="left:840px;top:700px;font-size:26px;padding:10px 18px;border-radius:10px;background:#c8f04f;color:#0a0d0b;font-weight:600">Sun 10:00–16:00</div>
+
+        <div id="ans-guess" class="abs bubble bad" style="left:1250px;top:250px;font-size:32px">"Probably 9 to 5?"</div>
+        <div id="stamp-guess" class="abs stamp" style="left:1560px;top:350px">GUESS</div>
+        <div id="ans-think" class="abs bubble bad" style="left:1250px;top:230px;font-size:30px;max-width:560px">"I think we're open Sundays…"</div>
+        <div id="ans-right" class="abs bubble out" style="left:1250px;top:380px;font-size:30px;max-width:560px">"We're open Sundays, 10 to 4."</div>
+
+        <div id="b-act" class="abs">
+          <div class="block-h">04 · ACTIONS</div>
+          <div id="inbox">
+            <svg viewBox="0 0 220 170" width="220" height="170" fill="none" stroke="#e8ede6" stroke-width="5">
+              <rect x="8" y="8" width="204" height="154" rx="22" fill="#101215" stroke="#ffffff33"/>
+              <path d="M8 100h56l14 26h64l14-26h56" stroke="#c8f04f"/>
+              <path d="M70 46h80M80 70h60" stroke="#ffffff44"/>
+            </svg>
+            <div id="inbox-badge">1</div>
+          </div>
+          <div class="mono" style="font-size:22px;color:var(--muted);margin-top:18px">OWNER'S INBOX</div>
+        </div>
+        <div id="lead" class="abs card">
+          <div class="mono" style="font-size:20px;color:var(--lime);letter-spacing:0.12em">NEW LEAD · 03:04</div>
+          <div id="lead-name" class="row"><div class="k">NAME</div><div>Maria Lopez</div></div>
+          <div id="lead-need" class="row"><div class="k">NEEDS</div><div>Quote, kitchen repair</div></div>
+          <div id="lead-reach" class="row"><div class="k">CONTACT</div><div>+1 555 0143</div></div>
+        </div>
+      </div>
+
+      <!-- ===== Scene 4: good vs annoying ===== -->
+      <div id="sc4" class="scene">
+        <div id="col-bad" class="abs col bad" style="left:150px">
+          <h2 style="color:var(--red)">✕ ANNOYING</h2>
+          <div class="item" id="bad1"><div class="ic">↻</div><div>"Sorry, I didn't get that." <span style="color:var(--muted)">×3</span></div></div>
+          <div class="item" id="bad2"><div class="ic">?</div><div>Makes up prices and hours</div></div>
+          <div class="item" id="bad3"><div class="ic">✕</div><div>No way to reach a human</div></div>
+        </div>
+        <div id="col-good" class="abs col good" style="left:990px">
+          <h2 style="color:var(--lime)">✓ GOOD</h2>
+          <div class="item" id="good1"><div class="ic">1</div><div>Answers only from your info, and says "I don't know"</div></div>
+          <div class="item" id="good2"><div class="ic">2</div><div>Hands off to a human when it should</div></div>
+          <div class="item" id="good3"><div class="ic">3</div><div>Captures the lead, every time</div></div>
+        </div>
+      </div>
+
+      <!-- ===== Scene 5: real example + CTA ===== -->
+      <div id="sc5" class="scene">
+        <div id="cf-group" class="abs" style="inset:0">
+          <img id="cf-logo" class="abs" src="assets/brand/clientfalcon-symbol-paper.svg" alt="ClientFalcon" />
+          <div id="cf-name" class="abs">ClientFalcon Voice</div>
+          <div id="cf-by" class="abs label">built by iAgentice</div>
+          <div id="cf-chips" class="abs">
+            <div id="cf-c1" class="chip">Web chat</div>
+            <div id="cf-c2" class="chip">Browser voice</div>
+            <div id="cf-c3" class="chip">WhatsApp</div>
+            <div id="cf-c4" class="chip" style="color:var(--muted)">Phone · soon</div>
+          </div>
+          <div id="cf-flow" class="abs">
+            <div class="chip" style="font-size:28px">Visitor message</div><div style="color:var(--lime)">→</div>
+            <div class="chip" style="font-size:28px">Agent answers</div><div style="color:var(--lime)">→</div>
+            <div class="chip" style="font-size:28px;border-color:#c8f04f88">Lead in your inbox</div>
+          </div>
+        </div>
+        <div id="url" class="abs"><div class="label">Get one for your business</div><div class="u" style="margin-top:18px">iagentice.com</div>
+          <div class="label" style="margin-top:22px">Link in the description</div></div>
+        <div id="endcard" class="abs">
+          <div class="slot" style="left:110px;top:250px"><div class="label">Next: the build, step by step</div></div>
+          <div class="abs" style="left:1000px;top:300px;width:800px">
+            <svg width="96" height="96" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#101215"/><path d="M22.20 55.22 L22.20 18.18 L29.98 18.18 L46.00 55.22 L37.53 55.22 L34.07 47.22 L29.98 47.22 L29.98 55.22 Z M29.98 41.00 L31.37 41.00 L29.98 37.77 Z" fill="#F3F4F1" fill-rule="evenodd"/><circle cx="26.09" cy="9.55" r="5.52" fill="#C8F04F"/></svg>
+            <div style="font-size:64px;font-weight:700;margin-top:26px">iAgentice</div>
+            <div class="label" style="margin-top:12px">Work that never sleeps.</div>
+          </div>
+          <div id="sub-btn" class="abs">Subscribe</div>
+        </div>
+      </div>
+
+      <!-- HUD (above scenes) -->
+      <div id="hud-left" class="abs">
+        <svg width="56" height="56" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#101215" stroke="#ffffff24"/><path d="M22.20 55.22 L22.20 18.18 L29.98 18.18 L46.00 55.22 L37.53 55.22 L34.07 47.22 L29.98 47.22 L29.98 55.22 Z M29.98 41.00 L31.37 41.00 L29.98 37.77 Z" fill="#F3F4F1" fill-rule="evenodd"/><circle cx="26.09" cy="9.55" r="5.52" fill="#C8F04F"/></svg>
+      </div>
+      <div id="lbl1" class="abs label scn-label" style="opacity:0">[SCN.01 // 03:02 AM]</div>
+      <div id="lbl2" class="abs label scn-label" style="opacity:0">[SCN.02 // THE PROBLEM]</div>
+      <div id="lbl3" class="abs label scn-label" style="opacity:0">[SCN.03 // HOW IT WORKS]</div>
+      <div id="lbl4" class="abs label scn-label" style="opacity:0">[SCN.04 // THE CHECKLIST]</div>
+      <div id="lbl5" class="abs label scn-label" style="opacity:0">[SCN.05 // REAL EXAMPLE]</div>
+      <div id="hud-right" class="abs label">EP.01 · AI RECEPTIONIST</div>
+      <div class="vignette"></div>
+      <div id="captions" class="abs"></div>
+
+      <!--__AUDIO__-->
+
+      <script>
+        (function () {
+          const V = /*__DATA__*/null;
+          const C = V.cues, S = V.scenes;
+          const tl = gsap.timeline({ paused: true });
+          const q = (s) => document.querySelector(s);
+          const fade = (el, t, d = 0.45) => tl.fromTo(el, { autoAlpha: 0 }, { autoAlpha: 1, duration: d, ease: "power2.out" }, t);
+          const out = (el, t, d = 0.35) => tl.to(el, { autoAlpha: 0, duration: d, ease: "power2.in" }, t);
+          const rise = (el, t, y = 40, d = 0.55) => tl.fromTo(el, { autoAlpha: 0, y }, { autoAlpha: 1, y: 0, duration: d, ease: "power3.out" }, t);
+          const pop = (el, t) => tl.fromTo(el, { autoAlpha: 0, scale: 0.6 }, { autoAlpha: 1, scale: 1, duration: 0.45, ease: "back.out(2)" }, t);
+          const dim = (el, t, v = 0.3) => tl.to(el, { opacity: v, duration: 0.4 }, t);
+          const sceneWin = [
+            ["#sc1", "#lbl1", 0, S.s2.start - 0.4],
+            ["#sc2", "#lbl2", S.s2.start - 0.4, S.s3a.start - 0.4],
+            ["#sc3", "#lbl3", S.s3a.start - 0.4, S.s4.start - 0.4],
+            ["#sc4", "#lbl4", S.s4.start - 0.4, S.s5.start - 0.4],
+            ["#sc5", "#lbl5", S.s5.start - 0.4, V.total],
+          ];
+          sceneWin.forEach(([sc, lb, a, b], i) => {
+            tl.fromTo(sc, { autoAlpha: 0 }, { autoAlpha: 1, duration: i ? 0.5 : 0.8 }, a);
+            tl.fromTo(lb, { opacity: 0 }, { opacity: 1, duration: 0.4 }, a + 0.2);
+            if (b < V.total) { tl.to(sc, { autoAlpha: 0, duration: 0.4 }, b - 0.4); tl.to(lb, { opacity: 0, duration: 0.3 }, b - 0.4); }
+          });
+
+          // ---------- Scene 1 ----------
+          ["#s1-msg", "#s1-status", "#s1-timer", "#rival", "#title-card", "#title-line"].forEach((s) => tl.set(s, { autoAlpha: 0 }, 0));
+          fade("#clock", 0.2, 0.8); fade("#clock-sub", 0.6);
+          rise("#s1-msg", C.s1_msg - 0.2, 30);
+          fade("#s1-status", C.s1_who);
+          fade("#s1-timer", C.s1_nobody);
+          rise("#rival", C.s1_else - 0.3, 50);
+          ["#phone", "#clock", "#clock-sub", "#rival"].forEach((s) => out(s, C.s1_title - 0.6, 0.4));
+          rise("#title-card", C.s1_title - 0.1, 30, 0.7);
+          tl.set("#title-line", { autoAlpha: 1 }, C.s1_title + 0.3);
+          tl.fromTo("#title-line", { scaleX: 0 }, { scaleX: 1, duration: 0.9, ease: "power3.inOut" }, C.s1_title + 0.3);
+
+          // ---------- Scene 2 ----------
+          const dots = q("#dots");
+          [19.5, 21, 22.5, 23.4, 0.6, 1.8, 3, 4.6, 6.2, 7.4, 18.4, 20.2, 2.4, 13.2, 16.5, 10.3].forEach((h, i) => {
+            const a = ((h / 24) * 360 - 90) * Math.PI / 180;
+            const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            c.setAttribute("cx", 300 + 230 * Math.cos(a)); c.setAttribute("cy", 300 + 230 * Math.sin(a));
+            c.setAttribute("r", 11); c.setAttribute("fill", h > 9 && h < 17 ? "#0a0d0b" : "#ff6b57");
+            c.setAttribute("stroke", "#e8ede6"); c.setAttribute("stroke-width", 3); c.setAttribute("opacity", 0);
+            dots.appendChild(c);
+            tl.fromTo(c, { opacity: 0, scale: 0, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(3)" }, C.s2_evenings + i * 0.12);
+          });
+          ["#rc-40", "#rc-168", "#rc-247", "#ch-web", "#ch-wa", "#ch-ph", "#s2-head"].forEach((s) => tl.set(s, { autoAlpha: 0 }, 0));
+          tl.to("#ring-open", { strokeDashoffset: 0, duration: 1.0, ease: "power2.inOut" }, C.s2_forty - 0.4);
+          rise("#rc-40", C.s2_forty - 0.2, 20);
+          out("#rc-40", C.s2_168 - 0.3, 0.25); rise("#rc-168", C.s2_168 - 0.1, 20);
+          fade("#s2-head", C.s2_web - 0.4);
+          rise("#ch-web", C.s2_web, 20); rise("#ch-wa", C.s2_wa, 20); rise("#ch-ph", C.s2_phone, 20);
+          tl.to("#ring-all", { strokeDashoffset: 0, duration: 1.6, ease: "power2.inOut" }, C.s2_all);
+          out("#rc-168", C.s2_shift - 0.3, 0.25); pop("#rc-247", C.s2_shift);
+
+          // ---------- Scene 3 ----------
+          const s3hidden = ["#b-ch", "#c-chat", "#c-voice", "#c-wa", "#w1", "#w2", "#w3", "#brain", "#b-kb", "#b-act", "#lead",
+            "#msg-messy", "#msg-q", "#ans-guess", "#stamp-guess", "#ans-think", "#ans-right", "#snippet", "#rag", "#inbox-badge",
+            "#d-serv", "#d-price", "#d-hours", "#d-pol", "#lead-name", "#lead-need", "#lead-reach"];
+          s3hidden.forEach((s) => tl.set(s, { autoAlpha: 0 }, 0));
+          // 3a channels
+          fade("#b-ch", C.a_part);
+          rise("#c-chat", C.a_chat, 24); rise("#c-voice", C.a_voice, 24); rise("#c-wa", C.a_wa, 24);
+          tl.set("#w1", { autoAlpha: 1 }, C.a_single - 0.2);
+          tl.fromTo("#w1", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "power2.out" }, C.a_single - 0.2);
+          fade("#brain", C.a_single, 0.5); dim("#brain", C.a_single + 0.5, 0.35);
+          // 3b brain
+          dim("#b-ch", C.b_part, 0.35); dim("#w1", C.b_part, 0.35);
+          tl.to("#brain", { opacity: 1, duration: 0.4 }, C.b_part);
+          tl.fromTo("#brain-core", { scale: 0.85 }, { scale: 1, duration: 0.8, ease: "elastic.out(1, 0.5)" }, C.b_part);
+          rise("#msg-messy", C.b_messy - 0.3, 20);
+          tl.to("#msg-messy", { x: 700, y: -260, scale: 0.4, autoAlpha: 0, duration: 0.9, ease: "power2.in" }, C.b_messy + 1.3);
+          tl.fromTo("#brain-core", { scale: 1 }, { scale: 1.08, duration: 0.25, yoyo: true, repeat: 1 }, C.b_messy + 2.1);
+          rise("#ans-guess", C.b_ask, 20);
+          pop("#stamp-guess", C.b_guess - 0.15);
+          out("#ans-guess", S.s3c.start - 0.3); out("#stamp-guess", S.s3c.start - 0.3);
+          // 3c knowledge base
+          dim("#brain", C.c_kb - 0.2, 0.5);
+          fade("#b-kb", C.c_kb - 0.1); tl.set("#w3", { autoAlpha: 1 }, C.c_kb + 0.3);
+          tl.fromTo("#w3", { scaleY: 0 }, { scaleY: 1, duration: 0.5 }, C.c_kb + 0.3);
+          pop("#d-serv", C.c_services); pop("#d-price", C.c_prices); pop("#d-hours", C.c_hours); pop("#d-pol", C.c_policies);
+          rise("#msg-q", C.c_question - 0.2, 20);
+          tl.to("#msg-q", { x: 640, y: -300, scale: 0.4, autoAlpha: 0, duration: 0.8, ease: "power2.in" }, C.c_question + 1.0);
+          tl.to("#hours-hl", { opacity: 1, duration: 0.3 }, C.c_finds);
+          tl.fromTo("#snippet", { autoAlpha: 0, y: 0 }, { autoAlpha: 1, duration: 0.3 }, C.c_hands - 0.2);
+          tl.to("#snippet", { y: -330, x: 40, duration: 0.9, ease: "power2.inOut" }, C.c_hands + 0.3);
+          tl.to("#snippet", { autoAlpha: 0, scale: 0.5, duration: 0.3 }, C.c_hands + 1.2);
+          tl.to("#brain", { opacity: 1, duration: 0.3 }, C.c_hands + 1.0);
+          tl.fromTo("#brain-core", { scale: 1 }, { scale: 1.08, duration: 0.25, yoyo: true, repeat: 1 }, C.c_hands + 1.1);
+          rise("#rag", C.c_rag - 0.2, -20);
+          rise("#ans-think", C.c_think - 0.2, 20);
+          rise("#ans-right", C.c_were2 - 0.1, 20);
+          tl.to("#ans-think", { opacity: 0.35, duration: 0.4 }, C.c_were2 + 0.2);
+          ["#ans-think", "#ans-right", "#rag"].forEach((s) => out(s, S.s3d.start - 0.3));
+          tl.to("#hours-hl", { opacity: 0, duration: 0.3 }, S.s3d.start - 0.3);
+          // 3d actions
+          dim("#b-kb", C.d_part, 0.35); dim("#w3", C.d_part, 0.35); dim("#brain", C.d_part, 0.5);
+          tl.set("#w2", { autoAlpha: 1 }, C.d_part);
+          tl.fromTo("#w2", { scaleX: 0 }, { scaleX: 1, duration: 0.6 }, C.d_part);
+          fade("#b-act", C.d_part + 0.3);
+          rise("#lead", C.d_lead - 0.2, 30);
+          rise("#lead-name", C.d_name - 0.1, 10); rise("#lead-need", C.d_need - 0.1, 10); rise("#lead-reach", C.d_reach - 0.1, 10);
+          tl.to("#lead", { x: 90, y: -280, scale: 0.3, autoAlpha: 0, duration: 0.7, ease: "power2.in" }, C.d_inbox - 0.3);
+          pop("#inbox-badge", C.d_inbox + 0.35);
+          ["#b-ch", "#w1", "#w2", "#w3", "#brain", "#b-kb"].forEach((s) => tl.to(s, { opacity: 1, duration: 0.6 }, C.d_wake));
+
+          // ---------- Scene 4 ----------
+          ["#col-bad", "#col-good", "#bad1", "#bad2", "#bad3", "#good1", "#good2", "#good3"].forEach((s) => tl.set(s, { autoAlpha: 0 }, 0));
+          fade("#col-bad", C.g_bad - 0.3);
+          rise("#bad1", C.g_bad, 20); rise("#bad2", C.g_bad + 0.5, 20); rise("#bad3", C.g_bad + 1.0, 20);
+          fade("#col-good", C.g_one - 0.6);
+          rise("#good1", C.g_one, 24); rise("#good2", C.g_two, 24); rise("#good3", C.g_three, 24);
+          dim("#col-bad", C.g_right, 0.3);
+
+          // ---------- Scene 5 ----------
+          ["#cf-logo", "#cf-name", "#cf-by", "#cf-c1", "#cf-c2", "#cf-c3", "#cf-c4", "#cf-flow", "#url", "#endcard"].forEach((s) => tl.set(s, { autoAlpha: 0 }, 0));
+          pop("#cf-logo", C.f_cf - 0.4); rise("#cf-name", C.f_cf - 0.1, 24); fade("#cf-by", C.f_cf + 0.4);
+          rise("#cf-c1", C.f_web - 0.1, 16); rise("#cf-c2", C.f_web + 0.2, 16); rise("#cf-c3", C.f_wa - 0.1, 16); rise("#cf-c4", C.f_wa + 0.3, 16);
+          rise("#cf-flow", C.f_lead - 0.3, 20);
+          out("#cf-group", C.f_want - 0.4);
+          rise("#url", C.f_want - 0.1, 30);
+          out("#url", C.f_sub - 1.2);
+          fade("#endcard", C.f_sub - 0.8, 0.6);
+          tl.fromTo("#sub-btn", { scale: 1 }, { scale: 1.08, duration: 0.3, yoyo: true, repeat: 3, ease: "sine.inOut" }, C.f_sub);
+
+          // ---------- Captions ----------
+          const box = q("#captions");
+          const phrases = [];
+          let cur = [];
+          V.words.forEach((w, i) => {
+            cur.push(w);
+            const next = V.words[i + 1];
+            const brk = /[.,?!:;]$/.test(w.w) || cur.length >= 7 || !next || next.sc !== w.sc || next.s - w.e > 0.6;
+            if (brk) { phrases.push(cur); cur = []; }
+          });
+          phrases.forEach((p, i) => {
+            const el = document.createElement("div");
+            el.className = "cap";
+            p.forEach((w, j) => {
+              const s = document.createElement("span");
+              s.textContent = w.w + (j < p.length - 1 ? " " : "");
+              el.appendChild(s);
+              tl.to(s, { opacity: 1, duration: 0.08 }, w.s);
+            });
+            box.appendChild(el);
+            const start = p[0].s - 0.05;
+            const nxt = phrases[i + 1];
+            const end = Math.min(p[p.length - 1].e + 0.35, nxt ? nxt[0].s - 0.06 : V.total);
+            tl.set(el, { autoAlpha: 1 }, start);
+            tl.set(el, { autoAlpha: 0 }, end);
+          });
+
+          tl.set({}, {}, V.total);
+          window.__timelines = window.__timelines || {};
+          window.__timelines["master"] = tl;
+        })();
+      </script>
+    </div>
+  </body>
+</html>

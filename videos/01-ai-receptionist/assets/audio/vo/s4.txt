@@ -1,0 +1,1 @@
+[candid] Now, we've all met a bad chatbot. So here's the checklist. One: it answers only from your information, and says "I don't know" instead of guessing. Two: it hands off to a human for anything it shouldn't decide. Three: it captures the lead every time, not just the conversation. [pause] Get those three right, and customers barely notice they're talking to an AI.
