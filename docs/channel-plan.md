@@ -37,12 +37,17 @@ Policy rules are in [youtube-monetization.md](youtube-monetization.md).
 
 ## Voice
 
-- ElevenLabs, most expressive model available on the plan (confirm the model id
-  from the API; `ELEVENLABS_API_KEY` comes from `.env` or the environment's
-  network secrets, never from the repo).
-- The key must not be IP-restricted for cloud sessions; limit its scope to
-  text-to-speech and voice read access instead.
-- Kokoro (`npm run tts`) stays as the free fallback for drafts.
+- **Channel voice: ElevenLabs "Brian"** (`nPczCjzI2devNBz1zQrb`, deep US narrator) on
+  model **`eleven_v4`**, chosen October 2026. v4 accepts expression tags such as
+  `[curious]`, `[warmly]`, `[pause]`; tested, and the tags aren't read aloud.
+- Generate with `python3 scripts/tts.py "text or file.txt" -e elevenlabs -o line.mp3`.
+- The API key comes from `.env` (git-ignored) or the environment's network secrets,
+  never from the repo. It is scoped to text-to-speech only, with no IP restriction,
+  so voices are addressed by id.
+- Plan: pay-as-you-go, about 23.7k characters per period. A 4-minute script is about
+  3.5–4k characters, so draft and time with Kokoro (`npm run tts`), and spend
+  ElevenLabs characters only on the final voice.
+- No voice cloning on the current plan.
 
 ## First video
 
