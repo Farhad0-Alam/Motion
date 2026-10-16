@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EP.01 - How an AI receptionist answers customers 24/7</title>
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Instrument Sans"; font-weight: 400 700; src: url("assets/fonts/InstrumentSans-400_700.woff2") format("woff2"); }
+      @font-face { font-family: "IBM Plex Mono"; font-weight: 400; src: url("assets/fonts/IBMPlexMono-400.woff2") format("woff2"); }
+      @font-face { font-family: "IBM Plex Mono"; font-weight: 500; src: url("assets/fonts/IBMPlexMono-500.woff2") format("woff2"); }
+      @font-face { font-family: "IBM Plex Mono"; font-weight: 600; src: url("assets/fonts/IBMPlexMono-600.woff2") format("woff2"); }
+      /* Mobile-first design tokens.
+         Type scale (ratio ~1.25, 32px floor so nothing drops below ~6pt on a 6" phone):
+           --t-meta 32 · --t-body 40 · --t-em 48 · --t-cap 60 · --t-h3 76 · --t-h2 96 · --t-h1 120
+         Colour (60-30-10): dark slate base, raised slate surfaces, lime accent for focus only.
+         Semantic hues: violet = night/time, gold = opening hours, red = problem, lime = solution.
+         All text pairs measured >= 4.5:1 (WCAG AA); body and labels >= 8.9:1. */
+      :root {
+        --bg: #12171a; --fg: #f3f6f1; --muted: #b9c3ba; --faint: #7d887e;
+        --lime: #c8f04f; --gold: #f0c05f; --dawn: #f7a63b; --dusk: #ff6b57;
+        --night: #9385ff; --teal: #4ecdc4; --red: #ff6b6b;
+        --slate: #1b2126; --slate2: #232a31; --slate3: #2b333b;
+        --hair: #ffffff1c; --hair2: #ffffff3d;
+        --sans: "Instrument Sans", "Noto Sans", sans-serif;
+        --mono: "IBM Plex Mono", monospace;
+        --t-meta: 32px; --t-body: 40px; --t-em: 48px; --t-cap: 60px; --t-h3: 76px; --t-h2: 96px; --t-h1: 120px;
+      }
+      html, body { margin: 0; padding: 0; width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); }
+      #root { position: relative; width: 1920px; height: 1080px; overflow: hidden;
+        background: radial-gradient(ellipse at 50% 40%, #1f2a27 0%, #151b1e 55%, #0f1416 100%);
+        font-family: var(--sans); color: var(--fg); }
+      .grid { position: absolute; inset: 0;
+        background-image: linear-gradient(var(--hair) 1px, transparent 1px), linear-gradient(90deg, var(--hair) 1px, transparent 1px);
+        background-size: 96px 96px; background-position: -1px -1px; opacity: 0.5; }
+      .vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, transparent 55%, #00000055 100%); }
+      .abs { position: absolute; }
+      .mono { font-family: var(--mono); letter-spacing: 0.04em; }
+      .label { font-family: var(--mono); font-size: var(--t-meta); font-weight: 500; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; }
+      .scene { position: absolute; inset: 0; visibility: hidden; opacity: 0; }
+
+      /* HUD */
+      #hud-left { left: 64px; top: 50px; display: flex; align-items: center; gap: 18px; }
+      #hud-right { right: 64px; top: 60px; }
+      .scn-label { left: 152px; top: 60px; color: var(--lime); }
+
+      /* Bubbles and cards */
+      .bubble { font-size: var(--t-body); line-height: 1.25; padding: 22px 30px; border-radius: 26px; background: var(--slate3);
+        border: 1px solid var(--hair2); max-width: 620px; }
+      .bubble.out { background: #24331a; border-color: #c8f04f77; }
+      .bubble.bad { background: #351b1b; border-color: #ff6b6b88; }
+      .chip { display: flex; align-items: center; gap: 18px; padding: 20px 30px; border-radius: 20px; background: var(--slate2);
+        border: 1px solid var(--hair2); font-size: var(--t-body); font-weight: 600; white-space: nowrap; }
+      .chip svg { width: 48px; height: 48px; flex: none; }
+      .card { background: var(--slate); border: 1px solid var(--hair2); border-radius: 24px; }
+
+      /* Scene 1 */
+      #phone { left: 190px; top: 140px; width: 540px; height: 780px; border-radius: 60px; background: var(--slate);
+        border: 2px solid var(--hair2); box-shadow: 0 40px 120px #00000088; overflow: hidden; }
+      #phone .top { height: 120px; border-bottom: 1px solid var(--hair); display: flex; align-items: flex-end; padding: 0 34px 20px; gap: 18px; }
+      #phone .avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--slate3); border: 1px solid var(--hair2); }
+      #s1-msg { left: 28px; top: 160px; max-width: 470px; }
+      #s1-status { left: 34px; top: 360px; font-size: var(--t-meta); color: var(--muted); }
+      #s1-timer { left: 34px; top: 420px; font-size: var(--t-meta); max-width: 470px; color: var(--red); line-height: 1.3; }
+      #clock { left: 840px; top: 140px; font-family: var(--mono); font-size: 200px; font-weight: 500; color: var(--night); line-height: 1; }
+      #clock small { font-size: var(--t-h3); color: var(--muted); margin-left: 16px; }
+      #clock-sub { left: 848px; top: 360px; }
+      #rival { left: 840px; top: 500px; width: 900px; padding: 32px 38px; }
+      #rival .who { font-size: var(--t-meta); color: var(--teal); font-family: var(--mono); letter-spacing: 0.06em; }
+      #rival .txt { font-size: var(--t-em); margin-top: 14px; font-weight: 600; }
+      #rival .t { font-size: var(--t-meta); color: var(--muted); margin-top: 14px; font-family: var(--mono); }
+      #title-card { left: 0; right: 0; top: 290px; text-align: center; }
+      #title-card .ep { color: var(--lime); }
+      #title-card h1 { font-size: var(--t-h1); line-height: 1.04; margin: 28px auto 0; max-width: 1640px; font-weight: 700; letter-spacing: -0.025em; }
+      #title-line { left: 510px; top: 660px; width: 900px; height: 10px; border-radius: 5px; background: var(--lime); transform-origin: left center; }
+
+      /* Scene 2 */
+      #ring { left: 200px; top: 150px; width: 720px; height: 720px; }
+      #ring-center { left: 200px; top: 150px; width: 720px; height: 720px; }
+      .big-num { font-size: 170px; font-weight: 700; line-height: 1; letter-spacing: -0.03em; }
+      .rc { position: absolute; text-align: center; width: 720px; left: 0; }
+      #s2-chips { left: 1080px; top: 300px; display: flex; flex-direction: column; gap: 30px; }
+      #s2-head { left: 1080px; top: 210px; }
+
+      /* Scene 3 diagram */
+      .block-h { font-family: var(--mono); font-size: var(--t-meta); font-weight: 500; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 20px; }
+      #b-ch { left: 70px; top: 200px; width: 480px; }
+      #b-ch .chip { margin-bottom: 24px; }
+      #brain { left: 790px; top: 220px; width: 380px; height: 380px; }
+      #brain-core { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 50% 45%, #c8f04f40, #c8f04f12 60%, transparent 70%);
+        border: 3px solid #c8f04faa; }
+      #brain-label { position: absolute; left: 0; right: 0; top: 136px; text-align: center; font-size: var(--t-em); font-weight: 700; line-height: 1.1; }
+      #b-kb { left: 600px; top: 650px; width: 760px; padding: 22px 26px; box-sizing: border-box; }
+      .docs { display: flex; gap: 16px; margin-top: 4px; }
+      .doc { flex: 1; height: 120px; border-radius: 14px; background: var(--slate3); border: 2px solid var(--hair2); position: relative; padding: 16px 14px; box-sizing: border-box; }
+      .doc .n { font-size: var(--t-meta); font-weight: 600; }
+      .doc .ln { height: 7px; border-radius: 4px; background: #ffffff26; margin-top: 12px; }
+      .doc .hl { position: absolute; inset: -2px; border-radius: 14px; border: 4px solid var(--lime); box-shadow: 0 0 34px #c8f04f77; opacity: 0; }
+      #b-act { left: 1470px; top: 200px; width: 400px; }
+      #inbox { width: 240px; height: 185px; position: relative; }
+      #inbox-badge { position: absolute; right: -8px; top: -16px; width: 64px; height: 64px; border-radius: 50%; background: var(--lime);
+        color: var(--bg); font-size: var(--t-body); font-weight: 700; display: flex; align-items: center; justify-content: center; }
+      .wire { position: absolute; height: 5px; border-radius: 3px; background: linear-gradient(90deg, #c8f04f00, #c8f04fdd); transform-origin: left center; }
+      .vwire { position: absolute; width: 5px; border-radius: 3px; background: linear-gradient(0deg, #c8f04f00, #c8f04fdd); transform-origin: center bottom; }
+      #lead { left: 1380px; top: 470px; width: 480px; padding: 24px 30px; font-size: var(--t-body); box-sizing: border-box; }
+      #lead .row { margin-top: 12px; }
+      #lead .k { color: var(--muted); font-family: var(--mono); font-size: var(--t-meta); }
+      #rag { left: 1410px; top: 600px; line-height: 1.3; padding: 18px 28px; border: 2px solid #c8f04f88; border-radius: 22px; background: #12171ae6; text-transform: none; letter-spacing: 0.02em; }
+      #rag b { display: block; font-family: var(--sans); font-size: var(--t-em); color: var(--lime); letter-spacing: 0; }
+      .stamp { font-family: var(--mono); font-weight: 600; font-size: var(--t-body); color: var(--red); border: 5px solid var(--red); border-radius: 12px;
+        padding: 4px 18px; transform: rotate(-8deg); }
+
+      /* Scene 4 */
+      .col { top: 190px; width: 820px; }
+      .col h2 { font-family: var(--mono); font-size: var(--t-em); letter-spacing: 0.12em; margin: 0 0 30px; }
+      .item { display: flex; gap: 24px; align-items: flex-start; padding: 26px 30px; border-radius: 22px; background: var(--slate);
+        border: 1px solid var(--hair2); margin-bottom: 24px; font-size: var(--t-body); line-height: 1.22; }
+      .item .ic { flex: 0 0 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        font-family: var(--mono); font-weight: 600; font-size: var(--t-meta); }
+      .bad .ic { background: #ff6b6b2e; color: var(--red); }
+      .good .ic { background: #c8f04f2e; color: var(--lime); }
+
+      /* Scene 5 */
+      #cf-logo { left: 870px; top: 110px; width: 180px; height: 180px; }
+      #cf-name { left: 0; right: 0; top: 300px; text-align: center; font-size: var(--t-h2); font-weight: 700; letter-spacing: -0.02em; }
+      #cf-by { left: 0; right: 0; top: 420px; text-align: center; }
+      #cf-chips { left: 0; right: 0; top: 500px; display: flex; justify-content: center; gap: 22px; }
+      #cf-flow { left: 0; right: 0; top: 670px; display: flex; justify-content: center; align-items: center; gap: 26px; font-size: var(--t-body); }
+      #url { left: 0; right: 0; top: 300px; text-align: center; }
+      #url .u { display: inline-block; font-size: 140px; font-weight: 700; color: var(--lime); letter-spacing: -0.025em; }
+      #endcard { inset: 0; }
+      .slot { position: absolute; width: 760px; height: 428px; border-radius: 22px; border: 3px dashed var(--hair2); background: #ffffff08;
+        display: flex; align-items: center; justify-content: center; text-align: center; padding: 30px; box-sizing: border-box; }
+      #sub-btn { left: 1000px; top: 640px; padding: 22px 52px; border-radius: 999px; background: var(--lime); color: var(--bg); font-size: var(--t-em); font-weight: 700; }
+
+      /* Captions: 60px, at most 5 words a line, AA contrast even for upcoming words */
+      #captions { left: 0; right: 0; bottom: 44px; height: 100px; }
+      .cap { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); white-space: nowrap; font-size: var(--t-cap); font-weight: 600;
+        line-height: 1.15; padding: 14px 34px; border-radius: 18px; background: #0b0f11ee; border: 1px solid var(--hair2); visibility: hidden; opacity: 0; }
+      .cap span { opacity: 0.55; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="master" data-width="1920" data-height="1080" data-start="0" data-duration="186.07">
+      <div class="grid"></div>
+
+      <!-- ===== Scene 1: hook ===== -->
+      <div id="sc1" class="scene">
+        <div id="phone" class="abs">
+          <div class="top"><div class="avatar"></div><div><div style="font-size:40px;font-weight:600">Customer</div>
+            <div class="mono" style="font-size:32px;color:var(--muted)">WhatsApp</div></div></div>
+          <div id="s1-msg" class="abs bubble">Hi, are you open tomorrow? I need a quote.</div>
+          <div id="s1-status" class="abs mono">✓✓ Delivered · 03:02</div>
+          <div id="s1-timer" class="abs mono">No reply · opens 09:00 (6h 58m)</div>
+        </div>
+        <div id="clock" class="abs">03:02<small>AM</small></div>
+        <div id="clock-sub" class="abs label">Local time · business closed</div>
+        <div id="rival" class="abs card">
+          <div class="who">COMPETITOR · REPLIED IN 4 S</div>
+          <div class="txt">"Yes, we're open! Here's your quote →"</div>
+          <div class="t">03:02 · ✓✓ Read</div>
+        </div>
+        <div id="title-card" class="abs">
+          <div class="label ep">[EP.01 // AI RECEPTIONIST]</div>
+          <h1>How an AI receptionist answers customers 24/7</h1>
+        </div>
+        <div id="title-line" class="abs"></div>
+      </div>
+
+      <!-- ===== Scene 2: the problem ===== -->
+      <div id="sc2" class="scene">
+        <svg id="ring" class="abs" viewBox="0 0 600 600">
+          <circle cx="300" cy="300" r="230" fill="none" stroke="#1e2228" stroke-width="46" />
+          <circle id="ring-open" cx="300" cy="300" r="230" fill="none" stroke="#f0c05f" stroke-width="46"
+            stroke-dasharray="481.71 1445.13" stroke-dashoffset="481.71" transform="rotate(45 300 300)" />
+          <circle id="ring-all" cx="300" cy="300" r="230" fill="none" stroke="#c8f04f" stroke-width="46"
+            stroke-dasharray="1445.13 1445.13" stroke-dashoffset="1445.13" transform="rotate(-90 300 300)" />
+          <g font-family="IBM Plex Mono" font-size="30" font-weight="500" fill="#b9c3ba" text-anchor="middle">
+            <text x="300" y="40">00</text><text x="578" y="310">06</text><text x="300" y="586">12</text><text x="22" y="310">18</text>
+          </g>
+          <g id="dots"></g>
+        </svg>
+        <div id="ring-center" class="abs">
+          <div id="rc-40" class="rc" style="top:250px"><div class="big-num" style="color:var(--gold)">40 h</div><div class="label" style="margin-top:14px">open per week</div></div>
+          <div id="rc-168" class="rc" style="top:250px"><div class="big-num">168 h</div><div class="label" style="margin-top:14px">customers message</div></div>
+          <div id="rc-247" class="rc" style="top:250px"><div class="big-num" style="color:var(--lime)">24/7</div><div class="label" style="margin-top:14px">always on shift</div></div>
+        </div>
+        <div id="s2-head" class="abs label">Every channel, every hour</div>
+        <div id="s2-chips" class="abs">
+          <div id="ch-web" class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#e8ede6" stroke-width="1.8"><rect x="3" y="4" width="18" height="13" rx="3"/><path d="M8 21l4-4h0"/></svg>Website chat</div>
+          <div id="ch-wa" class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#e8ede6" stroke-width="1.8"><path d="M4 20l1.5-4A8 8 0 1 1 9 19.5z"/></svg>WhatsApp</div>
+          <div id="ch-ph" class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#e8ede6" stroke-width="1.8"><path d="M6 3h4l2 5-3 2a11 11 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 4 5a2 2 0 0 1 2-2z"/></svg>Phone</div>
+        </div>
+      </div>
+
+      <!-- ===== Scene 3: the four parts ===== -->
+      <div id="sc3" class="scene">
+        <div id="rag" class="abs label"><b>RAG</b>retrieval-augmented<br />generation</div>
+        <div id="w1" class="wire" style="left:560px;top:408px;width:230px"></div>
+        <div id="w2" class="wire" style="left:1170px;top:408px;width:290px"></div>
+        <div id="w3" class="vwire" style="left:977px;top:600px;height:50px"></div>
+
+        <div id="b-ch" class="abs">
+          <div class="block-h">01 · CHANNELS</div>
+          <div id="c-chat" class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#c8f04f" stroke-width="1.8"><rect x="3" y="4" width="18" height="13" rx="3"/><path d="M8 21l4-4"/></svg>Web chat</div>
+          <div id="c-voice" class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#c8f04f" stroke-width="1.8"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>Browser voice</div>
+          <div id="c-wa" class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="#c8f04f" stroke-width="1.8"><path d="M4 20l1.5-4A8 8 0 1 1 9 19.5z"/></svg>WhatsApp</div>
+        </div>
+        <div id="msg-messy" class="abs bubble" style="left:70px;top:620px">hiii r u open sundy??</div>
+        <div id="msg-q" class="abs bubble" style="left:70px;top:620px">Are you open on Sundays?</div>
+
+        <div id="brain" class="abs">
+          <div id="brain-core"></div>
+          <div class="block-h" style="position:absolute;left:0;right:0;top:-54px;text-align:center">02 · BRAIN</div>
+          <div id="brain-label">Language<br />model</div>
+        </div>
+
+        <div id="b-kb" class="abs card">
+          <div class="block-h" style="margin:0 0 12px">03 · KNOWLEDGE BASE</div>
+          <div class="docs">
+            <div id="d-serv" class="doc"><div class="n">Services</div><div class="ln"></div><div class="ln" style="width:70%"></div><div class="hl"></div></div>
+            <div id="d-price" class="doc"><div class="n">Prices</div><div class="ln"></div><div class="ln" style="width:60%"></div><div class="hl"></div></div>
+            <div id="d-hours" class="doc"><div class="n">Hours</div><div class="ln"></div><div class="ln" style="width:80%"></div><div id="hours-hl" class="hl"></div></div>
+            <div id="d-pol" class="doc"><div class="n">Policies</div><div class="ln"></div><div class="ln" style="width:50%"></div><div class="hl"></div></div>
+          </div>
+        </div>
+        <div id="snippet" class="abs mono" style="left:830px;top:700px;font-size:32px;padding:12px 22px;border-radius:12px;background:#c8f04f;color:#12171a;font-weight:600">Sun 10:00–16:00</div>
+
+        <div id="ans-guess" class="abs bubble bad" style="left:1240px;top:240px">"Probably 9 to 5?"</div>
+        <div id="stamp-guess" class="abs stamp" style="left:1560px;top:360px">GUESS</div>
+        <div id="ans-think" class="abs bubble bad" style="left:1240px;top:200px;max-width:640px">"I think we're open Sundays…"</div>
+        <div id="ans-right" class="abs bubble out" style="left:1240px;top:400px;max-width:640px">"We're open Sundays, 10 to 4."</div>
+
+        <div id="b-act" class="abs">
+          <div class="block-h">04 · ACTIONS</div>
+          <div id="inbox">
+            <svg viewBox="0 0 220 170" width="240" height="185" fill="none" stroke="#e8ede6" stroke-width="5">
+              <rect x="8" y="8" width="204" height="154" rx="22" fill="#101215" stroke="#ffffff33"/>
+              <path d="M8 100h56l14 26h64l14-26h56" stroke="#c8f04f"/>
+              <path d="M70 46h80M80 70h60" stroke="#ffffff44"/>
+            </svg>
+            <div id="inbox-badge">1</div>
+          </div>
+          <div class="label" style="margin-top:18px">OWNER'S INBOX</div>
+        </div>
+        <div id="lead" class="abs card">
+          <div class="mono" style="font-size:32px;font-weight:600;color:var(--lime);letter-spacing:0.08em">NEW LEAD · 03:04</div>
+          <div id="lead-name" class="row"><div class="k">NAME</div><div>Maria Lopez</div></div>
+          <div id="lead-need" class="row"><div class="k">NEEDS</div><div>Kitchen repair quote</div></div>
+          <div id="lead-reach" class="row"><div class="k">CONTACT</div><div>+1 555 0143</div></div>
+        </div>
+      </div>
+
+      <!-- ===== Scene 4: good vs annoying ===== -->
+      <div id="sc4" class="scene">
+        <div id="col-bad" class="abs col bad" style="left:150px">
+          <h2 style="color:var(--red)">✕ ANNOYING</h2>
+          <div class="item" id="bad1"><div class="ic">↻</div><div>"Sorry, I didn't get that." <span style="color:var(--muted)">×3</span></div></div>
+          <div class="item" id="bad2"><div class="ic">?</div><div>Makes up prices and hours</div></div>
+          <div class="item" id="bad3"><div class="ic">✕</div><div>No way to reach a human</div></div>
+        </div>
+        <div id="col-good" class="abs col good" style="left:990px">
+          <h2 style="color:var(--lime)">✓ GOOD</h2>
+          <div class="item" id="good1"><div class="ic">1</div><div>Answers only from your info, and says "I don't know"</div></div>
+          <div class="item" id="good2"><div class="ic">2</div><div>Hands off to a human when it should</div></div>
+          <div class="item" id="good3"><div class="ic">3</div><div>Captures the lead, every time</div></div>
+        </div>
+      </div>
+
+      <!-- ===== Scene 5: real example + CTA ===== -->
+      <div id="sc5" class="scene">
+        <div id="cf-group" class="abs" style="inset:0">
+          <img id="cf-logo" class="abs" src="assets/brand/clientfalcon-symbol-paper.svg" alt="ClientFalcon" />
+          <div id="cf-name" class="abs">ClientFalcon Voice</div>
+          <div id="cf-by" class="abs label">built by iAgentice</div>
+          <div id="cf-chips" class="abs">
+            <div id="cf-c1" class="chip">Web chat</div>
+            <div id="cf-c2" class="chip">Browser voice</div>
+            <div id="cf-c3" class="chip">WhatsApp</div>
+            <div id="cf-c4" class="chip" style="color:var(--muted)">Phone · soon</div>
+          </div>
+          <div id="cf-flow" class="abs">
+            <div class="chip">Visitor message</div><div style="color:var(--lime)">→</div>
+            <div class="chip">Agent answers</div><div style="color:var(--lime)">→</div>
+            <div class="chip" style="border-color:#c8f04f99;color:var(--lime)">Lead in inbox</div>
+          </div>
+        </div>
+        <div id="url" class="abs"><div class="label">Get one for your business</div><div class="u" style="margin-top:18px">iagentice.com</div>
+          <div class="label" style="margin-top:22px">Link in the description</div></div>
+        <div id="endcard" class="abs">
+          <div class="slot" style="left:110px;top:250px"><div class="label" style="color:var(--fg);line-height:1.4">Next video:<br />the build, step by step</div></div>
+          <div class="abs" style="left:1000px;top:300px;width:800px">
+            <svg width="96" height="96" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#101215"/><path d="M22.20 55.22 L22.20 18.18 L29.98 18.18 L46.00 55.22 L37.53 55.22 L34.07 47.22 L29.98 47.22 L29.98 55.22 Z M29.98 41.00 L31.37 41.00 L29.98 37.77 Z" fill="#F3F4F1" fill-rule="evenodd"/><circle cx="26.09" cy="9.55" r="5.52" fill="#C8F04F"/></svg>
+            <div style="font-size:var(--t-h3);font-weight:700;margin-top:26px">iAgentice</div>
+            <div class="label" style="margin-top:12px">Work that never sleeps.</div>
+          </div>
+          <div id="sub-btn" class="abs">Subscribe</div>
+        </div>
+      </div>
+
+      <!-- HUD (above scenes) -->
+      <div id="hud-left" class="abs">
+        <svg width="56" height="56" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#101215" stroke="#ffffff24"/><path d="M22.20 55.22 L22.20 18.18 L29.98 18.18 L46.00 55.22 L37.53 55.22 L34.07 47.22 L29.98 47.22 L29.98 55.22 Z M29.98 41.00 L31.37 41.00 L29.98 37.77 Z" fill="#F3F4F1" fill-rule="evenodd"/><circle cx="26.09" cy="9.55" r="5.52" fill="#C8F04F"/></svg>
+      </div>
+      <div id="lbl1" class="abs label scn-label" style="opacity:0">[SCN.01 // 03:02 AM]</div>
+      <div id="lbl2" class="abs label scn-label" style="opacity:0">[SCN.02 // THE PROBLEM]</div>
+      <div id="lbl3" class="abs label scn-label" style="opacity:0">[SCN.03 // HOW IT WORKS]</div>
+      <div id="lbl4" class="abs label scn-label" style="opacity:0">[SCN.04 // THE CHECKLIST]</div>
+      <div id="lbl5" class="abs label scn-label" style="opacity:0">[SCN.05 // REAL EXAMPLE]</div>
+      <div id="hud-right" class="abs label">EP.01 · AI RECEPTIONIST</div>
+      <div class="vignette"></div>
+      <div id="captions" class="abs"></div>
+
+      <audio id="music" src="assets/audio/music.wav" data-start="0" data-duration="186.07" data-volume="1" data-fade-in="1" data-fade-out="3" data-track-index="10" data-automation='{"version":1,"lanes":[{"target":"volume","points":[{"t":0,"v":0.9},{"t":0.25,"v":0.9},{"t":0.6,"v":0.35},{"t":20.28,"v":0.35},{"t":20.68,"v":0.9},{"t":20.73,"v":0.9},{"t":21.08,"v":0.35},{"t":40.6,"v":0.35},{"t":41.0,"v":0.9},{"t":41.05,"v":0.9},{"t":41.4,"v":0.35},{"t":57.88,"v":0.35},{"t":58.28,"v":0.9},{"t":57.98,"v":0.9},{"t":58.33,"v":0.35},{"t":77.77,"v":0.35},{"t":78.17,"v":0.9},{"t":77.87,"v":0.9},{"t":78.22,"v":0.35},{"t":110.54,"v":0.35},{"t":110.94,"v":0.9},{"t":110.64,"v":0.9},{"t":110.99,"v":0.35},{"t":128.19,"v":0.35},{"t":128.59,"v":0.9},{"t":128.64,"v":0.9},{"t":128.99,"v":0.35},{"t":153.07,"v":0.35},{"t":153.47,"v":0.9},{"t":153.52,"v":0.9},{"t":153.87,"v":0.35},{"t":179.07,"v":0.35},{"t":179.47,"v":0.9}]}]}'></audio>
+      <audio id="vo-s1" src="assets/audio/vo/s1.norm.wav" data-start="0.6" data-duration="19.68" data-volume="1" data-track-index="11"></audio>
+      <audio id="vo-s2" src="assets/audio/vo/s2.norm.wav" data-start="21.08" data-duration="19.52" data-volume="1" data-track-index="11"></audio>
+      <audio id="vo-s3a" src="assets/audio/vo/s3a.norm.wav" data-start="41.4" data-duration="16.48" data-volume="1" data-track-index="11"></audio>
+      <audio id="vo-s3b" src="assets/audio/vo/s3b.norm.wav" data-start="58.33" data-duration="19.44" data-volume="1" data-track-index="11"></audio>
+      <audio id="vo-s3c" src="assets/audio/vo/s3c.norm.wav" data-start="78.22" data-duration="32.32" data-volume="1" data-track-index="11"></audio>
+      <audio id="vo-s3d" src="assets/audio/vo/s3d.norm.wav" data-start="110.99" data-duration="17.2" data-volume="1" data-track-index="11"></audio>
+      <audio id="vo-s4" src="assets/audio/vo/s4.norm.wav" data-start="128.99" data-duration="24.08" data-volume="1" data-track-index="11"></audio>
+      <audio id="vo-s5" src="assets/audio/vo/s5.norm.wav" data-start="153.87" data-duration="25.2" data-volume="1" data-track-index="11"></audio>
+      <audio id="sfx-0" src="assets/audio/sfx/notification.mp3" data-start="2.92" data-duration="2.46" data-volume="0.35" data-track-index="12"></audio>
+      <audio id="sfx-1" src="assets/audio/sfx/impact-bass-1.mp3" data-start="12.05" data-duration="2.12" data-volume="0.12" data-track-index="12"></audio>
+      <audio id="sfx-2" src="assets/audio/sfx/whoosh.mp3" data-start="20.58" data-duration="0.57" data-volume="0.25" data-track-index="12"></audio>
+      <audio id="sfx-3" src="assets/audio/sfx/pop.mp3" data-start="33.26" data-duration="0.72" data-volume="0.25" data-track-index="12"></audio>
+      <audio id="sfx-4" src="assets/audio/sfx/pop.mp3" data-start="34.03" data-duration="0.72" data-volume="0.25" data-track-index="12"></audio>
+      <audio id="sfx-5" src="assets/audio/sfx/pop.mp3" data-start="35.13" data-duration="0.72" data-volume="0.25" data-track-index="12"></audio>
+      <audio id="sfx-6" src="assets/audio/sfx/sparkle.mp3" data-start="39.24" data-duration="1.8" data-volume="0.22" data-track-index="12"></audio>
+      <audio id="sfx-7" src="assets/audio/sfx/whoosh.mp3" data-start="40.9" data-duration="0.57" data-volume="0.25" data-track-index="13"></audio>
+      <audio id="sfx-8" src="assets/audio/sfx/pop.mp3" data-start="46.51" data-duration="0.72" data-volume="0.25" data-track-index="12"></audio>
+      <audio id="sfx-9" src="assets/audio/sfx/pop.mp3" data-start="48.81" data-duration="0.72" data-volume="0.25" data-track-index="12"></audio>
+      <audio id="sfx-10" src="assets/audio/sfx/pop.mp3" data-start="50.34" data-duration="0.72" data-volume="0.25" data-track-index="12"></audio>
+      <audio id="sfx-11" src="assets/audio/sfx/whoosh-short.mp3" data-start="58.42" data-duration="0.57" data-volume="0.25" data-track-index="12"></audio>
+      <audio id="sfx-12" src="assets/audio/sfx/error.mp3" data-start="77.41" data-duration="1.62" data-volume="0.18" data-track-index="12"></audio>
+      <audio id="sfx-13" src="assets/audio/sfx/whoosh-short.mp3" data-start="81.07" data-duration="0.57" data-volume="0.25" data-track-index="12"></audio>
+      <audio id="sfx-14" src="assets/audio/sfx/click-soft.mp3" data-start="90.77" data-duration="0.37" data-volume="0.3" data-track-index="12"></audio>
+      <audio id="sfx-15" src="assets/audio/sfx/whoosh-short.mp3" data-start="93.95" data-duration="0.57" data-volume="0.22" data-track-index="12"></audio>
+      <audio id="sfx-16" src="assets/audio/sfx/whoosh-short.mp3" data-start="111.03" data-duration="0.57" data-volume="0.25" data-track-index="12"></audio>
+      <audio id="sfx-17" src="assets/audio/sfx/ping.mp3" data-start="123.99" data-duration="1.32" data-volume="0.3" data-track-index="12"></audio>
+      <audio id="sfx-18" src="assets/audio/sfx/whoosh.mp3" data-start="128.49" data-duration="0.57" data-volume="0.25" data-track-index="12"></audio>
+      <audio id="sfx-19" src="assets/audio/sfx/click.mp3" data-start="133.31" data-duration="0.37" data-volume="0.3" data-track-index="12"></audio>
+      <audio id="sfx-20" src="assets/audio/sfx/click.mp3" data-start="138.83" data-duration="0.37" data-volume="0.3" data-track-index="12"></audio>
+      <audio id="sfx-21" src="assets/audio/sfx/click.mp3" data-start="143.15" data-duration="0.37" data-volume="0.3" data-track-index="12"></audio>
+      <audio id="sfx-22" src="assets/audio/sfx/whoosh.mp3" data-start="153.37" data-duration="0.57" data-volume="0.25" data-track-index="12"></audio>
+      <audio id="sfx-23" src="assets/audio/sfx/chime.mp3" data-start="176.63" data-duration="2.5" data-volume="0.25" data-track-index="12"></audio>
+
+      <script>
+        (function () {
+          const V = {"total": 186.07, "scenes": {"s1": {"start": 0.6, "dur": 19.68}, "s2": {"start": 21.08, "dur": 19.52}, "s3a": {"start": 41.4, "dur": 16.48}, "s3b": {"start": 58.33, "dur": 19.44}, "s3c": {"start": 78.22, "dur": 32.32}, "s3d": {"start": 110.99, "dur": 17.2}, "s4": {"start": 128.99, "dur": 24.08}, "s5": {"start": 153.87, "dur": 25.2}}, "words": [{"w": "It's", "s": 0.71, "e": 0.82, "sc": "s1"}, {"w": "three", "s": 0.82, "e": 0.905, "sc": "s1"}, {"w": "in", "s": 0.99, "e": 1.1, "sc": "s1"}, {"w": "the", "s": 1.1, "e": 1.27, "sc": "s1"}, {"w": "morning,", "s": 1.27, "e": 1.85, "sc": "s1"}, {"w": "and", "s": 1.85, "e": 2.14, "sc": "s1"}, {"w": "a", "s": 2.14, "e": 2.15, "sc": "s1"}, {"w": "customer", "s": 2.15, "e": 2.74, "sc": "s1"}, {"w": "just", "s": 2.74, "e": 2.92, "sc": "s1"}, {"w": "messaged", "s": 2.92, "e": 3.27, "sc": "s1"}, {"w": "your", "s": 3.27, "e": 3.46, "sc": "s1"}, {"w": "business.", "s": 3.46, "e": 3.98, "sc": "s1"}, {"w": "Who", "s": 4.58, "e": 4.69, "sc": "s1"}, {"w": "answers?", "s": 4.69, "e": 5.12, "sc": "s1"}, {"w": "If", "s": 5.82, "e": 5.82, "sc": "s1"}, {"w": "the", "s": 5.82, "e": 5.94, "sc": "s1"}, {"w": "answer", "s": 5.94, "e": 6.26, "sc": "s1"}, {"w": "is", "s": 6.26, "e": 6.47, "sc": "s1"}, {"w": "\"nobody", "s": 6.47, "e": 7.36, "sc": "s1"}, {"w": "until", "s": 7.36, "e": 7.61, "sc": "s1"}, {"w": "nine,\"", "s": 7.61, "e": 7.885, "sc": "s1"}, {"w": "that", "s": 8.16, "e": 8.42, "sc": "s1"}, {"w": "customer", "s": 8.42, "e": 8.93, "sc": "s1"}, {"w": "is", "s": 8.93, "e": 9.06, "sc": "s1"}, {"w": "probably", "s": 9.06, "e": 9.9, "sc": "s1"}, {"w": "already", "s": 9.9, "e": 10.02, "sc": "s1"}, {"w": "talking", "s": 10.02, "e": 10.37, "sc": "s1"}, {"w": "to", "s": 10.37, "e": 11.05, "sc": "s1"}, {"w": "someone", "s": 11.05, "e": 11.12, "sc": "s1"}, {"w": "else.", "s": 11.12, "e": 11.54, "sc": "s1"}, {"w": "In", "s": 12.04, "e": 12.04, "sc": "s1"}, {"w": "the", "s": 12.04, "e": 12.15, "sc": "s1"}, {"w": "next", "s": 12.15, "e": 12.19, "sc": "s1"}, {"w": "few", "s": 12.19, "e": 12.41, "sc": "s1"}, {"w": "minutes,", "s": 12.41, "e": 13.07, "sc": "s1"}, {"w": "I'll", "s": 13.07, "e": 13.58, "sc": "s1"}, {"w": "show", "s": 13.58, "e": 13.65, "sc": "s1"}, {"w": "you", "s": 13.65, "e": 13.87, "sc": "s1"}, {"w": "exactly", "s": 13.87, "e": 14.39, "sc": "s1"}, {"w": "how", "s": 14.39, "e": 14.61, "sc": "s1"}, {"w": "an", "s": 14.61, "e": 14.75, "sc": "s1"}, {"w": "AI", "s": 14.75, "e": 14.89, "sc": "s1"}, {"w": "receptionist", "s": 14.89, "e": 16.12, "sc": "s1"}, {"w": "answers", "s": 16.12, "e": 16.3, "sc": "s1"}, {"w": "that", "s": 16.3, "e": 16.59, "sc": "s1"}, {"w": "message,", "s": 16.59, "e": 17.1, "sc": "s1"}, {"w": "and", "s": 17.1, "e": 17.31, "sc": "s1"}, {"w": "what", "s": 17.31, "e": 17.59, "sc": "s1"}, {"w": "separates", "s": 17.59, "e": 18.22, "sc": "s1"}, {"w": "a", "s": 18.22, "e": 18.3, "sc": "s1"}, {"w": "good", "s": 18.3, "e": 18.64, "sc": "s1"}, {"w": "one", "s": 18.64, "e": 18.86, "sc": "s1"}, {"w": "from", "s": 18.86, "e": 19.07, "sc": "s1"}, {"w": "an", "s": 19.07, "e": 19.21, "sc": "s1"}, {"w": "annoying", "s": 19.21, "e": 19.77, "sc": "s1"}, {"w": "one.", "s": 19.77, "e": 20.28, "sc": "s1"}, {"w": "Most", "s": 21.13, "e": 21.33, "sc": "s2"}, {"w": "small", "s": 21.33, "e": 21.64, "sc": "s2"}, {"w": "businesses", "s": 21.64, "e": 22.27, "sc": "s2"}, {"w": "are", "s": 22.27, "e": 22.45, "sc": "s2"}, {"w": "open", "s": 22.45, "e": 22.72, "sc": "s2"}, {"w": "about", "s": 22.72, "e": 23.15, "sc": "s2"}, {"w": "forty", "s": 23.15, "e": 23.34, "sc": "s2"}, {"w": "hours", "s": 23.53, "e": 23.89, "sc": "s2"}, {"w": "a", "s": 23.89, "e": 23.96, "sc": "s2"}, {"w": "week.", "s": 23.96, "e": 24.56, "sc": "s2"}, {"w": "Customers", "s": 24.56, "e": 25.58, "sc": "s2"}, {"w": "message", "s": 25.58, "e": 26.37, "sc": "s2"}, {"w": "all", "s": 26.37, "e": 26.71, "sc": "s2"}, {"w": "one", "s": 26.71, "e": 26.92, "sc": "s2"}, {"w": "hundred", "s": 26.92, "e": 27.13, "sc": "s2"}, {"w": "and", "s": 27.13, "e": 27.34, "sc": "s2"}, {"w": "sixty-eight.", "s": 27.34, "e": 27.55, "sc": "s2"}, {"w": "Evenings,", "s": 27.76, "e": 28.6, "sc": "s2"}, {"w": "weekends,", "s": 28.6, "e": 29.58, "sc": "s2"}, {"w": "other", "s": 29.58, "e": 30.1, "sc": "s2"}, {"w": "time", "s": 30.1, "e": 30.51, "sc": "s2"}, {"w": "zones.", "s": 30.51, "e": 31.04, "sc": "s2"}, {"w": "And", "s": 31.04, "e": 31.23, "sc": "s2"}, {"w": "every", "s": 31.23, "e": 31.55, "sc": "s2"}, {"w": "channel", "s": 31.55, "e": 32.0, "sc": "s2"}, {"w": "is", "s": 32.0, "e": 32.13, "sc": "s2"}, {"w": "different:", "s": 32.13, "e": 32.92, "sc": "s2"}, {"w": "your", "s": 32.92, "e": 33.26, "sc": "s2"}, {"w": "website,", "s": 33.26, "e": 34.03, "sc": "s2"}, {"w": "WhatsApp,", "s": 34.03, "e": 34.99, "sc": "s2"}, {"w": "the", "s": 34.99, "e": 35.13, "sc": "s2"}, {"w": "phone.", "s": 35.13, "e": 35.84, "sc": "s2"}, {"w": "An", "s": 35.84, "e": 35.99, "sc": "s2"}, {"w": "AI", "s": 35.99, "e": 36.13, "sc": "s2"}, {"w": "receptionist", "s": 36.13, "e": 37.08, "sc": "s2"}, {"w": "sits", "s": 37.08, "e": 37.39, "sc": "s2"}, {"w": "on", "s": 37.39, "e": 37.54, "sc": "s2"}, {"w": "all", "s": 37.54, "e": 37.87, "sc": "s2"}, {"w": "of", "s": 37.87, "e": 37.92, "sc": "s2"}, {"w": "them", "s": 37.92, "e": 38.3, "sc": "s2"}, {"w": "at", "s": 38.3, "e": 38.54, "sc": "s2"}, {"w": "once,", "s": 38.54, "e": 39.04, "sc": "s2"}, {"w": "and", "s": 39.04, "e": 39.24, "sc": "s2"}, {"w": "never", "s": 39.24, "e": 39.57, "sc": "s2"}, {"w": "goes", "s": 39.57, "e": 39.84, "sc": "s2"}, {"w": "off", "s": 39.84, "e": 40.04, "sc": "s2"}, {"w": "shift.", "s": 40.04, "e": 40.6, "sc": "s2"}, {"w": "Part", "s": 41.51, "e": 41.82, "sc": "s3a"}, {"w": "one:", "s": 41.82, "e": 42.54, "sc": "s3a"}, {"w": "the", "s": 42.54, "e": 42.59, "sc": "s3a"}, {"w": "channels.", "s": 42.59, "e": 43.4, "sc": "s3a"}, {"w": "This", "s": 43.4, "e": 43.75, "sc": "s3a"}, {"w": "is", "s": 43.75, "e": 43.83, "sc": "s3a"}, {"w": "wherever", "s": 43.83, "e": 44.58, "sc": "s3a"}, {"w": "your", "s": 44.58, "e": 44.71, "sc": "s3a"}, {"w": "customers", "s": 44.71, "e": 45.91, "sc": "s3a"}, {"w": "already", "s": 45.91, "e": 46.09, "sc": "s3a"}, {"w": "are:", "s": 46.09, "e": 46.4, "sc": "s3a"}, {"w": "a", "s": 46.4, "e": 46.51, "sc": "s3a"}, {"w": "chat", "s": 46.51, "e": 46.81, "sc": "s3a"}, {"w": "window", "s": 46.81, "e": 47.29, "sc": "s3a"}, {"w": "on", "s": 47.29, "e": 47.59, "sc": "s3a"}, {"w": "your", "s": 47.59, "e": 47.79, "sc": "s3a"}, {"w": "website,", "s": 47.79, "e": 48.5, "sc": "s3a"}, {"w": "a", "s": 48.5, "e": 48.81, "sc": "s3a"}, {"w": "voice", "s": 48.81, "e": 48.91, "sc": "s3a"}, {"w": "button", "s": 48.91, "e": 49.12, "sc": "s3a"}, {"w": "in", "s": 49.12, "e": 49.22, "sc": "s3a"}, {"w": "the", "s": 49.22, "e": 49.4, "sc": "s3a"}, {"w": "browser,", "s": 49.4, "e": 50.05, "sc": "s3a"}, {"w": "your", "s": 50.05, "e": 50.34, "sc": "s3a"}, {"w": "WhatsApp", "s": 50.34, "e": 50.93, "sc": "s3a"}, {"w": "number.", "s": 50.93, "e": 51.4, "sc": "s3a"}, {"w": "The", "s": 51.4, "e": 51.61, "sc": "s3a"}, {"w": "trick", "s": 51.61, "e": 51.96, "sc": "s3a"}, {"w": "is", "s": 51.96, "e": 52.07, "sc": "s3a"}, {"w": "that", "s": 52.07, "e": 52.58, "sc": "s3a"}, {"w": "all", "s": 52.58, "e": 52.61, "sc": "s3a"}, {"w": "of", "s": 52.61, "e": 52.75, "sc": "s3a"}, {"w": "them", "s": 52.75, "e": 53.04, "sc": "s3a"}, {"w": "feed", "s": 53.04, "e": 53.54, "sc": "s3a"}, {"w": "one", "s": 53.54, "e": 53.91, "sc": "s3a"}, {"w": "single", "s": 53.91, "e": 53.97, "sc": "s3a"}, {"w": "agent,", "s": 53.97, "e": 54.57, "sc": "s3a"}, {"w": "so", "s": 54.57, "e": 54.76, "sc": "s3a"}, {"w": "the", "s": 54.76, "e": 55.03, "sc": "s3a"}, {"w": "answer", "s": 55.03, "e": 55.57, "sc": "s3a"}, {"w": "is", "s": 55.57, "e": 55.75, "sc": "s3a"}, {"w": "the", "s": 55.75, "e": 56.02, "sc": "s3a"}, {"w": "same", "s": 56.02, "e": 56.78, "sc": "s3a"}, {"w": "wherever", "s": 56.78, "e": 56.86, "sc": "s3a"}, {"w": "the", "s": 56.86, "e": 57.03, "sc": "s3a"}, {"w": "customer", "s": 57.03, "e": 57.49, "sc": "s3a"}, {"w": "asks.", "s": 57.49, "e": 57.9, "sc": "s3a"}, {"w": "Part", "s": 58.42, "e": 58.72, "sc": "s3b"}, {"w": "two:", "s": 58.72, "e": 59.47, "sc": "s3b"}, {"w": "the", "s": 59.47, "e": 59.49, "sc": "s3b"}, {"w": "brain.", "s": 59.49, "e": 60.69, "sc": "s3b"}, {"w": "That's", "s": 60.69, "e": 61.11, "sc": "s3b"}, {"w": "a", "s": 61.11, "e": 61.19, "sc": "s3b"}, {"w": "large", "s": 61.19, "e": 61.84, "sc": "s3b"}, {"w": "language", "s": 61.84, "e": 62.13, "sc": "s3b"}, {"w": "model,", "s": 62.13, "e": 62.51, "sc": "s3b"}, {"w": "the", "s": 62.51, "e": 62.75, "sc": "s3b"}, {"w": "same", "s": 62.75, "e": 63.07, "sc": "s3b"}, {"w": "kind", "s": 63.07, "e": 63.55, "sc": "s3b"}, {"w": "of", "s": 63.55, "e": 63.65, "sc": "s3b"}, {"w": "AI", "s": 63.65, "e": 63.73, "sc": "s3b"}, {"w": "behind", "s": 63.73, "e": 64.07, "sc": "s3b"}, {"w": "the", "s": 64.07, "e": 64.13, "sc": "s3b"}, {"w": "chat", "s": 64.13, "e": 64.94, "sc": "s3b"}, {"w": "assistants", "s": 64.94, "e": 64.955, "sc": "s3b"}, {"w": "you've", "s": 64.97, "e": 65.37, "sc": "s3b"}, {"w": "already", "s": 65.37, "e": 66.09, "sc": "s3b"}, {"w": "used.", "s": 66.09, "e": 66.31, "sc": "s3b"}, {"w": "It's", "s": 66.31, "e": 66.55, "sc": "s3b"}, {"w": "great", "s": 66.55, "e": 66.85, "sc": "s3b"}, {"w": "at", "s": 66.85, "e": 66.97, "sc": "s3b"}, {"w": "understanding", "s": 66.97, "e": 67.77, "sc": "s3b"}, {"w": "messy,", "s": 67.77, "e": 68.74, "sc": "s3b"}, {"w": "real", "s": 68.74, "e": 68.92, "sc": "s3b"}, {"w": "human", "s": 68.92, "e": 69.35, "sc": "s3b"}, {"w": "messages,", "s": 69.35, "e": 70.07, "sc": "s3b"}, {"w": "typos", "s": 70.07, "e": 70.55, "sc": "s3b"}, {"w": "and", "s": 70.55, "e": 71.13, "sc": "s3b"}, {"w": "all.", "s": 71.13, "e": 71.45, "sc": "s3b"}, {"w": "But", "s": 71.45, "e": 71.69, "sc": "s3b"}, {"w": "on", "s": 71.69, "e": 71.85, "sc": "s3b"}, {"w": "its", "s": 71.85, "e": 72.09, "sc": "s3b"}, {"w": "own,", "s": 72.09, "e": 72.59, "sc": "s3b"}, {"w": "it", "s": 72.59, "e": 72.64, "sc": "s3b"}, {"w": "knows", "s": 72.64, "e": 72.96, "sc": "s3b"}, {"w": "nothing", "s": 72.96, "e": 73.18, "sc": "s3b"}, {"w": "about", "s": 73.18, "e": 73.88, "sc": "s3b"}, {"w": "your", "s": 73.88, "e": 74.0, "sc": "s3b"}, {"w": "business.", "s": 74.0, "e": 74.75, "sc": "s3b"}, {"w": "Ask", "s": 74.75, "e": 74.97, "sc": "s3b"}, {"w": "it", "s": 74.97, "e": 75.045, "sc": "s3b"}, {"w": "your", "s": 75.12, "e": 75.39, "sc": "s3b"}, {"w": "opening", "s": 75.39, "e": 75.91, "sc": "s3b"}, {"w": "hours,", "s": 75.91, "e": 76.31, "sc": "s3b"}, {"w": "and", "s": 76.31, "e": 76.52, "sc": "s3b"}, {"w": "it'll", "s": 76.52, "e": 77.18, "sc": "s3b"}, {"w": "happily", "s": 77.18, "e": 77.41, "sc": "s3b"}, {"w": "guess.", "s": 77.41, "e": 77.79, "sc": "s3b"}, {"w": "Which", "s": 78.35, "e": 78.59, "sc": "s3c"}, {"w": "is", "s": 78.59, "e": 78.74, "sc": "s3c"}, {"w": "why", "s": 78.74, "e": 79.01, "sc": "s3c"}, {"w": "part", "s": 79.01, "e": 79.43, "sc": "s3c"}, {"w": "three", "s": 79.43, "e": 79.63, "sc": "s3c"}, {"w": "matters", "s": 79.63, "e": 80.18, "sc": "s3c"}, {"w": "most:", "s": 80.18, "e": 80.64, "sc": "s3c"}, {"w": "the", "s": 80.64, "e": 81.07, "sc": "s3c"}, {"w": "knowledge", "s": 81.07, "e": 81.48, "sc": "s3c"}, {"w": "base.", "s": 81.48, "e": 81.98, "sc": "s3c"}, {"w": "You", "s": 82.64, "e": 82.64, "sc": "s3c"}, {"w": "give", "s": 82.64, "e": 82.68, "sc": "s3c"}, {"w": "the", "s": 82.68, "e": 82.77, "sc": "s3c"}, {"w": "agent", "s": 82.77, "e": 83.03, "sc": "s3c"}, {"w": "your", "s": 83.03, "e": 83.31, "sc": "s3c"}, {"w": "own", "s": 83.31, "e": 83.52, "sc": "s3c"}, {"w": "information:", "s": 83.52, "e": 84.48, "sc": "s3c"}, {"w": "services,", "s": 84.48, "e": 85.49, "sc": "s3c"}, {"w": "prices,", "s": 85.49, "e": 86.16, "sc": "s3c"}, {"w": "hours,", "s": 86.16, "e": 87.1, "sc": "s3c"}, {"w": "policies.", "s": 87.1, "e": 87.8, "sc": "s3c"}, {"w": "When", "s": 88.38, "e": 88.38, "sc": "s3c"}, {"w": "a", "s": 88.38, "e": 88.51, "sc": "s3c"}, {"w": "question", "s": 88.51, "e": 88.96, "sc": "s3c"}, {"w": "comes", "s": 88.96, "e": 89.39, "sc": "s3c"}, {"w": "in,", "s": 89.39, "e": 89.78, "sc": "s3c"}, {"w": "the", "s": 89.78, "e": 90.0, "sc": "s3c"}, {"w": "system", "s": 90.0, "e": 90.43, "sc": "s3c"}, {"w": "first", "s": 90.43, "e": 90.77, "sc": "s3c"}, {"w": "finds", "s": 90.77, "e": 91.23, "sc": "s3c"}, {"w": "the", "s": 91.23, "e": 91.37, "sc": "s3c"}, {"w": "few", "s": 91.37, "e": 91.59, "sc": "s3c"}, {"w": "passages", "s": 91.59, "e": 92.19, "sc": "s3c"}, {"w": "that", "s": 92.19, "e": 92.84, "sc": "s3c"}, {"w": "actually", "s": 92.84, "e": 92.99, "sc": "s3c"}, {"w": "answer", "s": 92.99, "e": 93.4, "sc": "s3c"}, {"w": "it,", "s": 93.4, "e": 93.76, "sc": "s3c"}, {"w": "and", "s": 93.76, "e": 93.95, "sc": "s3c"}, {"w": "hands", "s": 93.95, "e": 94.28, "sc": "s3c"}, {"w": "only", "s": 94.28, "e": 94.52, "sc": "s3c"}, {"w": "those", "s": 94.52, "e": 94.83, "sc": "s3c"}, {"w": "to", "s": 94.83, "e": 95.09, "sc": "s3c"}, {"w": "the", "s": 95.09, "e": 95.15, "sc": "s3c"}, {"w": "brain.", "s": 95.15, "e": 95.7, "sc": "s3c"}, {"w": "Engineers", "s": 96.26, "e": 96.47, "sc": "s3c"}, {"w": "call", "s": 96.47, "e": 96.81, "sc": "s3c"}, {"w": "this", "s": 96.81, "e": 97.15, "sc": "s3c"}, {"w": "retrieval-augmented", "s": 97.15, "e": 97.915, "sc": "s3c"}, {"w": "generation,", "s": 98.68, "e": 99.75, "sc": "s3c"}, {"w": "R-A-G.", "s": 99.75, "e": 100.26, "sc": "s3c"}, {"w": "In", "s": 100.82, "e": 100.83, "sc": "s3c"}, {"w": "plain", "s": 100.83, "e": 100.95, "sc": "s3c"}, {"w": "words:", "s": 100.95, "e": 101.4, "sc": "s3c"}, {"w": "the", "s": 101.4, "e": 101.64, "sc": "s3c"}, {"w": "AI", "s": 101.64, "e": 101.8, "sc": "s3c"}, {"w": "looks", "s": 101.8, "e": 102.21, "sc": "s3c"}, {"w": "it", "s": 102.21, "e": 102.37, "sc": "s3c"}, {"w": "up", "s": 102.37, "e": 102.53, "sc": "s3c"}, {"w": "before", "s": 102.53, "e": 103.01, "sc": "s3c"}, {"w": "it", "s": 103.01, "e": 103.23, "sc": "s3c"}, {"w": "speaks.", "s": 103.23, "e": 103.96, "sc": "s3c"}, {"w": "That's", "s": 104.41, "e": 104.71, "sc": "s3c"}, {"w": "the", "s": 104.71, "e": 104.93, "sc": "s3c"}, {"w": "difference", "s": 104.93, "e": 105.66, "sc": "s3c"}, {"w": "between", "s": 105.66, "e": 106.17, "sc": "s3c"}, {"w": "\"I", "s": 106.17, "e": 106.24, "sc": "s3c"}, {"w": "think", "s": 106.24, "e": 106.6, "sc": "s3c"}, {"w": "we're", "s": 106.6, "e": 107.13, "sc": "s3c"}, {"w": "open", "s": 107.13, "e": 107.25, "sc": "s3c"}, {"w": "Sundays\"", "s": 107.25, "e": 107.77, "sc": "s3c"}, {"w": "and", "s": 107.77, "e": 107.98, "sc": "s3c"}, {"w": "\"We're", "s": 107.98, "e": 108.63, "sc": "s3c"}, {"w": "open", "s": 108.63, "e": 108.74, "sc": "s3c"}, {"w": "Sundays,", "s": 108.74, "e": 109.14, "sc": "s3c"}, {"w": "ten", "s": 109.14, "e": 109.36, "sc": "s3c"}, {"w": "to", "s": 109.58, "e": 109.81, "sc": "s3c"}, {"w": "four.\"", "s": 109.81, "e": 110.175, "sc": "s3c"}, {"w": "Part", "s": 111.03, "e": 111.38, "sc": "s3d"}, {"w": "four:", "s": 111.38, "e": 111.5, "sc": "s3d"}, {"w": "actions.", "s": 111.62, "e": 112.67, "sc": "s3d"}, {"w": "Answering", "s": 113.35, "e": 113.42, "sc": "s3d"}, {"w": "questions", "s": 113.42, "e": 114.16, "sc": "s3d"}, {"w": "is", "s": 114.16, "e": 114.49, "sc": "s3d"}, {"w": "nice,", "s": 114.49, "e": 114.85, "sc": "s3d"}, {"w": "but", "s": 114.85, "e": 115.06, "sc": "s3d"}, {"w": "the", "s": 115.06, "e": 115.61, "sc": "s3d"}, {"w": "goal", "s": 115.61, "e": 115.7, "sc": "s3d"}, {"w": "is", "s": 115.7, "e": 115.76, "sc": "s3d"}, {"w": "the", "s": 115.76, "e": 115.99, "sc": "s3d"}, {"w": "lead.", "s": 115.99, "e": 116.55, "sc": "s3d"}, {"w": "A", "s": 117.05, "e": 117.05, "sc": "s3d"}, {"w": "good", "s": 117.05, "e": 117.09, "sc": "s3d"}, {"w": "receptionist", "s": 117.09, "e": 117.65, "sc": "s3d"}, {"w": "collects", "s": 117.65, "e": 118.19, "sc": "s3d"}, {"w": "the", "s": 118.19, "e": 118.36, "sc": "s3d"}, {"w": "customer's", "s": 118.36, "e": 119.29, "sc": "s3d"}, {"w": "name,", "s": 119.29, "e": 119.47, "sc": "s3d"}, {"w": "what", "s": 119.47, "e": 119.79, "sc": "s3d"}, {"w": "they", "s": 119.79, "e": 120.13, "sc": "s3d"}, {"w": "need,", "s": 120.13, "e": 120.59, "sc": "s3d"}, {"w": "and", "s": 120.59, "e": 120.8, "sc": "s3d"}, {"w": "how", "s": 120.8, "e": 121.0, "sc": "s3d"}, {"w": "to", "s": 121.0, "e": 121.32, "sc": "s3d"}, {"w": "reach", "s": 121.32, "e": 121.54, "sc": "s3d"}, {"w": "them,", "s": 121.54, "e": 121.96, "sc": "s3d"}, {"w": "and", "s": 121.96, "e": 122.15, "sc": "s3d"}, {"w": "sends", "s": 122.15, "e": 122.41, "sc": "s3d"}, {"w": "it", "s": 122.41, "e": 122.51, "sc": "s3d"}, {"w": "straight", "s": 122.51, "e": 123.01, "sc": "s3d"}, {"w": "to", "s": 123.01, "e": 123.24, "sc": "s3d"}, {"w": "the", "s": 123.24, "e": 123.25, "sc": "s3d"}, {"w": "owner's", "s": 123.25, "e": 123.64, "sc": "s3d"}, {"w": "inbox.", "s": 123.64, "e": 124.13, "sc": "s3d"}, {"w": "You", "s": 124.71, "e": 124.71, "sc": "s3d"}, {"w": "wake", "s": 124.71, "e": 124.75, "sc": "s3d"}, {"w": "up", "s": 124.75, "e": 124.85, "sc": "s3d"}, {"w": "to", "s": 124.85, "e": 125.0, "sc": "s3d"}, {"w": "booked", "s": 125.0, "e": 125.85, "sc": "s3d"}, {"w": "conversations,", "s": 125.85, "e": 126.7, "sc": "s3d"}, {"w": "not", "s": 126.7, "e": 127.06, "sc": "s3d"}, {"w": "missed", "s": 127.06, "e": 127.41, "sc": "s3d"}, {"w": "ones.", "s": 127.41, "e": 128.01, "sc": "s3d"}, {"w": "Now,", "s": 129.1, "e": 129.47, "sc": "s4"}, {"w": "we've", "s": 129.47, "e": 130.05, "sc": "s4"}, {"w": "all", "s": 130.05, "e": 130.24, "sc": "s4"}, {"w": "met", "s": 130.24, "e": 130.53, "sc": "s4"}, {"w": "a", "s": 130.53, "e": 130.62, "sc": "s4"}, {"w": "bad", "s": 130.62, "e": 130.9, "sc": "s4"}, {"w": "chatbot.", "s": 130.9, "e": 131.82, "sc": "s4"}, {"w": "So", "s": 131.82, "e": 131.87, "sc": "s4"}, {"w": "here's", "s": 131.87, "e": 132.25, "sc": "s4"}, {"w": "the", "s": 132.25, "e": 132.41, "sc": "s4"}, {"w": "checklist.", "s": 132.41, "e": 133.31, "sc": "s4"}, {"w": "One:", "s": 133.31, "e": 133.84, "sc": "s4"}, {"w": "it", "s": 134.37, "e": 134.44, "sc": "s4"}, {"w": "answers", "s": 134.44, "e": 134.9, "sc": "s4"}, {"w": "only", "s": 134.9, "e": 135.16, "sc": "s4"}, {"w": "from", "s": 135.16, "e": 135.41, "sc": "s4"}, {"w": "your", "s": 135.41, "e": 136.14, "sc": "s4"}, {"w": "information,", "s": 136.14, "e": 136.43, "sc": "s4"}, {"w": "and", "s": 136.43, "e": 136.63, "sc": "s4"}, {"w": "says", "s": 136.63, "e": 136.9, "sc": "s4"}, {"w": "\"I", "s": 136.9, "e": 137.01, "sc": "s4"}, {"w": "don't", "s": 137.01, "e": 137.6, "sc": "s4"}, {"w": "know\"", "s": 137.6, "e": 137.69, "sc": "s4"}, {"w": "instead", "s": 137.69, "e": 138.25, "sc": "s4"}, {"w": "of", "s": 138.25, "e": 138.58, "sc": "s4"}, {"w": "guessing.", "s": 138.58, "e": 138.83, "sc": "s4"}, {"w": "Two:", "s": 138.83, "e": 139.15, "sc": "s4"}, {"w": "it", "s": 139.47, "e": 139.58, "sc": "s4"}, {"w": "hands", "s": 139.58, "e": 139.88, "sc": "s4"}, {"w": "off", "s": 139.88, "e": 140.16, "sc": "s4"}, {"w": "to", "s": 140.16, "e": 140.28, "sc": "s4"}, {"w": "a", "s": 140.28, "e": 140.36, "sc": "s4"}, {"w": "human", "s": 140.36, "e": 140.77, "sc": "s4"}, {"w": "for", "s": 140.77, "e": 141.01, "sc": "s4"}, {"w": "anything", "s": 141.01, "e": 141.67, "sc": "s4"}, {"w": "it", "s": 141.67, "e": 142.3, "sc": "s4"}, {"w": "shouldn't", "s": 142.3, "e": 142.57, "sc": "s4"}, {"w": "decide.", "s": 142.57, "e": 143.15, "sc": "s4"}, {"w": "Three:", "s": 143.15, "e": 143.51, "sc": "s4"}, {"w": "it", "s": 143.87, "e": 143.98, "sc": "s4"}, {"w": "captures", "s": 143.98, "e": 144.56, "sc": "s4"}, {"w": "the", "s": 144.56, "e": 144.73, "sc": "s4"}, {"w": "lead", "s": 144.73, "e": 145.06, "sc": "s4"}, {"w": "every", "s": 145.06, "e": 145.48, "sc": "s4"}, {"w": "time,", "s": 145.48, "e": 145.97, "sc": "s4"}, {"w": "not", "s": 145.97, "e": 146.21, "sc": "s4"}, {"w": "just", "s": 146.21, "e": 146.7, "sc": "s4"}, {"w": "the", "s": 146.7, "e": 146.8, "sc": "s4"}, {"w": "conversation.", "s": 146.8, "e": 148.11, "sc": "s4"}, {"w": "Get", "s": 148.83, "e": 148.83, "sc": "s4"}, {"w": "those", "s": 148.83, "e": 148.94, "sc": "s4"}, {"w": "three", "s": 148.94, "e": 149.07, "sc": "s4"}, {"w": "right,", "s": 149.07, "e": 149.58, "sc": "s4"}, {"w": "and", "s": 149.58, "e": 149.89, "sc": "s4"}, {"w": "customers", "s": 149.89, "e": 150.46, "sc": "s4"}, {"w": "barely", "s": 150.46, "e": 150.9, "sc": "s4"}, {"w": "notice", "s": 150.9, "e": 151.63, "sc": "s4"}, {"w": "they're", "s": 151.63, "e": 151.85, "sc": "s4"}, {"w": "talking", "s": 151.85, "e": 152.35, "sc": "s4"}, {"w": "to", "s": 152.35, "e": 152.5, "sc": "s4"}, {"w": "an", "s": 152.5, "e": 152.64, "sc": "s4"}, {"w": "AI.", "s": 152.64, "e": 153.07, "sc": "s4"}, {"w": "This", "s": 153.95, "e": 154.14, "sc": "s5"}, {"w": "is", "s": 154.14, "e": 154.27, "sc": "s5"}, {"w": "exactly", "s": 154.27, "e": 154.75, "sc": "s5"}, {"w": "how", "s": 154.75, "e": 154.95, "sc": "s5"}, {"w": "we", "s": 154.95, "e": 155.08, "sc": "s5"}, {"w": "built", "s": 155.08, "e": 155.55, "sc": "s5"}, {"w": "ClientFalcon", "s": 155.55, "e": 155.885, "sc": "s5"}, {"w": "Voice", "s": 156.22, "e": 156.57, "sc": "s5"}, {"w": "at", "s": 156.57, "e": 156.7, "sc": "s5"}, {"w": "iAgentice:", "s": 156.7, "e": 157.355, "sc": "s5"}, {"w": "voice", "s": 158.01, "e": 158.01, "sc": "s5"}, {"w": "and", "s": 158.01, "e": 158.09, "sc": "s5"}, {"w": "chat", "s": 158.09, "e": 158.28, "sc": "s5"}, {"w": "assistants", "s": 158.28, "e": 158.98, "sc": "s5"}, {"w": "trained", "s": 158.98, "e": 159.44, "sc": "s5"}, {"w": "on", "s": 159.44, "e": 159.57, "sc": "s5"}, {"w": "a", "s": 159.57, "e": 159.69, "sc": "s5"}, {"w": "business's", "s": 159.69, "e": 160.32, "sc": "s5"}, {"w": "own", "s": 160.32, "e": 160.51, "sc": "s5"}, {"w": "information,", "s": 160.51, "e": 161.47, "sc": "s5"}, {"w": "answering", "s": 162.07, "e": 162.14, "sc": "s5"}, {"w": "website", "s": 162.14, "e": 162.61, "sc": "s5"}, {"w": "visitors", "s": 162.61, "e": 163.18, "sc": "s5"}, {"w": "and", "s": 163.18, "e": 163.39, "sc": "s5"}, {"w": "WhatsApp", "s": 163.39, "e": 163.96, "sc": "s5"}, {"w": "messages", "s": 163.96, "e": 164.53, "sc": "s5"}, {"w": "around", "s": 164.53, "e": 164.95, "sc": "s5"}, {"w": "the", "s": 164.95, "e": 165.16, "sc": "s5"}, {"w": "clock,", "s": 165.16, "e": 165.55, "sc": "s5"}, {"w": "and", "s": 165.55, "e": 165.75, "sc": "s5"}, {"w": "sending", "s": 165.75, "e": 166.2, "sc": "s5"}, {"w": "every", "s": 166.2, "e": 166.54, "sc": "s5"}, {"w": "lead", "s": 166.54, "e": 166.8, "sc": "s5"}, {"w": "to", "s": 166.8, "e": 166.93, "sc": "s5"}, {"w": "the", "s": 166.93, "e": 167.13, "sc": "s5"}, {"w": "owner's", "s": 167.13, "e": 167.65, "sc": "s5"}, {"w": "inbox.", "s": 167.65, "e": 168.15, "sc": "s5"}, {"w": "If", "s": 168.65, "e": 168.65, "sc": "s5"}, {"w": "you", "s": 168.65, "e": 168.73, "sc": "s5"}, {"w": "want", "s": 168.73, "e": 168.8, "sc": "s5"}, {"w": "one", "s": 168.8, "e": 169.02, "sc": "s5"}, {"w": "for", "s": 169.02, "e": 169.24, "sc": "s5"}, {"w": "your", "s": 169.24, "e": 169.53, "sc": "s5"}, {"w": "business,", "s": 169.53, "e": 170.17, "sc": "s5"}, {"w": "or", "s": 170.17, "e": 170.33, "sc": "s5"}, {"w": "want", "s": 170.33, "e": 170.53, "sc": "s5"}, {"w": "us", "s": 170.53, "e": 170.65, "sc": "s5"}, {"w": "to", "s": 170.65, "e": 170.77, "sc": "s5"}, {"w": "build", "s": 170.77, "e": 171.08, "sc": "s5"}, {"w": "a", "s": 171.08, "e": 171.13, "sc": "s5"}, {"w": "custom", "s": 171.13, "e": 171.53, "sc": "s5"}, {"w": "agent,", "s": 171.53, "e": 171.97, "sc": "s5"}, {"w": "the", "s": 172.33, "e": 172.33, "sc": "s5"}, {"w": "link's", "s": 172.33, "e": 172.41, "sc": "s5"}, {"w": "in", "s": 172.41, "e": 172.46, "sc": "s5"}, {"w": "the", "s": 172.46, "e": 172.59, "sc": "s5"}, {"w": "description.", "s": 172.59, "e": 173.27, "sc": "s5"}, {"w": "And", "s": 173.85, "e": 173.85, "sc": "s5"}, {"w": "if", "s": 173.85, "e": 173.85, "sc": "s5"}, {"w": "you'd", "s": 173.85, "e": 173.99, "sc": "s5"}, {"w": "like", "s": 173.99, "e": 174.28, "sc": "s5"}, {"w": "to", "s": 174.28, "e": 174.42, "sc": "s5"}, {"w": "see", "s": 174.42, "e": 174.64, "sc": "s5"}, {"w": "the", "s": 174.64, "e": 174.86, "sc": "s5"}, {"w": "build", "s": 174.86, "e": 175.23, "sc": "s5"}, {"w": "itself,", "s": 175.23, "e": 175.67, "sc": "s5"}, {"w": "step", "s": 175.67, "e": 175.96, "sc": "s5"}, {"w": "by", "s": 175.96, "e": 176.13, "sc": "s5"}, {"w": "step,", "s": 176.13, "e": 176.63, "sc": "s5"}, {"w": "subscribe.", "s": 176.63, "e": 177.23, "sc": "s5"}, {"w": "That's", "s": 177.81, "e": 177.88, "sc": "s5"}, {"w": "the", "s": 177.88, "e": 177.89, "sc": "s5"}, {"w": "next", "s": 177.89, "e": 178.17, "sc": "s5"}, {"w": "video.", "s": 178.17, "e": 178.79, "sc": "s5"}], "cues": {"s1_msg": 2.92, "s1_who": 4.58, "s1_nobody": 6.47, "s1_else": 11.05, "s1_title": 12.15, "s1_good": 18.3, "s2_forty": 23.15, "s2_168": 26.71, "s2_evenings": 27.76, "s2_web": 33.26, "s2_wa": 34.03, "s2_phone": 35.13, "s2_all": 37.08, "s2_shift": 39.24, "a_part": 41.51, "a_chat": 46.51, "a_voice": 48.81, "a_wa": 50.34, "a_single": 53.91, "a_same": 56.02, "b_part": 58.42, "b_messy": 67.77, "b_nothing": 72.96, "b_ask": 74.75, "b_guess": 77.41, "c_kb": 81.07, "c_services": 84.48, "c_prices": 85.49, "c_hours": 86.16, "c_policies": 87.1, "c_question": 88.51, "c_finds": 90.77, "c_hands": 93.95, "c_rag": 97.15, "c_looks": 101.8, "c_think": 106.24, "c_were2": 106.6, "d_part": 111.03, "d_lead": 115.99, "d_name": 119.29, "d_need": 120.13, "d_reach": 121.32, "d_inbox": 123.64, "d_wake": 124.71, "g_bad": 130.62, "g_one": 133.31, "g_two": 138.83, "g_three": 143.15, "g_right": 149.07, "f_cf": 155.55, "f_web": 162.14, "f_wa": 163.39, "f_lead": 166.54, "f_want": 168.73, "f_link": 172.33, "f_sub": 176.63}};
+          const C = V.cues, S = V.scenes;
+          const tl = gsap.timeline({ paused: true });
+          const q = (s) => document.querySelector(s);
+          const fade = (el, t, d = 0.45) => tl.fromTo(el, { autoAlpha: 0 }, { autoAlpha: 1, duration: d, ease: "power2.out" }, t);
+          const out = (el, t, d = 0.35) => tl.to(el, { autoAlpha: 0, duration: d, ease: "power2.in" }, t);
+          const rise = (el, t, y = 40, d = 0.55) => tl.fromTo(el, { autoAlpha: 0, y }, { autoAlpha: 1, y: 0, duration: d, ease: "power3.out" }, t);
+          const pop = (el, t) => tl.fromTo(el, { autoAlpha: 0, scale: 0.6 }, { autoAlpha: 1, scale: 1, duration: 0.45, ease: "back.out(2)" }, t);
+          const dim = (el, t, v = 0.55) => tl.to(el, { opacity: v, duration: 0.4 }, t);
+          const sceneWin = [
+            ["#sc1", "#lbl1", 0, S.s2.start - 0.4],
+            ["#sc2", "#lbl2", S.s2.start - 0.4, S.s3a.start - 0.4],
+            ["#sc3", "#lbl3", S.s3a.start - 0.4, S.s4.start - 0.4],
+            ["#sc4", "#lbl4", S.s4.start - 0.4, S.s5.start - 0.4],
+            ["#sc5", "#lbl5", S.s5.start - 0.4, V.total],
+          ];
+          sceneWin.forEach(([sc, lb, a, b], i) => {
+            if (i) tl.fromTo(sc, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5 }, a); else tl.set(sc, { autoAlpha: 1 }, 0);
+            if (i) tl.fromTo(lb, { opacity: 0 }, { opacity: 1, duration: 0.4 }, a + 0.2); else tl.set(lb, { opacity: 1 }, 0);
+            if (b < V.total) { tl.to(sc, { autoAlpha: 0, duration: 0.4 }, b - 0.4); tl.to(lb, { opacity: 0, duration: 0.3 }, b - 0.4); }
+          });
+
+          // ---------- Scene 1 ----------
+          ["#s1-msg", "#s1-status", "#s1-timer", "#rival", "#title-card", "#title-line"].forEach((s) => tl.set(s, { autoAlpha: 0 }, 0));
+          /* clock and phone are visible from the first frame */
+          rise("#s1-msg", C.s1_msg - 0.2, 30);
+          fade("#s1-status", C.s1_who);
+          fade("#s1-timer", C.s1_nobody);
+          rise("#rival", C.s1_else - 0.3, 50);
+          ["#phone", "#clock", "#clock-sub", "#rival"].forEach((s) => out(s, C.s1_title - 0.6, 0.4));
+          rise("#title-card", C.s1_title - 0.1, 30, 0.7);
+          tl.fromTo("#title-line", { scaleX: 0, autoAlpha: 0 }, { scaleX: 1, autoAlpha: 1, duration: 0.9, ease: "power3.inOut" }, C.s1_title + 0.3);
+
+          // ---------- Scene 2 ----------
+          const dots = q("#dots");
+          [19.5, 21, 22.5, 23.4, 0.6, 1.8, 3, 4.6, 6.2, 7.4, 18.4, 20.2, 2.4, 13.2, 16.5, 10.3].forEach((h, i) => {
+            const a = ((h / 24) * 360 - 90) * Math.PI / 180;
+            const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            c.setAttribute("cx", 300 + 230 * Math.cos(a)); c.setAttribute("cy", 300 + 230 * Math.sin(a));
+            c.setAttribute("r", 11); c.setAttribute("fill", h > 9 && h < 17 ? "#0a0d0b" : "#ff6b57");
+            c.setAttribute("stroke", "#e8ede6"); c.setAttribute("stroke-width", 3); c.setAttribute("opacity", 0);
+            dots.appendChild(c);
+            tl.fromTo(c, { opacity: 0, scale: 0, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(3)" }, C.s2_evenings + i * 0.12);
+          });
+          ["#rc-40", "#rc-168", "#rc-247", "#ch-web", "#ch-wa", "#ch-ph", "#s2-head"].forEach((s) => tl.set(s, { autoAlpha: 0 }, 0));
+          tl.to("#ring-open", { strokeDashoffset: 0, duration: 1.0, ease: "power2.inOut" }, C.s2_forty - 0.4);
+          rise("#rc-40", C.s2_forty - 0.2, 20);
+          out("#rc-40", C.s2_168 - 0.3, 0.25); rise("#rc-168", C.s2_168 - 0.1, 20);
+          fade("#s2-head", C.s2_web - 0.4);
+          rise("#ch-web", C.s2_web, 20); rise("#ch-wa", C.s2_wa, 20); rise("#ch-ph", C.s2_phone, 20);
+          tl.to("#ring-all", { strokeDashoffset: 0, duration: 1.6, ease: "power2.inOut" }, C.s2_all);
+          out("#rc-168", C.s2_shift - 0.3, 0.25); pop("#rc-247", C.s2_shift);
+
+          // ---------- Scene 3 ----------
+          const s3hidden = ["#b-ch", "#c-chat", "#c-voice", "#c-wa", "#w1", "#w2", "#w3", "#brain", "#b-kb", "#b-act", "#lead",
+            "#msg-messy", "#msg-q", "#ans-guess", "#stamp-guess", "#ans-think", "#ans-right", "#snippet", "#rag", "#inbox-badge",
+            "#d-serv", "#d-price", "#d-hours", "#d-pol", "#lead-name", "#lead-need", "#lead-reach"];
+          s3hidden.forEach((s) => tl.set(s, { autoAlpha: 0 }, 0));
+          // 3a channels
+          fade("#b-ch", C.a_part);
+          rise("#c-chat", C.a_chat, 24); rise("#c-voice", C.a_voice, 24); rise("#c-wa", C.a_wa, 24);
+          tl.set("#w1", { autoAlpha: 1 }, C.a_single - 0.2);
+          tl.fromTo("#w1", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "power2.out" }, C.a_single - 0.2);
+          fade("#brain", C.a_single, 0.5); dim("#brain", C.a_single + 0.5, 0.55);
+          // 3b brain
+          dim("#b-ch", C.b_part, 0.55); dim("#w1", C.b_part, 0.55);
+          tl.to("#brain", { opacity: 1, duration: 0.4 }, C.b_part);
+          tl.fromTo("#brain-core", { scale: 0.85 }, { scale: 1, duration: 0.8, ease: "elastic.out(1, 0.5)" }, C.b_part);
+          rise("#msg-messy", C.b_messy - 0.3, 20);
+          tl.to("#msg-messy", { x: 700, y: -260, scale: 0.4, autoAlpha: 0, duration: 0.9, ease: "power2.in" }, C.b_messy + 1.3);
+          tl.fromTo("#brain-core", { scale: 1 }, { scale: 1.08, duration: 0.25, yoyo: true, repeat: 1 }, C.b_messy + 2.1);
+          rise("#ans-guess", C.b_ask, 20);
+          pop("#stamp-guess", C.b_guess - 0.15);
+          out("#ans-guess", S.s3c.start - 0.3); out("#stamp-guess", S.s3c.start - 0.3);
+          // 3c knowledge base
+          dim("#brain", C.c_kb - 0.2, 0.5);
+          fade("#b-kb", C.c_kb - 0.1); tl.set("#w3", { autoAlpha: 1 }, C.c_kb + 0.3);
+          tl.fromTo("#w3", { scaleY: 0 }, { scaleY: 1, duration: 0.5 }, C.c_kb + 0.3);
+          pop("#d-serv", C.c_services); pop("#d-price", C.c_prices); pop("#d-hours", C.c_hours); pop("#d-pol", C.c_policies);
+          rise("#msg-q", C.c_question - 0.2, 20);
+          tl.to("#msg-q", { x: 640, y: -300, scale: 0.4, autoAlpha: 0, duration: 0.8, ease: "power2.in" }, C.c_question + 1.0);
+          tl.to("#hours-hl", { opacity: 1, duration: 0.3 }, C.c_finds);
+          tl.fromTo("#snippet", { autoAlpha: 0, y: 0 }, { autoAlpha: 1, duration: 0.3 }, C.c_hands - 0.2);
+          tl.to("#snippet", { y: -330, x: 40, duration: 0.9, ease: "power2.inOut" }, C.c_hands + 0.3);
+          tl.to("#snippet", { autoAlpha: 0, scale: 0.5, duration: 0.3 }, C.c_hands + 1.2);
+          tl.to("#brain", { opacity: 1, duration: 0.3 }, C.c_hands + 1.0);
+          tl.fromTo("#brain-core", { scale: 1 }, { scale: 1.08, duration: 0.25, yoyo: true, repeat: 1 }, C.c_hands + 1.1);
+          rise("#rag", C.c_rag - 0.2, 20);
+          rise("#ans-think", C.c_think - 0.2, 20);
+          rise("#ans-right", C.c_were2 - 0.1, 20);
+          tl.to("#ans-think", { opacity: 0.35, duration: 0.4 }, C.c_were2 + 0.2);
+          ["#ans-think", "#ans-right", "#rag"].forEach((s) => out(s, S.s3d.start - 0.3));
+          tl.to("#hours-hl", { opacity: 0, duration: 0.3 }, S.s3d.start - 0.3);
+          // 3d actions
+          dim("#b-kb", C.d_part, 0.55); dim("#w3", C.d_part, 0.55); dim("#brain", C.d_part, 0.5);
+          tl.set("#w2", { autoAlpha: 1 }, C.d_part);
+          tl.fromTo("#w2", { scaleX: 0 }, { scaleX: 1, duration: 0.6 }, C.d_part);
+          fade("#b-act", C.d_part + 0.3);
+          rise("#lead", C.d_lead - 0.2, 30);
+          rise("#lead-name", C.d_name - 0.1, 10); rise("#lead-need", C.d_need - 0.1, 10); rise("#lead-reach", C.d_reach - 0.1, 10);
+          tl.to("#lead", { x: -20, y: -260, scale: 0.3, autoAlpha: 0, duration: 0.7, ease: "power2.in" }, C.d_inbox - 0.3);
+          pop("#inbox-badge", C.d_inbox + 0.35);
+          ["#b-ch", "#w1", "#w2", "#w3", "#brain", "#b-kb"].forEach((s) => tl.to(s, { opacity: 1, duration: 0.6 }, C.d_wake));
+
+          // ---------- Scene 4 ----------
+          ["#col-bad", "#col-good", "#bad1", "#bad2", "#bad3", "#good1", "#good2", "#good3"].forEach((s) => tl.set(s, { autoAlpha: 0 }, 0));
+          fade("#col-bad", C.g_bad - 0.3);
+          rise("#bad1", C.g_bad, 20); rise("#bad2", C.g_bad + 0.5, 20); rise("#bad3", C.g_bad + 1.0, 20);
+          fade("#col-good", C.g_one - 0.6);
+          rise("#good1", C.g_one, 24); rise("#good2", C.g_two, 24); rise("#good3", C.g_three, 24);
+          dim("#col-bad", C.g_right, 0.5);
+
+          // ---------- Scene 5 ----------
+          ["#cf-logo", "#cf-name", "#cf-by", "#cf-c1", "#cf-c2", "#cf-c3", "#cf-c4", "#cf-flow", "#url", "#endcard"].forEach((s) => tl.set(s, { autoAlpha: 0 }, 0));
+          pop("#cf-logo", C.f_cf - 0.4); rise("#cf-name", C.f_cf - 0.1, 24); fade("#cf-by", C.f_cf + 0.4);
+          rise("#cf-c1", C.f_web - 0.1, 16); rise("#cf-c2", C.f_web + 0.2, 16); rise("#cf-c3", C.f_wa - 0.1, 16); rise("#cf-c4", C.f_wa + 0.3, 16);
+          rise("#cf-flow", C.f_lead - 0.3, 20);
+          out("#cf-group", C.f_want - 0.4);
+          rise("#url", C.f_want - 0.1, 30);
+          out("#url", C.f_sub - 1.2);
+          fade("#endcard", C.f_sub - 0.8, 0.6);
+          tl.fromTo("#sub-btn", { scale: 1 }, { scale: 1.08, duration: 0.3, yoyo: true, repeat: 3, ease: "sine.inOut" }, C.f_sub);
+
+          // ---------- Captions ----------
+          const box = q("#captions");
+          const phrases = [];
+          let cur = [];
+          V.words.forEach((w, i) => {
+            cur.push(w);
+            const next = V.words[i + 1];
+            const brk = /[.,?!:;]$/.test(w.w) || cur.length >= 5 || !next || next.sc !== w.sc || next.s - w.e > 0.6;
+            if (brk) { phrases.push(cur); cur = []; }
+          });
+          phrases.forEach((p, i) => {
+            const el = document.createElement("div");
+            el.className = "cap";
+            p.forEach((w, j) => {
+              const s = document.createElement("span");
+              s.textContent = w.w + (j < p.length - 1 ? " " : "");
+              el.appendChild(s);
+              tl.to(s, { opacity: 1, duration: 0.08 }, w.s);
+            });
+            box.appendChild(el);
+            const start = p[0].s - 0.05;
+            const nxt = phrases[i + 1];
+            const end = Math.min(p[p.length - 1].e + 0.35, nxt ? nxt[0].s - 0.06 : V.total);
+            tl.set(el, { autoAlpha: 1 }, start);
+            tl.set(el, { autoAlpha: 0 }, end);
+          });
+
+          tl.set({}, {}, V.total);
+          window.__timelines = window.__timelines || {};
+          window.__timelines["master"] = tl;
+        })();
+      </script>
+    </div>
+  </body>
+</html>

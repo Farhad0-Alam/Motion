@@ -1,0 +1,5 @@
+renders/
+.hyperframes/
+*.norm.wav
+assets/audio/music.wav
+snaps/

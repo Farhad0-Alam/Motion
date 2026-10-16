@@ -1,0 +1,1 @@
+[steady] Part one: the channels. This is wherever your customers already are: a chat window on your website, a voice button in the browser, your WhatsApp number. The trick is that all of them feed one single agent, so the answer is the same wherever the customer asks.

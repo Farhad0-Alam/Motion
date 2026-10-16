@@ -1,0 +1,1 @@
+Part two: the brain. That's a large language model, the same kind of AI behind the chat assistants you've already used. It's great at understanding messy, real human messages, [lightly] typos and all. [serious] But on its own, it knows nothing about your business. Ask it your opening hours, and it'll happily guess.
