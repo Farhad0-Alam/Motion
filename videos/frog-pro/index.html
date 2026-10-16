@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>FROG PRO</title>
+    <script src="vendor/gsap.min.js"></script>
+    <script src="vendor/SplitText.min.js"></script>
+    <script src="vendor/CustomEase.min.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./vendor/three/three.module.js",
+          "three/addons/": "./vendor/three/addons/"
+        }
+      }
+    </script>
+    <style>
+      @font-face {
+        font-family: "Inter Variable";
+        font-style: normal;
+        font-weight: 100 900;
+        src: url("assets/fonts/inter-latin-wght-normal.woff2") format("woff2");
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+          U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+          U+FEFF, U+FFFD;
+      }
+      @font-face {
+        font-family: "Inter Variable";
+        font-style: normal;
+        font-weight: 100 900;
+        src: url("assets/fonts/inter-latin-ext-wght-normal.woff2") format("woff2");
+        unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+          U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
+          U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+      }
+
+      :root {
+        --bg: #050806; /* near-black, tinted toward the frog green */
+        --fg: #eef3ec;
+        --muted: #9fae9b;
+        --accent: #7be08a; /* frog green */
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--bg);
+      }
+
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--bg);
+        font-family: "Inter Variable", "Noto Sans", Arial, sans-serif;
+        color: var(--fg);
+      }
+
+      #stage {
+        position: absolute;
+        inset: 0;
+      }
+
+      #three-layer {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      /* Everything typographic shakes together on the burp */
+      #hud {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      /* ---------- Opening: "Introducing" + hero wordmark ---------- */
+      #intro-kicker {
+        position: absolute;
+        top: 236px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 34px;
+        font-weight: 500;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      #wordmark {
+        position: absolute;
+        top: 296px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 196px;
+        font-weight: 760;
+        letter-spacing: -0.05em;
+        line-height: 1;
+        color: var(--fg);
+      }
+      #wordmark .pro {
+        color: var(--accent);
+      }
+
+      /* ---------- Spec callouts, left-anchored over the lower third ---------- */
+      #specs {
+        position: absolute;
+        left: 88px;
+        right: 88px;
+        top: 1330px;
+        display: flex;
+        flex-direction: column;
+        gap: 34px;
+      }
+      .spec {
+        display: flex;
+        align-items: baseline;
+        gap: 26px;
+        padding-top: 22px;
+        border-top: 3px solid rgba(238, 243, 236, 0.22);
+      }
+      .spec-figure {
+        font-size: 92px;
+        font-weight: 720;
+        letter-spacing: -0.045em;
+        line-height: 1;
+        color: var(--fg);
+        min-width: 300px;
+      }
+      .spec-label {
+        font-size: 40px;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        color: var(--muted);
+      }
+      .spec-figure.accent {
+        color: var(--accent);
+      }
+
+      /* ---------- Aftermath ---------- */
+      #apology {
+        position: absolute;
+        left: 88px;
+        right: 88px;
+        top: 1420px;
+        text-align: center;
+        font-size: 50px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+        color: var(--fg);
+      }
+
+      #endcard {
+        position: absolute;
+        top: 300px;
+        left: 0;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+      }
+      #endcard .end-mark {
+        font-size: 84px;
+        font-weight: 760;
+        letter-spacing: -0.045em;
+        line-height: 1;
+      }
+      #endcard .end-mark span {
+        color: var(--accent);
+      }
+      #endcard .end-line {
+        font-size: 34px;
+        font-weight: 450;
+        letter-spacing: 0.02em;
+        color: var(--muted);
+      }
+
+      /* Darkens the lower third so specs and captions stay readable over the set */
+      #scrim {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 820px;
+        background: linear-gradient(to bottom, rgba(5, 8, 6, 0), rgba(5, 8, 6, 0.78) 45%, rgba(5, 8, 6, 0.9));
+      }
+
+      /* Burp shock: a quick green-white flash */
+      #flash {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 50% 56%, rgba(214, 255, 210, 0.85), rgba(123, 224, 138, 0) 62%);
+        opacity: 0;
+      }
+
+      /* Finishing: vignette + seek-safe grain */
+      #vignette {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse 80% 62% at 50% 52%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.72) 100%);
+      }
+      #grain {
+        position: absolute;
+        inset: -120px;
+        opacity: 0.14;
+        mix-blend-mode: overlay;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-size: 256px 256px;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="8.5"
+      data-width="1080"
+      data-height="1920"
+    >
+      <div id="stage" class="clip" data-start="0" data-duration="8.5" data-track-index="0">
+        <canvas id="three-layer" width="1080" height="1920"></canvas>
+        <div id="scrim"></div>
+        <div id="flash"></div>
+        <div id="vignette"></div>
+        <div id="grain"></div>
+        <div id="hud">
+          <div id="intro-kicker">Introducing</div>
+          <h1 id="wordmark">FROG <span class="pro">PRO</span></h1>
+
+          <div id="specs">
+            <div class="spec" id="spec-1">
+              <div class="spec-figure accent">0.2s</div>
+              <div class="spec-label">tongue latency</div>
+            </div>
+            <div class="spec" id="spec-2">
+              <div class="spec-figure">Waterproof.</div>
+              <div class="spec-label">Obviously.</div>
+            </div>
+            <div class="spec" id="spec-3">
+              <div class="spec-figure accent">Pro</div>
+              <div class="spec-label">grade croak</div>
+            </div>
+          </div>
+
+          <p id="apology">We'll fix that in the next update.</p>
+
+          <div id="endcard">
+            <div class="end-mark">FROG <span>PRO</span></div>
+            <div class="end-line">Ribbit responsibly.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Score + sound design (tools/sound.py) and narration (hyperframes tts, bm_george) -->
+      <audio id="music" src="assets/audio/music.wav" data-start="0" data-duration="8.5" data-volume="0.55" data-fade-in="0.3" data-track-index="1"></audio>
+      <audio id="vo-1" src="assets/audio/vo_1.wav" data-start="0.25" data-duration="1.82" data-volume="1" data-track-index="2"></audio>
+      <audio id="vo-2" src="assets/audio/vo_2.wav" data-start="2.2" data-duration="2.04" data-volume="1" data-track-index="2"></audio>
+      <audio id="vo-3" src="assets/audio/vo_3.wav" data-start="6.0" data-duration="2.12" data-volume="1" data-track-index="2"></audio>
+      <audio id="sfx-whoosh" src="assets/audio/whoosh-cinematic.mp3" data-start="0" data-duration="2.2" data-volume="0.45" data-fade-out="0.6" data-track-index="3"></audio>
+      <audio id="sfx-impact" src="assets/audio/impact-bass-2.mp3" data-start="0.62" data-duration="2.2" data-volume="0.5" data-fade-out="0.8" data-track-index="4"></audio>
+      <audio id="sfx-sparkle" src="assets/audio/sparkle.mp3" data-start="1.15" data-duration="1.8" data-volume="0.3" data-track-index="5"></audio>
+      <audio id="sfx-spec-1" src="assets/audio/click-soft.mp3" data-start="3.0" data-duration="0.36" data-volume="0.7" data-track-index="5"></audio>
+      <audio id="sfx-spec-2" src="assets/audio/click-soft.mp3" data-start="3.8" data-duration="0.36" data-volume="0.7" data-track-index="5"></audio>
+      <audio id="sfx-spec-3" src="assets/audio/click-soft.mp3" data-start="4.5" data-duration="0.36" data-volume="0.7" data-track-index="5"></audio>
+      <audio id="sfx-burp" src="assets/audio/burp.wav" data-start="5.08" data-duration="0.72" data-volume="1" data-track-index="3"></audio>
+      <audio id="sfx-crickets" src="assets/audio/crickets.wav" data-start="5.75" data-duration="2.75" data-volume="0.32" data-fade-out="0.4" data-track-index="4"></audio>
+      <audio id="sfx-ribbit" src="assets/audio/ribbit.wav" data-start="8.14" data-duration="0.32" data-volume="0.8" data-track-index="5"></audio>
+    </div>
+
+    <!-- ===================== Typography + finishing: one paused GSAP timeline ===================== -->
+    <script>
+      (function () {
+        gsap.registerPlugin(SplitText, CustomEase);
+        // Keynote curves: confident arrival, no bounce
+        CustomEase.create("keynote", "M0,0 C0.12,0.72 0.24,1 1,1");
+        CustomEase.create("drop", "M0,0 C0.5,0 0.84,0.4 1,1");
+
+        const BURP = 5.15;
+
+        // Seeded PRNG so the shatter is identical on every render
+        function mulberry32(a) {
+          return function () {
+            a |= 0;
+            a = (a + 0x6d2b79f5) | 0;
+            let t = Math.imul(a ^ (a >>> 15), 1 | a);
+            t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+          };
+        }
+
+        function build() {
+          const tl = gsap.timeline({ paused: true });
+          const word = SplitText.create("#wordmark", { type: "chars" });
+          const kicker = SplitText.create("#intro-kicker", { type: "chars" });
+
+          // Opening: kicker letters breathe in, wordmark rises in from blur
+          tl.fromTo(kicker.chars, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5, ease: "keynote", stagger: 0.025 }, 0.2);
+          tl.to("#intro-kicker", { opacity: 0, y: -10, duration: 0.4, ease: "power2.in" }, 1.6);
+          tl.fromTo(
+            word.chars,
+            { opacity: 0, y: 70, filter: "blur(18px)" },
+            { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.9, ease: "keynote", stagger: 0.045 },
+            0.62,
+          );
+          tl.fromTo("#wordmark", { scale: 1.04 }, { scale: 1, duration: 4.4, ease: "none" }, 0.62);
+
+          // Specs: rule draws, figure and label land on the clicks
+          ["#spec-1", "#spec-2", "#spec-3"].forEach((id, i) => {
+            const at = [3.0, 3.8, 4.5][i];
+            tl.fromTo(id, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.45, ease: "keynote" }, at);
+            tl.fromTo(id + " .spec-label", { opacity: 0 }, { opacity: 1, duration: 0.35, ease: "power1.out" }, at + 0.12);
+          });
+
+          // ---- THE BURP ----
+          tl.fromTo("#flash", { opacity: 0 }, { opacity: 0.9, duration: 0.06, ease: "none" }, BURP);
+          tl.to("#flash", { opacity: 0, duration: 0.5, ease: "power2.out" }, BURP + 0.06);
+
+          // Wordmark shatters: every letter tumbles off-frame on its own seeded path
+          const rand = mulberry32(42);
+          word.chars.forEach((ch, i) => {
+            const dir = rand() * 2 - 1;
+            tl.to(
+              ch,
+              {
+                keyframes: [
+                  { x: dir * 90, y: -60 - rand() * 80, rotation: dir * 40, duration: 0.14, ease: "power2.out" },
+                  { x: dir * 300 + (i - word.chars.length / 2) * 40, y: 1700 + rand() * 400, rotation: dir * (200 + rand() * 260), duration: 0.9 + rand() * 0.3, ease: "power2.in" },
+                ],
+              },
+              BURP + 0.02 + rand() * 0.08,
+            );
+          });
+          // Spec rows slide off, one after another, like they were knocked loose
+          ["#spec-1", "#spec-2", "#spec-3"].forEach((id, i) => {
+            const rot = [-7, 5, -4][i];
+            tl.to(id, { y: 760, rotation: rot, opacity: 0, duration: 0.7, ease: "power2.in" }, BURP + 0.03 + i * 0.06);
+          });
+
+          // HUD shake that decays over 0.6s (deterministic table, not random per frame)
+          const shake = [[-18, 10], [22, -14], [-15, 12], [12, -8], [-8, 6], [5, -3], [-2, 2], [0, 0]];
+          shake.forEach(([x, y], i) => tl.to("#hud", { x, y, duration: 0.075, ease: "none" }, BURP + i * 0.075));
+
+          // Aftermath: the apology, then the deadpan end card
+          const apology = SplitText.create("#apology", { type: "words" });
+          tl.fromTo(apology.words, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.35, ease: "keynote", stagger: 0.09 }, 6.02);
+          tl.to("#apology", { opacity: 0, duration: 0.3, ease: "power1.in" }, 7.95);
+          tl.fromTo("#endcard", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.5, ease: "keynote" }, 7.25);
+
+          // Grain moves in stepped jumps every frame-ish, seekable by position
+          tl.fromTo("#grain", { x: 0, y: 0 }, { x: -96, y: 64, duration: 8.5, ease: "steps(64)" }, 0);
+          // Vignette breathes slightly through the hold
+          tl.fromTo("#vignette", { opacity: 0.85 }, { opacity: 1, duration: 8.5, ease: "sine.inOut" }, 0);
+
+          window.__timelines["main"] = tl;
+        }
+
+        Promise.all([
+          document.fonts.load('760 196px "Inter Variable"'),
+          document.fonts.load('400 40px "Inter Variable"'),
+        ]).then(build, build);
+      })();
+    </script>
+
+    <!-- ===================== The 3D product shot: Three.js, rendered from HyperFrames time ===================== -->
+    <script type="module">
+      import * as THREE from "three";
+      import { RoomEnvironment } from "three/addons/RoomEnvironment.js";
+
+      const W = 1080;
+      const H = 1920;
+      const BURP = 5.15;
+
+      // ---------- math helpers (all pure functions of time) ----------
+      const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+      const lerp = (a, b, k) => a + (b - a) * k;
+      const range = (t, a, b) => clamp((t - a) / (b - a));
+      const smooth = (k) => k * k * (3 - 2 * k);
+      const outCubic = (k) => 1 - Math.pow(1 - k, 3);
+      const outBack = (k) => 1 + 2.4 * Math.pow(k - 1, 3) + 1.4 * Math.pow(k - 1, 2);
+      // damped wobble that starts at t0
+      const wobble = (t, t0, freq, decay) => (t < t0 ? 0 : Math.sin((t - t0) * freq) * Math.exp(-(t - t0) * decay));
+
+      // ---------- renderer ----------
+      const canvas = document.getElementById("three-layer");
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, preserveDrawingBuffer: true });
+      renderer.setPixelRatio(1);
+      renderer.setSize(W, H, false);
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 0.92;
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x050806);
+      const pmrem = new THREE.PMREMGenerator(renderer);
+      scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+      scene.environmentIntensity = 0.3;
+      scene.fog = new THREE.Fog(0x050806, 8, 15);
+
+      const camera = new THREE.PerspectiveCamera(30, W / H, 0.1, 100);
+
+      // ---------- materials ----------
+      const skin = new THREE.MeshPhysicalMaterial({
+        color: 0x1f8a2e, roughness: 0.34, clearcoat: 1, clearcoatRoughness: 0.1,
+      });
+      const belly = new THREE.MeshStandardMaterial({ color: 0xc9e07a, roughness: 0.4 });
+      const sclera = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.1 });
+      const pupil = new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.05 });
+      const lidMat = skin;
+      const mouthMat = new THREE.MeshStandardMaterial({ color: 0x1a2a14, roughness: 0.6 });
+      const cheekMat = new THREE.MeshStandardMaterial({ color: 0xff7a7a, roughness: 0.8, transparent: true, opacity: 0.45 });
+      const sacMat = new THREE.MeshStandardMaterial({ color: 0xf2f7cf, roughness: 0.25 });
+      const glass = new THREE.MeshStandardMaterial({
+        // Glass without transmission: a clear-coated, see-through shell (one render pass, fast on CPU renderers)
+        color: 0xcfffe0, roughness: 0.05, metalness: 0.1, transparent: true, opacity: 0.28,
+        side: THREE.DoubleSide, depthWrite: false,
+      });
+      const glowMat = new THREE.MeshBasicMaterial({ color: 0x9dffb0 });
+      const floorMat = new THREE.MeshStandardMaterial({ color: 0x030504, roughness: 0.42, metalness: 0.0, envMapIntensity: 0.15 });
+
+      // ---------- set: floor, glass pedestal with a light ring ----------
+      const floor = new THREE.Mesh(new THREE.CircleGeometry(30, 96), floorMat);
+      floor.rotation.x = -Math.PI / 2;
+      scene.add(floor);
+
+      const pedestal = new THREE.Mesh(new THREE.CylinderGeometry(1.25, 1.32, 0.42, 96), glass);
+      pedestal.position.y = 0.21;
+      scene.add(pedestal);
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(1.29, 0.018, 16, 160), glowMat);
+      ring.rotation.x = Math.PI / 2;
+      ring.position.y = 0.42;
+      scene.add(ring);
+      const ringLow = ring.clone();
+      ringLow.position.y = 0.02;
+      ringLow.scale.setScalar(1.025);
+      scene.add(ringLow);
+
+      // Soft contact shadow under the frog (radial texture, no shadow maps)
+      const shadowCanvas = document.createElement("canvas");
+      shadowCanvas.width = shadowCanvas.height = 256;
+      const sctx = shadowCanvas.getContext("2d");
+      const grad = sctx.createRadialGradient(128, 128, 0, 128, 128, 128);
+      grad.addColorStop(0, "rgba(0,0,0,0.75)");
+      grad.addColorStop(1, "rgba(0,0,0,0)");
+      sctx.fillStyle = grad;
+      sctx.fillRect(0, 0, 256, 256);
+      const contact = new THREE.Mesh(
+        new THREE.PlaneGeometry(2.0, 1.6),
+        new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(shadowCanvas), transparent: true, depthWrite: false }),
+      );
+      contact.rotation.x = -Math.PI / 2;
+      contact.position.y = 0.425;
+      scene.add(contact);
+
+      // ---------- the frog ----------
+      const frog = new THREE.Group();
+      frog.position.y = 0.42;
+      scene.add(frog);
+      const body = new THREE.Group(); // squash/stretch pivot at the feet
+      frog.add(body);
+
+      const sphere = (r, mat, seg = 64) => new THREE.Mesh(new THREE.SphereGeometry(r, seg, seg / 2), mat);
+
+      const torso = sphere(0.78, skin);
+      torso.scale.set(1.12, 0.82, 0.98);
+      torso.position.y = 0.62;
+      body.add(torso);
+
+      const tummy = sphere(0.62, belly);
+      tummy.scale.set(1.0, 0.78, 0.6);
+      tummy.position.set(0, 0.52, 0.42);
+      body.add(tummy);
+
+      // Throat sac: hidden inside the chin until the burp builds
+      const sac = sphere(0.36, sacMat);
+      sac.position.set(0, 0.5, 0.62);
+      body.add(sac);
+
+      // Mouth: a wide, smug arc
+      const mouth = new THREE.Mesh(new THREE.TorusGeometry(0.62, 0.028, 12, 80, Math.PI * 0.62), mouthMat);
+      mouth.rotation.set(0.28, 0, Math.PI + Math.PI * 0.19);
+      mouth.position.set(0, 0.98, 0.42);
+      mouth.scale.set(1, 0.55, 1);
+      body.add(mouth);
+      // Open mouth for the burp: a dark ellipse that scales up
+      const mouthOpen = sphere(0.3, new THREE.MeshStandardMaterial({ color: 0x140606, roughness: 0.9 }));
+      mouthOpen.position.set(0, 0.9, 0.62);
+      mouthOpen.scale.set(1.3, 0.001, 0.4);
+      body.add(mouthOpen);
+
+      for (const s of [-1, 1]) {
+        const cheek = new THREE.Mesh(new THREE.CircleGeometry(0.12, 32), cheekMat);
+        cheek.position.set(s * 0.6, 0.78, 0.6);
+        cheek.rotation.y = s * 0.7;
+        body.add(cheek);
+      }
+
+      // Eyes: big glossy domes on top of the head, with lids for blinks and squints
+      const eyes = [];
+      for (const s of [-1, 1]) {
+        const eye = new THREE.Group();
+        eye.position.set(s * 0.42, 1.12, 0.22);
+        body.add(eye);
+        const socket = sphere(0.3, skin);
+        eye.add(socket);
+        const white = sphere(0.24, sclera);
+        white.position.set(0, 0.04, 0.12);
+        eye.add(white);
+        const pup = sphere(0.11, pupil);
+        pup.scale.set(1, 1, 0.55);
+        pup.position.set(s * -0.02, 0.05, 0.33);
+        eye.add(pup);
+        const glint = sphere(0.03, new THREE.MeshBasicMaterial({ color: 0xffffff }), 16);
+        glint.position.set(0.05, 0.11, 0.37);
+        eye.add(glint);
+        // Upper lid: a hemisphere shell that rotates down over the eye
+        const lid = new THREE.Mesh(new THREE.SphereGeometry(0.265, 48, 24, 0, Math.PI * 2, 0, Math.PI / 2), lidMat);
+        lid.position.set(0, 0.04, 0.12);
+        eye.add(lid);
+        eyes.push({ eye, pup, lid, s });
+      }
+
+      // Legs: chunky folded back legs and little front arms with splayed toes
+      function foot(x, z, scale) {
+        const g = new THREE.Group();
+        g.position.set(x, 0.03, z);
+        for (const a of [-0.5, 0, 0.5]) {
+          const toe = sphere(0.07, skin, 24);
+          toe.scale.set(0.9, 0.5, 2.2);
+          toe.position.set(Math.sin(a) * 0.12, 0, Math.cos(a) * 0.12);
+          toe.rotation.y = a;
+          g.add(toe);
+        }
+        g.scale.setScalar(scale);
+        body.add(g);
+      }
+      for (const s of [-1, 1]) {
+        const thigh = sphere(0.42, skin);
+        thigh.scale.set(0.75, 0.6, 1.1);
+        thigh.position.set(s * 0.78, 0.32, -0.12);
+        body.add(thigh);
+        foot(s * 0.9, 0.2, 1.15);
+        const arm = sphere(0.14, skin, 32);
+        arm.scale.set(0.8, 1.9, 0.8);
+        arm.position.set(s * 0.5, 0.28, 0.55);
+        arm.rotation.z = s * 0.25;
+        body.add(arm);
+        foot(s * 0.5, 0.62, 0.8);
+      }
+
+      // Burp shockwave ring
+      const shockMat = new THREE.MeshBasicMaterial({ color: 0xd8ffd0, transparent: true, opacity: 0, depthWrite: false });
+      const shock = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.035, 12, 96), shockMat);
+      shock.position.set(0, 1.05, 1.0);
+      scene.add(shock);
+
+      // ---------- lights ----------
+      const key = new THREE.SpotLight(0xfff6ea, 0, 20, 0.42, 0.6, 1.2);
+      key.position.set(2.2, 6.5, 4.2);
+      key.target = frog;
+      scene.add(key);
+      const rimL = new THREE.SpotLight(0x9dffb0, 0, 20, 0.5, 0.7, 1.2);
+      rimL.position.set(-4.2, 3.2, -3.4);
+      rimL.target = frog;
+      scene.add(rimL);
+      const rimR = new THREE.SpotLight(0xd9f2ff, 0, 20, 0.5, 0.7, 1.2);
+      rimR.position.set(4.4, 2.6, -3.0);
+      rimR.target = frog;
+      scene.add(rimR);
+      const fill = new THREE.HemisphereLight(0xd8ffe0, 0x0b140d, 0);
+      scene.add(fill);
+      // A slow light-sweep that slides across the frog during the hero orbit
+      const sweep = new THREE.PointLight(0xffffff, 0, 6, 2);
+      scene.add(sweep);
+
+      // ---------- shot list ----------
+      const target = new THREE.Vector3(0, 1.15, 0);
+      function cameraAt(t) {
+        let az, el, dist, look;
+        if (t < BURP) {
+          // Hero: push in from the dark, then a slow keynote orbit
+          const k = smooth(range(t, 0, BURP));
+          az = lerp(-0.55, 0.42, k);
+          el = lerp(0.12, 0.3, k);
+          dist = lerp(11.5, 7.6, outCubic(range(t, 0, 2.6)));
+          look = target.clone();
+        } else {
+          // Aftermath: locked-off, slightly too close, unflattering
+          const k = smooth(range(t, BURP + 0.4, BURP + 1.4));
+          az = lerp(0.42, 0.0, k);
+          el = lerp(0.3, 0.08, k);
+          dist = lerp(7.6, 6.7, k);
+          look = target.clone().add(new THREE.Vector3(0, lerp(0, 0.28, k), 0));
+        }
+        const p = new THREE.Vector3(Math.sin(az) * dist * Math.cos(el), target.y + Math.sin(el) * dist, Math.cos(az) * dist * Math.cos(el));
+        // Burp camera shake (decaying, deterministic)
+        const sh = t >= BURP ? Math.exp(-(t - BURP) * 6) : 0;
+        p.x += Math.sin(t * 91) * 0.12 * sh;
+        p.y += Math.sin(t * 77 + 1.3) * 0.1 * sh;
+        camera.position.copy(p);
+        camera.lookAt(look);
+        camera.rotation.z += Math.sin(t * 63) * 0.025 * sh;
+      }
+
+      function lightsAt(t) {
+        const on = smooth(range(t, 0.05, 1.1));
+        // The launch lighting dies with the burp: rims cut, key drops to a flat work light
+        const after = t >= BURP ? smooth(range(t, BURP, BURP + 0.12)) : 0;
+        const flicker = t >= BURP && t < BURP + 0.5 ? (Math.sin(t * 140) > 0.2 ? 1 : 0.25) : 1;
+        key.intensity = lerp(110, 55, after) * on * flicker;
+        rimL.intensity = 140 * on * (1 - after);
+        rimR.intensity = 90 * on * (1 - after);
+        fill.intensity = lerp(0.25, 0.45, after) * on;
+        const ringGlow = (1 - after) * on;
+        glowMat.color.setRGB(0.62 * ringGlow, 1.0 * ringGlow, 0.69 * ringGlow);
+        const sw = range(t, 1.0, 2.6);
+        sweep.intensity = Math.sin(sw * Math.PI) * 10;
+        sweep.position.set(lerp(-2.6, 2.6, smooth(sw)), 1.6, 1.6);
+      }
+
+      function frogAt(t) {
+        // Idle breathing
+        const breathe = Math.sin(t * 2.4) * 0.012;
+        let sy = 1 + breathe;
+        let sx = 1 - breathe * 0.6;
+
+        // Burp build-up: sac inflates, eyes squint, body leans back
+        const build = smooth(range(t, BURP - 0.45, BURP));
+        const release = t >= BURP ? outCubic(range(t, BURP, BURP + 0.25)) : 0;
+        const sacScale = lerp(0.2, 1.35, build) * (1 - release * 0.85) + 0.15 * release;
+        sac.scale.set(sacScale * 1.1, sacScale, sacScale);
+        sac.position.z = 0.62 + 0.18 * build * (1 - release);
+
+        // Burp release: squash + recoil wobble
+        const jolt = wobble(t, BURP, 26, 7);
+        sy += -0.14 * jolt;
+        sx += 0.1 * jolt;
+        body.scale.set(sx, sy, sx);
+        body.rotation.x = -0.12 * build * (1 - release) + 0.08 * jolt;
+        frog.position.y = 0.42 + Math.max(0, 0.22 * jolt);
+
+        // Mouth opens on the burp, then shuts to a flat line
+        const open = t >= BURP ? Math.exp(-(t - BURP) * 5) * range(t, BURP, BURP + 0.04) : 0;
+        mouthOpen.scale.set(1.3, Math.max(0.001, open * 0.85), 0.4);
+        const flat = range(t, BURP + 0.3, BURP + 0.6);
+        mouth.scale.set(1, lerp(0.55, 0.12, flat), 1); // smug smile -> deadpan
+
+        // Hero pose: a proud slow head turn following the camera
+        const look = t < BURP ? Math.sin(t * 0.7) * 0.08 : 0;
+        frog.rotation.y = look;
+
+        // Eyes: pupils track the camera in the hero, then stare straight down the lens
+        const lens = t < BURP ? 0.0 : 1;
+        for (const e of eyes) {
+          e.pup.position.x = e.s * -0.02 + lerp(Math.sin(t * 0.5) * 0.03, 0, lens);
+          // Lid angle: 0 = open (lid tipped back), 1 = closed
+          let close = 0.12; // slightly hooded, smug
+          close = Math.max(close, build * 0.55); // squint while the burp builds
+          if (t >= BURP) close = lerp(0.55, 0.38, range(t, BURP, BURP + 0.5)); // half-lidded deadpan
+          for (const b of [6.7, 7.95]) {
+            const blink = 1 - Math.abs(range(t, b, b + 0.3) * 2 - 1); // slow lazy blink
+            close = Math.max(close, blink);
+          }
+          e.lid.rotation.x = lerp(-1.75, -0.05, close);
+        }
+
+        // Ribbit at the very end: two throat pulses
+        const rib = Math.max(Math.sin(range(t, 8.14, 8.25) * Math.PI), Math.sin(range(t, 8.31, 8.46) * Math.PI));
+        if (t > 8.1) sac.scale.setScalar(0.2 + 0.75 * rib);
+
+        // Shockwave from the mouth
+        const sk = range(t, BURP, BURP + 0.55);
+        shock.scale.setScalar(lerp(0.3, 2.6, outCubic(sk)));
+        shockMat.opacity = t >= BURP ? (1 - sk) * 0.55 : 0;
+        shock.lookAt(camera.position);
+
+        // Pedestal light ring spins slowly
+        ring.rotation.z = t * 0.6;
+      }
+
+      function renderAt(time) {
+        const t = clamp(time, 0, 8.5);
+        cameraAt(t);
+        frogAt(t);
+        lightsAt(t);
+        renderer.render(scene, camera);
+      }
+
+      window.addEventListener("hf-seek", (event) => renderAt(event.detail.time));
+      renderAt(window.__hfThreeTime || 0);
+    </script>
+  </body>
+</html>
