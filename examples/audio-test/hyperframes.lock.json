@@ -1,6 +1,10 @@
 {
   "assets/swiss-grid.svg": "710b2ff8208d15a7d30c987d041942769e4565390c458a4162860d6bad914a28",
   "compositions/captions.html": "db68318682f477c733daa8afe53ea405c32452f18437b5274d219f97dd43e62d",
+  "compositions/components/caption-weight-shift.html": "8a5294debec3eadeb7ca0a8688c31a6e8c517ebb1c55ff410aa81df3807daa55",
+  "compositions/components/count-up.html": "6b34b9873a243fedb060d23f4eb5cef1b61a5b169ec1ae064030b70b48beea66",
+  "compositions/components/cta-lockup.html": "126c3b7da9540230aeead700a154c36d5f205a33037083cc0cb7aaabe497ee65",
+  "compositions/components/grain-overlay.html": "97a0da8f26feca9574abcf08b8186cef10ea4819b2aeabc30547ae16ed9ae80d",
   "compositions/graphics.html": "625b6e23b4d4fedd9f2308ebde78484205e3e0d0d46bddc25747b6dbac20219c",
   "compositions/intro.html": "652448deda76a713c6eefa1fd7bdc276db65474c8fd10f928b042b9df296a7db",
   "index.html": "2136a513da2cccf0bbd3e1f14857c3186cf065c77c508037cce37e3acc3484bf"

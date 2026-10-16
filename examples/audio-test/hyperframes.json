@@ -8,5 +8,27 @@
   },
   "media": {
     "autoProxy": true
-  }
+  },
+  "registryItems": [
+    {
+      "name": "count-up",
+      "type": "hyperframes:component",
+      "target": "compositions/components/count-up.html"
+    },
+    {
+      "name": "cta-lockup",
+      "type": "hyperframes:component",
+      "target": "compositions/components/cta-lockup.html"
+    },
+    {
+      "name": "grain-overlay",
+      "type": "hyperframes:component",
+      "target": "compositions/components/grain-overlay.html"
+    },
+    {
+      "name": "caption-weight-shift",
+      "type": "hyperframes:component",
+      "target": "compositions/components/caption-weight-shift.html"
+    }
+  ]
 }
