@@ -1,6 +1,7 @@
 # EP.01 upload package
 
-Everything to paste into YouTube Studio for `renders/ep01-v2.mp4`.
+Everything to paste into YouTube Studio for `renders/ep01-v2-4k.mp4` (the 4K
+render; `renders/ep01-v2.mp4` is the same cut at 1080p).
 
 ## Title (pick one, 60 characters or fewer so it isn't cut off on mobile)
 

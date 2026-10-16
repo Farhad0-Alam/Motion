@@ -81,11 +81,19 @@ Network needs: `huggingface.co`, `*.hf.co`, `cdn.jsdelivr.net` and
   size (about 480px wide) before rendering.
 - **Render speed:** a full render takes about 5–7 minutes for 3 minutes of video
   on 4 CPUs.
+- **4K:** `npx hyperframes render . --resolution 4k --quality delivery -o renders/<name>-4k.mp4`.
+  The layout stays 1920×1080; Chrome renders at 2× pixel density, so the type
+  scale above needs no changes. Check a still first with
+  `hyperframes snapshot . --at <t> --zoom 0,0,1920,1080 --zoom-scale 2`.
+- **Keep timings stable:** `build.py` reads MP3 lengths with ffprobe, and FFmpeg 6
+  reports them about 40ms longer than FFmpeg 9 (EP.01 drifted 0.3s in total). To
+  re-render an approved cut, keep the committed `index.html`/`timeline.json` and
+  only regenerate the git-ignored audio (`*.norm.wav`, `music.wav`).
 
 ## Status (October 2026)
 
 - **EP.01** "How an AI receptionist answers customers 24/7": done (v2, mobile
-  redesign). Thumbnails A/B/C, captions and upload package are ready.
+  redesign; 1080p and 4K renders). Thumbnails A/B/C, captions and upload package are ready.
   - Open: is "iAgentice" pronounced correctly?
   - Open: keep the MusicGen music, or swap in an Audio Library track?
 - **Business card:** design done.
