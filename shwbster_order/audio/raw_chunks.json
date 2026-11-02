@@ -1,0 +1,858 @@
+{
+  "part_a": [
+    {
+      "start": 0.0,
+      "end": 1.95,
+      "dur": 1.95,
+      "sil_after": 0.4
+    },
+    {
+      "start": 2.35,
+      "end": 2.99,
+      "dur": 0.64,
+      "sil_after": 0.88
+    },
+    {
+      "start": 3.87,
+      "end": 7.78,
+      "dur": 3.91,
+      "sil_after": 0.48
+    },
+    {
+      "start": 8.26,
+      "end": 8.88,
+      "dur": 0.62,
+      "sil_after": 0.29
+    },
+    {
+      "start": 9.17,
+      "end": 9.76,
+      "dur": 0.59,
+      "sil_after": 0.27
+    },
+    {
+      "start": 10.03,
+      "end": 11.51,
+      "dur": 1.48,
+      "sil_after": 1.02
+    },
+    {
+      "start": 12.53,
+      "end": 13.52,
+      "dur": 0.99,
+      "sil_after": 0.43
+    },
+    {
+      "start": 13.95,
+      "end": 15.27,
+      "dur": 1.32,
+      "sil_after": 0.62
+    },
+    {
+      "start": 15.89,
+      "end": 20.47,
+      "dur": 4.58,
+      "sil_after": 0.85
+    },
+    {
+      "start": 21.32,
+      "end": 22.37,
+      "dur": 1.05,
+      "sil_after": 1.35
+    },
+    {
+      "start": 23.72,
+      "end": 28.91,
+      "dur": 5.19,
+      "sil_after": 0.6
+    },
+    {
+      "start": 29.51,
+      "end": 32.06,
+      "dur": 2.55,
+      "sil_after": 0.3
+    },
+    {
+      "start": 32.36,
+      "end": 33.04,
+      "dur": 0.68,
+      "sil_after": 0.32
+    },
+    {
+      "start": 33.36,
+      "end": 33.9,
+      "dur": 0.54,
+      "sil_after": 1.45
+    },
+    {
+      "start": 35.35,
+      "end": 35.57,
+      "dur": 0.22,
+      "sil_after": 0.53
+    },
+    {
+      "start": 36.1,
+      "end": 36.36,
+      "dur": 0.26,
+      "sil_after": 1.39
+    },
+    {
+      "start": 37.75,
+      "end": 39.36,
+      "dur": 1.61,
+      "sil_after": 0.4
+    },
+    {
+      "start": 39.76,
+      "end": 41.2,
+      "dur": 1.44,
+      "sil_after": 1.27
+    },
+    {
+      "start": 42.47,
+      "end": 45.68,
+      "dur": 3.21,
+      "sil_after": 0.43
+    },
+    {
+      "start": 46.11,
+      "end": 49.12,
+      "dur": 3.01,
+      "sil_after": 1.11
+    },
+    {
+      "start": 50.23,
+      "end": 52.45,
+      "dur": 2.22,
+      "sil_after": 0.28
+    },
+    {
+      "start": 52.73,
+      "end": 53.83,
+      "dur": 1.1,
+      "sil_after": 0.52
+    },
+    {
+      "start": 54.35,
+      "end": 57.41,
+      "dur": 3.06,
+      "sil_after": 1.04
+    },
+    {
+      "start": 58.45,
+      "end": 60.25,
+      "dur": 1.8,
+      "sil_after": 0.42
+    },
+    {
+      "start": 60.67,
+      "end": 62.67,
+      "dur": 2.0,
+      "sil_after": 0.63
+    },
+    {
+      "start": 63.3,
+      "end": 65.13,
+      "dur": 1.83,
+      "sil_after": 0.44
+    },
+    {
+      "start": 65.57,
+      "end": 66.73,
+      "dur": 1.16,
+      "sil_after": 0.34
+    },
+    {
+      "start": 67.07,
+      "end": 67.68,
+      "dur": 0.61,
+      "sil_after": 1.47
+    },
+    {
+      "start": 69.15,
+      "end": 69.42,
+      "dur": 0.27,
+      "sil_after": 0.6
+    },
+    {
+      "start": 70.02,
+      "end": 70.63,
+      "dur": 0.61,
+      "sil_after": 1.34
+    },
+    {
+      "start": 71.97,
+      "end": 76.04,
+      "dur": 4.07,
+      "sil_after": 0.49
+    },
+    {
+      "start": 76.53,
+      "end": 79.42,
+      "dur": 2.89,
+      "sil_after": 0.94
+    },
+    {
+      "start": 80.36,
+      "end": 82.1,
+      "dur": 1.74,
+      "sil_after": 0.52
+    },
+    {
+      "start": 82.62,
+      "end": 83.64,
+      "dur": 1.02,
+      "sil_after": 0.35
+    },
+    {
+      "start": 83.99,
+      "end": 84.74,
+      "dur": 0.75,
+      "sil_after": 1.06
+    },
+    {
+      "start": 85.8,
+      "end": 89.07,
+      "dur": 3.27,
+      "sil_after": 0.61
+    },
+    {
+      "start": 89.68,
+      "end": 92.51,
+      "dur": 2.83,
+      "sil_after": 0.76
+    },
+    {
+      "start": 93.27,
+      "end": 94.92,
+      "dur": 1.65,
+      "sil_after": 0.32
+    },
+    {
+      "start": 95.24,
+      "end": 96.68,
+      "dur": 1.44,
+      "sil_after": 0.34
+    },
+    {
+      "start": 97.02,
+      "end": 97.88,
+      "dur": 0.86,
+      "sil_after": 0.49
+    },
+    {
+      "start": 98.37,
+      "end": 99.87,
+      "dur": 1.5,
+      "sil_after": 0.34
+    },
+    {
+      "start": 100.21,
+      "end": 101.65,
+      "dur": 1.44,
+      "sil_after": 1.2
+    },
+    {
+      "start": 102.85,
+      "end": 103.04,
+      "dur": 0.19,
+      "sil_after": 0.63
+    },
+    {
+      "start": 103.67,
+      "end": 104.04,
+      "dur": 0.37,
+      "sil_after": 0.55
+    },
+    {
+      "start": 104.59,
+      "end": 111.19,
+      "dur": 6.6,
+      "sil_after": 0.56
+    },
+    {
+      "start": 111.75,
+      "end": 115.4,
+      "dur": 3.65,
+      "sil_after": 0.58
+    },
+    {
+      "start": 115.98,
+      "end": 117.83,
+      "dur": 1.85,
+      "sil_after": 0.52
+    },
+    {
+      "start": 118.35,
+      "end": 126.06,
+      "dur": 7.71,
+      "sil_after": 0.65
+    },
+    {
+      "start": 126.71,
+      "end": 128.61,
+      "dur": 1.9,
+      "sil_after": 0.32
+    },
+    {
+      "start": 128.93,
+      "end": 130.31,
+      "dur": 1.38,
+      "sil_after": 0.47
+    },
+    {
+      "start": 131.21,
+      "end": 132.84,
+      "dur": 1.63,
+      "sil_after": 0.46
+    },
+    {
+      "start": 133.3,
+      "end": 134.71,
+      "dur": 1.41,
+      "sil_after": 0.28
+    },
+    {
+      "start": 134.99,
+      "end": 136.23,
+      "dur": 1.24,
+      "sil_after": 1.04
+    },
+    {
+      "start": 137.27,
+      "end": 137.6,
+      "dur": 0.33,
+      "sil_after": 0.56
+    },
+    {
+      "start": 138.16,
+      "end": 138.46,
+      "dur": 0.3,
+      "sil_after": 0.74
+    },
+    {
+      "start": 139.2,
+      "end": 140.0,
+      "dur": 0.8,
+      "sil_after": 0.45
+    },
+    {
+      "start": 140.45,
+      "end": 142.96,
+      "dur": 2.51,
+      "sil_after": 0.38
+    },
+    {
+      "start": 143.34,
+      "end": 145.89,
+      "dur": 2.55,
+      "sil_after": 0.28
+    },
+    {
+      "start": 146.17,
+      "end": 148.14,
+      "dur": 1.97,
+      "sil_after": 0.57
+    },
+    {
+      "start": 148.71,
+      "end": 149.51,
+      "dur": 0.8,
+      "sil_after": 0.27
+    },
+    {
+      "start": 149.78,
+      "end": 151.46,
+      "dur": 1.68,
+      "sil_after": 0.75
+    },
+    {
+      "start": 152.21,
+      "end": 153.04,
+      "dur": 0.83,
+      "sil_after": 0.64
+    },
+    {
+      "start": 153.68,
+      "end": 157.98,
+      "dur": 4.3,
+      "sil_after": 0.26
+    },
+    {
+      "start": 158.24,
+      "end": 160.0,
+      "dur": 1.76,
+      "sil_after": 0.63
+    },
+    {
+      "start": 160.63,
+      "end": 164.3,
+      "dur": 3.67,
+      "sil_after": 0.53
+    },
+    {
+      "start": 164.83,
+      "end": 168.52,
+      "dur": 3.69,
+      "sil_after": 0.59
+    },
+    {
+      "start": 169.11,
+      "end": 172.26,
+      "dur": 3.15,
+      "sil_after": 0.43
+    },
+    {
+      "start": 172.69,
+      "end": 176.34,
+      "dur": 3.65,
+      "sil_after": 1.07
+    },
+    {
+      "start": 177.41,
+      "end": 177.78,
+      "dur": 0.37,
+      "sil_after": 0.46
+    },
+    {
+      "start": 178.24,
+      "end": 178.72,
+      "dur": 0.48,
+      "sil_after": 0.83
+    },
+    {
+      "start": 179.55,
+      "end": 181.76,
+      "dur": 2.21,
+      "sil_after": 0.58
+    },
+    {
+      "start": 182.34,
+      "end": 184.09,
+      "dur": 1.75,
+      "sil_after": 0.27
+    },
+    {
+      "start": 184.36,
+      "end": 188.15,
+      "dur": 3.79,
+      "sil_after": 0.32
+    },
+    {
+      "start": 188.47,
+      "end": 190.89,
+      "dur": 2.42,
+      "sil_after": 0.7
+    },
+    {
+      "start": 191.59,
+      "end": 194.58,
+      "dur": 2.99,
+      "sil_after": 0.89
+    },
+    {
+      "start": 195.47,
+      "end": 200.46,
+      "dur": 4.99,
+      "sil_after": 0.5
+    },
+    {
+      "start": 200.96,
+      "end": 205.68,
+      "dur": 4.72,
+      "sil_after": 0.64
+    },
+    {
+      "start": 206.32,
+      "end": 208.28,
+      "dur": 1.96,
+      "sil_after": 0.46
+    },
+    {
+      "start": 208.74,
+      "end": 211.12,
+      "dur": 2.38,
+      "sil_after": 0.32
+    }
+  ],
+  "part_b": [
+    {
+      "start": 0.32,
+      "end": 0.78,
+      "dur": 0.46,
+      "sil_after": 0.34
+    },
+    {
+      "start": 1.12,
+      "end": 1.61,
+      "dur": 0.49,
+      "sil_after": 0.28
+    },
+    {
+      "start": 1.89,
+      "end": 1.99,
+      "dur": 0.1,
+      "sil_after": 0.45
+    },
+    {
+      "start": 2.44,
+      "end": 10.21,
+      "dur": 7.77,
+      "sil_after": 0.27
+    },
+    {
+      "start": 10.48,
+      "end": 12.1,
+      "dur": 1.62,
+      "sil_after": 0.58
+    },
+    {
+      "start": 12.68,
+      "end": 16.53,
+      "dur": 3.85,
+      "sil_after": 0.3
+    },
+    {
+      "start": 16.83,
+      "end": 19.24,
+      "dur": 2.41,
+      "sil_after": 0.5
+    },
+    {
+      "start": 19.74,
+      "end": 23.75,
+      "dur": 4.01,
+      "sil_after": 0.28
+    },
+    {
+      "start": 24.03,
+      "end": 26.95,
+      "dur": 2.92,
+      "sil_after": 0.56
+    },
+    {
+      "start": 27.51,
+      "end": 31.57,
+      "dur": 4.06,
+      "sil_after": 1.03
+    },
+    {
+      "start": 32.6,
+      "end": 32.92,
+      "dur": 0.32,
+      "sil_after": 0.61
+    },
+    {
+      "start": 33.53,
+      "end": 33.96,
+      "dur": 0.43,
+      "sil_after": 0.86
+    },
+    {
+      "start": 34.82,
+      "end": 38.39,
+      "dur": 3.57,
+      "sil_after": 0.31
+    },
+    {
+      "start": 38.7,
+      "end": 41.49,
+      "dur": 2.79,
+      "sil_after": 0.31
+    },
+    {
+      "start": 41.8,
+      "end": 43.64,
+      "dur": 1.84,
+      "sil_after": 0.65
+    },
+    {
+      "start": 44.29,
+      "end": 44.54,
+      "dur": 0.25,
+      "sil_after": 0.26
+    },
+    {
+      "start": 44.8,
+      "end": 48.6,
+      "dur": 3.8,
+      "sil_after": 0.36
+    },
+    {
+      "start": 48.96,
+      "end": 52.28,
+      "dur": 3.32,
+      "sil_after": 0.44
+    },
+    {
+      "start": 52.72,
+      "end": 55.03,
+      "dur": 2.31,
+      "sil_after": 0.27
+    },
+    {
+      "start": 55.3,
+      "end": 57.46,
+      "dur": 2.16,
+      "sil_after": 0.46
+    },
+    {
+      "start": 57.92,
+      "end": 59.83,
+      "dur": 1.91,
+      "sil_after": 0.3
+    },
+    {
+      "start": 60.13,
+      "end": 61.61,
+      "dur": 1.48,
+      "sil_after": 0.66
+    },
+    {
+      "start": 62.27,
+      "end": 62.76,
+      "dur": 0.49,
+      "sil_after": 0.58
+    },
+    {
+      "start": 63.34,
+      "end": 63.73,
+      "dur": 0.39,
+      "sil_after": 0.65
+    },
+    {
+      "start": 64.38,
+      "end": 66.31,
+      "dur": 1.93,
+      "sil_after": 0.35
+    },
+    {
+      "start": 66.66,
+      "end": 68.61,
+      "dur": 1.95,
+      "sil_after": 0.35
+    },
+    {
+      "start": 68.96,
+      "end": 74.75,
+      "dur": 5.79,
+      "sil_after": 0.63
+    },
+    {
+      "start": 75.38,
+      "end": 78.63,
+      "dur": 3.25,
+      "sil_after": 0.46
+    },
+    {
+      "start": 79.09,
+      "end": 81.45,
+      "dur": 2.36,
+      "sil_after": 0.58
+    },
+    {
+      "start": 82.03,
+      "end": 85.44,
+      "dur": 3.41,
+      "sil_after": 0.43
+    },
+    {
+      "start": 85.87,
+      "end": 89.1,
+      "dur": 3.23,
+      "sil_after": 0.91
+    },
+    {
+      "start": 90.01,
+      "end": 90.24,
+      "dur": 0.23,
+      "sil_after": 0.6
+    },
+    {
+      "start": 90.84,
+      "end": 91.36,
+      "dur": 0.52,
+      "sil_after": 0.91
+    },
+    {
+      "start": 92.27,
+      "end": 94.51,
+      "dur": 2.24,
+      "sil_after": 0.56
+    },
+    {
+      "start": 95.07,
+      "end": 98.49,
+      "dur": 3.42,
+      "sil_after": 0.36
+    },
+    {
+      "start": 98.85,
+      "end": 100.24,
+      "dur": 1.39,
+      "sil_after": 0.52
+    },
+    {
+      "start": 100.76,
+      "end": 103.19,
+      "dur": 2.43,
+      "sil_after": 0.66
+    },
+    {
+      "start": 103.85,
+      "end": 105.84,
+      "dur": 1.99,
+      "sil_after": 0.71
+    },
+    {
+      "start": 106.55,
+      "end": 109.82,
+      "dur": 3.27,
+      "sil_after": 0.68
+    },
+    {
+      "start": 110.5,
+      "end": 112.45,
+      "dur": 1.95,
+      "sil_after": 0.7
+    },
+    {
+      "start": 113.15,
+      "end": 117.97,
+      "dur": 4.82,
+      "sil_after": 0.57
+    },
+    {
+      "start": 118.54,
+      "end": 120.39,
+      "dur": 1.85,
+      "sil_after": 0.91
+    },
+    {
+      "start": 121.3,
+      "end": 123.63,
+      "dur": 2.33,
+      "sil_after": 1.8
+    },
+    {
+      "start": 125.43,
+      "end": 125.71,
+      "dur": 0.28,
+      "sil_after": 0.45
+    },
+    {
+      "start": 126.16,
+      "end": 126.72,
+      "dur": 0.56,
+      "sil_after": 0.91
+    },
+    {
+      "start": 127.63,
+      "end": 128.71,
+      "dur": 1.08,
+      "sil_after": 0.5
+    },
+    {
+      "start": 129.21,
+      "end": 133.92,
+      "dur": 4.71,
+      "sil_after": 0.91
+    },
+    {
+      "start": 134.83,
+      "end": 135.86,
+      "dur": 1.03,
+      "sil_after": 0.39
+    },
+    {
+      "start": 136.25,
+      "end": 138.49,
+      "dur": 2.24,
+      "sil_after": 0.51
+    },
+    {
+      "start": 139.0,
+      "end": 139.13,
+      "dur": 0.13,
+      "sil_after": 0.45
+    },
+    {
+      "start": 139.58,
+      "end": 143.8,
+      "dur": 4.22,
+      "sil_after": 0.66
+    },
+    {
+      "start": 144.46,
+      "end": 147.44,
+      "dur": 2.98,
+      "sil_after": 0.39
+    },
+    {
+      "start": 147.83,
+      "end": 149.41,
+      "dur": 1.58,
+      "sil_after": 0.74
+    },
+    {
+      "start": 150.15,
+      "end": 153.1,
+      "dur": 2.95,
+      "sil_after": 0.61
+    },
+    {
+      "start": 153.71,
+      "end": 154.89,
+      "dur": 1.18,
+      "sil_after": 0.7
+    },
+    {
+      "start": 155.59,
+      "end": 156.75,
+      "dur": 1.16,
+      "sil_after": 0.75
+    },
+    {
+      "start": 157.5,
+      "end": 158.67,
+      "dur": 1.17,
+      "sil_after": 1.78
+    },
+    {
+      "start": 160.45,
+      "end": 164.24,
+      "dur": 3.79,
+      "sil_after": 0.64
+    },
+    {
+      "start": 164.88,
+      "end": 165.73,
+      "dur": 0.85,
+      "sil_after": 0.32
+    },
+    {
+      "start": 166.05,
+      "end": 166.82,
+      "dur": 0.77,
+      "sil_after": 0.33
+    },
+    {
+      "start": 167.15,
+      "end": 169.17,
+      "dur": 2.02,
+      "sil_after": 0.8
+    },
+    {
+      "start": 169.97,
+      "end": 171.64,
+      "dur": 1.67,
+      "sil_after": 0.69
+    },
+    {
+      "start": 172.33,
+      "end": 176.37,
+      "dur": 4.04,
+      "sil_after": 0.23
+    }
+  ]
+}

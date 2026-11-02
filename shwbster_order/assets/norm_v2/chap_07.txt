@@ -1,0 +1,6 @@
+file '/root/Motion/shwbster_order/assets/norm_v2/seg_37.mp4'
+file '/root/Motion/shwbster_order/assets/norm_v2/seg_38.mp4'
+file '/root/Motion/shwbster_order/assets/norm_v2/seg_39.mp4'
+file '/root/Motion/shwbster_order/assets/norm_v2/seg_40.mp4'
+file '/root/Motion/shwbster_order/assets/norm_v2/seg_41.mp4'
+file '/root/Motion/shwbster_order/assets/norm_v2/seg_42.mp4'

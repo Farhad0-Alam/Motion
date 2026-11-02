@@ -1,0 +1,1879 @@
+{
+ "subs": [
+  {
+   "chapter": "Opening hook",
+   "src": "part_a",
+   "idx": 0,
+   "start": 0.04,
+   "end": 1.99,
+   "text": "$54,000 a year..."
+  },
+  {
+   "chapter": "Opening hook",
+   "src": "part_a",
+   "idx": 1,
+   "start": 2.39,
+   "end": 3.03,
+   "text": "for one bedroom."
+  },
+  {
+   "chapter": "Opening hook",
+   "src": "part_a",
+   "idx": 2,
+   "start": 3.91,
+   "end": 7.82,
+   "text": "That\u2019s roughly the average annual rent for a city-centre one-bedroom in New York."
+  },
+  {
+   "chapter": "Opening hook",
+   "src": "part_a",
+   "idx": 3,
+   "start": 8.3,
+   "end": 8.92,
+   "text": "Before bills."
+  },
+  {
+   "chapter": "Opening hook",
+   "src": "part_a",
+   "idx": 4,
+   "start": 9.21,
+   "end": 9.8,
+   "text": "Before food."
+  },
+  {
+   "chapter": "Opening hook",
+   "src": "part_a",
+   "idx": 5,
+   "start": 10.07,
+   "end": 11.55,
+   "text": "Before you\u2019ve even stepped outside."
+  },
+  {
+   "chapter": "Opening hook",
+   "src": "part_a",
+   "idx": 6,
+   "start": 12.57,
+   "end": 13.56,
+   "text": "Think Dubai is expensive?"
+  },
+  {
+   "chapter": "Opening hook",
+   "src": "part_a",
+   "idx": 7,
+   "start": 13.99,
+   "end": 15.31,
+   "text": "Nine cities rank above it."
+  },
+  {
+   "chapter": "Opening hook",
+   "src": "part_a",
+   "idx": 8,
+   "start": 15.93,
+   "end": 20.51,
+   "text": "And the cheapest city-centre rent on this list belongs to a quiet city that still outranks Dubai."
+  },
+  {
+   "chapter": "Opening hook",
+   "src": "part_a",
+   "idx": 9,
+   "start": 21.36,
+   "end": 22.41,
+   "text": "So what are you actually paying for?"
+  },
+  {
+   "chapter": "How the comparison works",
+   "src": "part_a",
+   "idx": 10,
+   "start": 23.76,
+   "end": 28.95,
+   "text": "Our ranking follows ECA International\u2019s 2026 cost-of-living list for international employees."
+  },
+  {
+   "chapter": "How the comparison works",
+   "src": "part_a",
+   "idx": 11,
+   "start": 29.55,
+   "end": 32.1,
+   "text": "Rent figures are separate Numbeo estimates for a one-bedroom,"
+  },
+  {
+   "chapter": "How the comparison works",
+   "src": "part_a",
+   "idx": 12,
+   "start": 32.4,
+   "end": 33.08,
+   "text": "in US dollars,"
+  },
+  {
+   "chapter": "How the comparison works",
+   "src": "part_a",
+   "idx": 13,
+   "start": 33.4,
+   "end": 33.94,
+   "text": "before bills."
+  },
+  {
+   "chapter": "Number 10 Dubai",
+   "src": "part_a",
+   "idx": 14,
+   "start": 35.39,
+   "end": 35.61,
+   "text": "10."
+  },
+  {
+   "chapter": "Number 10 Dubai",
+   "src": "part_a",
+   "idx": 15,
+   "start": 36.14,
+   "end": 36.4,
+   "text": "Dubai."
+  },
+  {
+   "chapter": "Number 10 Dubai",
+   "src": "part_a",
+   "idx": 16,
+   "start": 37.79,
+   "end": 39.4,
+   "text": "The Burj Khalifa sells you the dream."
+  },
+  {
+   "chapter": "Number 10 Dubai",
+   "src": "part_a",
+   "idx": 17,
+   "start": 39.8,
+   "end": 41.24,
+   "text": "The rent tells you what it costs."
+  },
+  {
+   "chapter": "Number 10 Dubai",
+   "src": "part_a",
+   "idx": 18,
+   "start": 42.51,
+   "end": 45.72,
+   "text": "Our central one-bedroom estimate is about $2,600 a month,"
+  },
+  {
+   "chapter": "Number 10 Dubai",
+   "src": "part_a",
+   "idx": 19,
+   "start": 46.15,
+   "end": 49.16,
+   "text": "though actual prices vary with the neighbourhood, the building and the view."
+  },
+  {
+   "chapter": "Number 10 Dubai",
+   "src": "part_a",
+   "idx": 20,
+   "start": 50.27,
+   "end": 52.49,
+   "text": "Outside the centre, the estimate falls"
+  },
+  {
+   "chapter": "Number 10 Dubai",
+   "src": "part_a",
+   "idx": 21,
+   "start": 52.77,
+   "end": 53.87,
+   "text": "to roughly $1,500."
+  },
+  {
+   "chapter": "Number 10 Dubai",
+   "src": "part_a",
+   "idx": 22,
+   "start": 54.39,
+   "end": 57.45,
+   "text": "That\u2019s a gap of around $1,100 every month."
+  },
+  {
+   "chapter": "Number 10 Dubai",
+   "src": "part_a",
+   "idx": 23,
+   "start": 58.49,
+   "end": 60.29,
+   "text": "So when you see a glossy apartment tour,"
+  },
+  {
+   "chapter": "Number 10 Dubai",
+   "src": "part_a",
+   "idx": 24,
+   "start": 60.71,
+   "end": 62.71,
+   "text": "ask which neighbourhood you\u2019re actually being shown."
+  },
+  {
+   "chapter": "Number 10 Dubai",
+   "src": "part_a",
+   "idx": 25,
+   "start": 63.34,
+   "end": 65.17,
+   "text": "The skyline can look identical in the thumbnail..."
+  },
+  {
+   "chapter": "Number 10 Dubai",
+   "src": "part_a",
+   "idx": 26,
+   "start": 65.61,
+   "end": 66.77,
+   "text": "while the commute and the bill"
+  },
+  {
+   "chapter": "Number 10 Dubai",
+   "src": "part_a",
+   "idx": 27,
+   "start": 67.11,
+   "end": 67.72,
+   "text": "look very different."
+  },
+  {
+   "chapter": "Number 9 San Francisco",
+   "src": "part_a",
+   "idx": 28,
+   "start": 69.19,
+   "end": 69.46,
+   "text": "9."
+  },
+  {
+   "chapter": "Number 9 San Francisco",
+   "src": "part_a",
+   "idx": 29,
+   "start": 70.06,
+   "end": 70.67,
+   "text": "San Francisco."
+  },
+  {
+   "chapter": "Number 9 San Francisco",
+   "src": "part_a",
+   "idx": 30,
+   "start": 72.01,
+   "end": 76.08,
+   "text": "A central one-bedroom costs around $3,700 a month in our snapshot."
+  },
+  {
+   "chapter": "Number 9 San Francisco",
+   "src": "part_a",
+   "idx": 31,
+   "start": 76.57,
+   "end": 79.46,
+   "text": "That\u2019s $44,400 a year, before bills."
+  },
+  {
+   "chapter": "Number 9 San Francisco",
+   "src": "part_a",
+   "idx": 32,
+   "start": 80.4,
+   "end": 82.14,
+   "text": "The Golden Gate Bridge is free to admire."
+  },
+  {
+   "chapter": "Number 9 San Francisco",
+   "src": "part_a",
+   "idx": 33,
+   "start": 82.66,
+   "end": 83.68,
+   "text": "Keeping a roof over your head..."
+  },
+  {
+   "chapter": "Number 9 San Francisco",
+   "src": "part_a",
+   "idx": 34,
+   "start": 84.03,
+   "end": 84.78,
+   "text": "is the expensive part."
+  },
+  {
+   "chapter": "Number 9 San Francisco",
+   "src": "part_a",
+   "idx": 35,
+   "start": 85.84,
+   "end": 89.11,
+   "text": "Outside the centre, the estimate drops to $2,700 a month."
+  },
+  {
+   "chapter": "Number 9 San Francisco",
+   "src": "part_a",
+   "idx": 36,
+   "start": 89.72,
+   "end": 92.55,
+   "text": "Over a year, that difference adds up to $12,000."
+  },
+  {
+   "chapter": "Number 9 San Francisco",
+   "src": "part_a",
+   "idx": 37,
+   "start": 93.31,
+   "end": 94.96,
+   "text": "So before falling for the skyline,"
+  },
+  {
+   "chapter": "Number 9 San Francisco",
+   "src": "part_a",
+   "idx": 38,
+   "start": 95.28,
+   "end": 96.72,
+   "text": "compare the bedroom, the kitchen"
+  },
+  {
+   "chapter": "Number 9 San Francisco",
+   "src": "part_a",
+   "idx": 39,
+   "start": 97.06,
+   "end": 97.92,
+   "text": "and the journey to work."
+  },
+  {
+   "chapter": "Number 9 San Francisco",
+   "src": "part_a",
+   "idx": 40,
+   "start": 98.41,
+   "end": 99.91,
+   "text": "How much of that rent buys convenience..."
+  },
+  {
+   "chapter": "Number 9 San Francisco",
+   "src": "part_a",
+   "idx": 41,
+   "start": 100.25,
+   "end": 101.69,
+   "text": "and how much buys actual space?"
+  },
+  {
+   "chapter": "Number 8 Singapore",
+   "src": "part_a",
+   "idx": 42,
+   "start": 102.89,
+   "end": 103.08,
+   "text": "8."
+  },
+  {
+   "chapter": "Number 8 Singapore",
+   "src": "part_a",
+   "idx": 43,
+   "start": 103.71,
+   "end": 104.08,
+   "text": "Singapore."
+  },
+  {
+   "chapter": "Number 8 Singapore",
+   "src": "part_a",
+   "idx": 44,
+   "start": 104.63,
+   "end": 111.23,
+   "text": "Our central one-bedroom estimate is $3,200 a month. Outside the centre, it\u2019s about $2,200."
+  },
+  {
+   "chapter": "Number 8 Singapore",
+   "src": "part_a",
+   "idx": 45,
+   "start": 111.79,
+   "end": 115.44,
+   "text": "That\u2019s a $1,000 gap before you\u2019ve even decided how to get around."
+  },
+  {
+   "chapter": "Number 8 Singapore",
+   "src": "part_a",
+   "idx": 46,
+   "start": 116.02,
+   "end": 117.87,
+   "text": "And that decision matters here."
+  },
+  {
+   "chapter": "Number 8 Singapore",
+   "src": "part_a",
+   "idx": 47,
+   "start": 118.39,
+   "end": 126.1,
+   "text": "To own a new car, you\u2019ll first need a Certificate of Entitlement, normally valid for 10 years and paid for separately from the vehicle itself."
+  },
+  {
+   "chapter": "Number 8 Singapore",
+   "src": "part_a",
+   "idx": 48,
+   "start": 126.75,
+   "end": 128.65,
+   "text": "So compare life around the MRT"
+  },
+  {
+   "chapter": "Number 8 Singapore",
+   "src": "part_a",
+   "idx": 49,
+   "start": 128.97,
+   "end": 130.35,
+   "text": "with life built around a car."
+  },
+  {
+   "chapter": "Number 8 Singapore",
+   "src": "part_a",
+   "idx": 50,
+   "start": 131.25,
+   "end": 132.88,
+   "text": "The skyline is the postcard."
+  },
+  {
+   "chapter": "Number 8 Singapore",
+   "src": "part_a",
+   "idx": 51,
+   "start": 133.34,
+   "end": 134.75,
+   "text": "Your housing and transport choices"
+  },
+  {
+   "chapter": "Number 8 Singapore",
+   "src": "part_a",
+   "idx": 52,
+   "start": 135.03,
+   "end": 136.27,
+   "text": "decide the everyday bill."
+  },
+  {
+   "chapter": "Number 7 Bern",
+   "src": "part_a",
+   "idx": 53,
+   "start": 137.31,
+   "end": 137.64,
+   "text": "7."
+  },
+  {
+   "chapter": "Number 7 Bern",
+   "src": "part_a",
+   "idx": 54,
+   "start": 138.2,
+   "end": 138.5,
+   "text": "Bern."
+  },
+  {
+   "chapter": "Number 7 Bern",
+   "src": "part_a",
+   "idx": 55,
+   "start": 139.24,
+   "end": 140.04,
+   "text": "Here\u2019s the surprise."
+  },
+  {
+   "chapter": "Number 7 Bern",
+   "src": "part_a",
+   "idx": 56,
+   "start": 140.49,
+   "end": 143.0,
+   "text": "This quiet Swiss city ranks above Dubai,"
+  },
+  {
+   "chapter": "Number 7 Bern",
+   "src": "part_a",
+   "idx": 57,
+   "start": 143.38,
+   "end": 145.93,
+   "text": "yet it has the lowest central rent on our list:"
+  },
+  {
+   "chapter": "Number 7 Bern",
+   "src": "part_a",
+   "idx": 58,
+   "start": 146.21,
+   "end": 148.18,
+   "text": "around $2,100 a month."
+  },
+  {
+   "chapter": "Number 7 Bern",
+   "src": "part_a",
+   "idx": 59,
+   "start": 148.75,
+   "end": 149.55,
+   "text": "Outside the centre,"
+  },
+  {
+   "chapter": "Number 7 Bern",
+   "src": "part_a",
+   "idx": 60,
+   "start": 149.82,
+   "end": 151.5,
+   "text": "it\u2019s about $1,600."
+  },
+  {
+   "chapter": "Number 7 Bern",
+   "src": "part_a",
+   "idx": 61,
+   "start": 152.25,
+   "end": 153.08,
+   "text": "Now add lunch."
+  },
+  {
+   "chapter": "Number 7 Bern",
+   "src": "part_a",
+   "idx": 62,
+   "start": 153.72,
+   "end": 158.02,
+   "text": "Numbeo puts a meal at an inexpensive restaurant at 24 Swiss francs..."
+  },
+  {
+   "chapter": "Number 7 Bern",
+   "src": "part_a",
+   "idx": 63,
+   "start": 158.28,
+   "end": 160.04,
+   "text": "roughly $29 US dollars."
+  },
+  {
+   "chapter": "Number 7 Bern",
+   "src": "part_a",
+   "idx": 64,
+   "start": 160.67,
+   "end": 164.34,
+   "text": "Eat out regularly, and those ordinary purchases add up fast."
+  },
+  {
+   "chapter": "Number 7 Bern",
+   "src": "part_a",
+   "idx": 65,
+   "start": 164.87,
+   "end": 168.56,
+   "text": "That\u2019s why the overall ranking and the rent comparison tell different stories."
+  },
+  {
+   "chapter": "Number 7 Bern",
+   "src": "part_a",
+   "idx": 66,
+   "start": 169.15,
+   "end": 172.3,
+   "text": "The old-town streets look a world away from Dubai\u2019s towers."
+  },
+  {
+   "chapter": "Number 7 Bern",
+   "src": "part_a",
+   "idx": 67,
+   "start": 172.73,
+   "end": 176.38,
+   "text": "But a lower housing bill can still sit inside an expensive everyday life."
+  },
+  {
+   "chapter": "Number 6 Tel Aviv",
+   "src": "part_a",
+   "idx": 68,
+   "start": 177.45,
+   "end": 177.82,
+   "text": "6."
+  },
+  {
+   "chapter": "Number 6 Tel Aviv",
+   "src": "part_a",
+   "idx": 69,
+   "start": 178.28,
+   "end": 178.76,
+   "text": "Tel Aviv."
+  },
+  {
+   "chapter": "Number 6 Tel Aviv",
+   "src": "part_a",
+   "idx": 70,
+   "start": 179.59,
+   "end": 181.8,
+   "text": "The beach is the easy part of the sales pitch."
+  },
+  {
+   "chapter": "Number 6 Tel Aviv",
+   "src": "part_a",
+   "idx": 71,
+   "start": 182.38,
+   "end": 184.13,
+   "text": "The housing bill takes more thought."
+  },
+  {
+   "chapter": "Number 6 Tel Aviv",
+   "src": "part_a",
+   "idx": 72,
+   "start": 184.4,
+   "end": 188.19,
+   "text": "Our central one-bedroom estimate is about $2,300 a month,"
+  },
+  {
+   "chapter": "Number 6 Tel Aviv",
+   "src": "part_a",
+   "idx": 73,
+   "start": 188.51,
+   "end": 190.93,
+   "text": "dropping to $1,700 outside the centre."
+  },
+  {
+   "chapter": "Number 6 Tel Aviv",
+   "src": "part_a",
+   "idx": 74,
+   "start": 191.63,
+   "end": 194.62,
+   "text": "That frees up roughly $600 a month for everything else."
+  },
+  {
+   "chapter": "Number 6 Tel Aviv",
+   "src": "part_a",
+   "idx": 75,
+   "start": 195.51,
+   "end": 200.5,
+   "text": "A seafront apartment and one on an ordinary residential street can feel like different cities."
+  },
+  {
+   "chapter": "Number 6 Tel Aviv",
+   "src": "part_a",
+   "idx": 76,
+   "start": 201.0,
+   "end": 205.72,
+   "text": "So compare the usable space, the condition of the building and the actual route to work."
+  },
+  {
+   "chapter": "Number 6 Tel Aviv",
+   "src": "part_a",
+   "idx": 77,
+   "start": 206.36,
+   "end": 208.32,
+   "text": "A coastal address sounds wonderful."
+  },
+  {
+   "chapter": "Number 6 Tel Aviv",
+   "src": "part_a",
+   "idx": 78,
+   "start": 208.78,
+   "end": 211.16,
+   "text": "But it\u2019s the everyday flat you actually live in."
+  },
+  {
+   "chapter": "Number 5 Hong Kong",
+   "src": "part_b",
+   "idx": 0,
+   "start": 211.42,
+   "end": 211.88,
+   "text": "5."
+  },
+  {
+   "chapter": "Number 5 Hong Kong",
+   "src": "part_b",
+   "idx": 1,
+   "start": 212.22,
+   "end": 212.71,
+   "text": "Hong Kong."
+  },
+  {
+   "chapter": "Number 5 Hong Kong",
+   "src": "part_b",
+   "idx": 3,
+   "start": 213.54,
+   "end": 221.31,
+   "text": "Residential towers crowd the harbour view. Yet government figures put about 40% of the territory inside country parks and special areas."
+  },
+  {
+   "chapter": "Number 5 Hong Kong",
+   "src": "part_b",
+   "idx": 4,
+   "start": 221.58,
+   "end": 223.2,
+   "text": "The skyline is only part of the map."
+  },
+  {
+   "chapter": "Number 5 Hong Kong",
+   "src": "part_b",
+   "idx": 5,
+   "start": 223.78,
+   "end": 227.63,
+   "text": "Our central one-bedroom estimate is around $2,400 a month,"
+  },
+  {
+   "chapter": "Number 5 Hong Kong",
+   "src": "part_b",
+   "idx": 6,
+   "start": 227.93,
+   "end": 230.34,
+   "text": "compared with $1,800 outside the centre."
+  },
+  {
+   "chapter": "Number 5 Hong Kong",
+   "src": "part_b",
+   "idx": 7,
+   "start": 230.84,
+   "end": 234.85,
+   "text": "When it comes to the flat itself, compare floor area, not just bedrooms."
+  },
+  {
+   "chapter": "Number 5 Hong Kong",
+   "src": "part_b",
+   "idx": 8,
+   "start": 235.13,
+   "end": 238.05,
+   "text": "A compact one-bedroom and a spacious one share the same label."
+  },
+  {
+   "chapter": "Number 5 Hong Kong",
+   "src": "part_b",
+   "idx": 9,
+   "start": 238.61,
+   "end": 242.67,
+   "text": "Storage, daylight and kitchen layout show you what the monthly figure actually buys."
+  },
+  {
+   "chapter": "Number 4 Zurich",
+   "src": "part_b",
+   "idx": 10,
+   "start": 243.7,
+   "end": 244.02,
+   "text": "4."
+  },
+  {
+   "chapter": "Number 4 Zurich",
+   "src": "part_b",
+   "idx": 11,
+   "start": 244.63,
+   "end": 245.06,
+   "text": "Zurich."
+  },
+  {
+   "chapter": "Number 4 Zurich",
+   "src": "part_b",
+   "idx": 12,
+   "start": 245.92,
+   "end": 249.49,
+   "text": "Our central one-bedroom benchmark is around $2,900 a month."
+  },
+  {
+   "chapter": "Number 4 Zurich",
+   "src": "part_b",
+   "idx": 13,
+   "start": 249.8,
+   "end": 252.59,
+   "text": "Outside the centre, it falls to about $2,100."
+  },
+  {
+   "chapter": "Number 4 Zurich",
+   "src": "part_b",
+   "idx": 14,
+   "start": 252.9,
+   "end": 254.74,
+   "text": "That's roughly $800 between the two."
+  },
+  {
+   "chapter": "Number 4 Zurich",
+   "src": "part_b",
+   "idx": 16,
+   "start": 255.9,
+   "end": 259.7,
+   "text": "The trams, the lakeside and the old town make a convincing case for living here."
+  },
+  {
+   "chapter": "Number 4 Zurich",
+   "src": "part_b",
+   "idx": 17,
+   "start": 260.06,
+   "end": 263.38,
+   "text": "But the decision still comes down to the money you keep after the essentials."
+  },
+  {
+   "chapter": "Number 4 Zurich",
+   "src": "part_b",
+   "idx": 18,
+   "start": 263.82,
+   "end": 266.13,
+   "text": "Rent, food, transport and household bills"
+  },
+  {
+   "chapter": "Number 4 Zurich",
+   "src": "part_b",
+   "idx": 19,
+   "start": 266.4,
+   "end": 268.56,
+   "text": "all have to fit inside the same monthly budget."
+  },
+  {
+   "chapter": "Number 4 Zurich",
+   "src": "part_b",
+   "idx": 20,
+   "start": 269.02,
+   "end": 270.93,
+   "text": "And that beautiful flat looks very different"
+  },
+  {
+   "chapter": "Number 4 Zurich",
+   "src": "part_b",
+   "idx": 21,
+   "start": 271.23,
+   "end": 272.71,
+   "text": "when there's little left after paying for it."
+  },
+  {
+   "chapter": "Number 3 London",
+   "src": "part_b",
+   "idx": 22,
+   "start": 273.37,
+   "end": 273.86,
+   "text": "3."
+  },
+  {
+   "chapter": "Number 3 London",
+   "src": "part_b",
+   "idx": 23,
+   "start": 274.44,
+   "end": 274.83,
+   "text": "London."
+  },
+  {
+   "chapter": "Number 3 London",
+   "src": "part_b",
+   "idx": 24,
+   "start": 275.48,
+   "end": 277.41,
+   "text": "Tower Bridge is the easy introduction."
+  },
+  {
+   "chapter": "Number 3 London",
+   "src": "part_b",
+   "idx": 25,
+   "start": 277.76,
+   "end": 279.71,
+   "text": "For a tenant, the harder number is the rent:"
+  },
+  {
+   "chapter": "Number 3 London",
+   "src": "part_b",
+   "idx": 26,
+   "start": 280.06,
+   "end": 285.85,
+   "text": "about $2,900 US dollars a month for a central one-bedroom, or roughly \u00a32,150."
+  },
+  {
+   "chapter": "Number 3 London",
+   "src": "part_b",
+   "idx": 27,
+   "start": 286.48,
+   "end": 289.73,
+   "text": "Outside the centre, the dollar estimate falls to $2,300."
+  },
+  {
+   "chapter": "Number 3 London",
+   "src": "part_b",
+   "idx": 28,
+   "start": 290.19,
+   "end": 292.55,
+   "text": "That saving matters, but so does the route to work."
+  },
+  {
+   "chapter": "Number 3 London",
+   "src": "part_b",
+   "idx": 29,
+   "start": 293.13,
+   "end": 296.54,
+   "text": "Count the changes, the walking and the fares before choosing the cheaper flat."
+  },
+  {
+   "chapter": "Number 3 London",
+   "src": "part_b",
+   "idx": 30,
+   "start": 296.97,
+   "end": 300.2,
+   "text": "Put the rent and the commute together, and you get a far more useful price."
+  },
+  {
+   "chapter": "Number 2 Geneva",
+   "src": "part_b",
+   "idx": 31,
+   "start": 301.11,
+   "end": 301.34,
+   "text": "2."
+  },
+  {
+   "chapter": "Number 2 Geneva",
+   "src": "part_b",
+   "idx": 32,
+   "start": 301.94,
+   "end": 302.46,
+   "text": "Geneva."
+  },
+  {
+   "chapter": "Number 2 Geneva",
+   "src": "part_b",
+   "idx": 33,
+   "start": 303.37,
+   "end": 305.61,
+   "text": "The Jet d'Eau gives the city its signature view."
+  },
+  {
+   "chapter": "Number 2 Geneva",
+   "src": "part_b",
+   "idx": 34,
+   "start": 306.17,
+   "end": 309.59,
+   "text": "Our central one-bedroom figure is about $2,900 a month,"
+  },
+  {
+   "chapter": "Number 2 Geneva",
+   "src": "part_b",
+   "idx": 35,
+   "start": 309.95,
+   "end": 311.34,
+   "text": "level with Zurich once rounded."
+  },
+  {
+   "chapter": "Number 2 Geneva",
+   "src": "part_b",
+   "idx": 36,
+   "start": 311.86,
+   "end": 314.29,
+   "text": "Outside the centre, it's around $2,200."
+  },
+  {
+   "chapter": "Number 2 Geneva",
+   "src": "part_b",
+   "idx": 37,
+   "start": 314.95,
+   "end": 316.94,
+   "text": "Yet Geneva ranks two places higher."
+  },
+  {
+   "chapter": "Number 2 Geneva",
+   "src": "part_b",
+   "idx": 38,
+   "start": 317.65,
+   "end": 320.92,
+   "text": "That's another reason to keep the overall ranking separate from the rent comparison."
+  },
+  {
+   "chapter": "Number 2 Geneva",
+   "src": "part_b",
+   "idx": 39,
+   "start": 321.6,
+   "end": 323.55,
+   "text": "Matching rents don't mean matching living costs."
+  },
+  {
+   "chapter": "Number 2 Geneva",
+   "src": "part_b",
+   "idx": 40,
+   "start": 324.25,
+   "end": 329.07,
+   "text": "Before choosing between cities, compare your full budget in the currency you'll actually be paid in."
+  },
+  {
+   "chapter": "Number 2 Geneva",
+   "src": "part_b",
+   "idx": 41,
+   "start": 329.64,
+   "end": 331.49,
+   "text": "A neat dollar figure makes comparison easy."
+  },
+  {
+   "chapter": "Number 2 Geneva",
+   "src": "part_b",
+   "idx": 42,
+   "start": 332.4,
+   "end": 334.73,
+   "text": "Your own circumstances decide whether it's affordable."
+  },
+  {
+   "chapter": "Number 1 New York",
+   "src": "part_b",
+   "idx": 43,
+   "start": 336.53,
+   "end": 336.81,
+   "text": "1."
+  },
+  {
+   "chapter": "Number 1 New York",
+   "src": "part_b",
+   "idx": 44,
+   "start": 337.26,
+   "end": 337.82,
+   "text": "New York."
+  },
+  {
+   "chapter": "Number 1 New York",
+   "src": "part_b",
+   "idx": 45,
+   "start": 338.73,
+   "end": 339.81,
+   "text": "Remember that opening figure?"
+  },
+  {
+   "chapter": "Number 1 New York",
+   "src": "part_b",
+   "idx": 46,
+   "start": 340.31,
+   "end": 345.02,
+   "text": "A city-centre one-bedroom averages roughly $4,500 a month in our snapshot."
+  },
+  {
+   "chapter": "Number 1 New York",
+   "src": "part_b",
+   "idx": 47,
+   "start": 345.93,
+   "end": 346.96,
+   "text": "Multiply that by 12"
+  },
+  {
+   "chapter": "Number 1 New York",
+   "src": "part_b",
+   "idx": 48,
+   "start": 347.35,
+   "end": 349.59,
+   "text": "and you're at $54,000 a year."
+  },
+  {
+   "chapter": "Number 1 New York",
+   "src": "part_b",
+   "idx": 50,
+   "start": 350.68,
+   "end": 354.9,
+   "text": "Outside the centre, the estimate is around $3,000 a month, or $36,000 a year."
+  },
+  {
+   "chapter": "Number 1 New York",
+   "src": "part_b",
+   "idx": 51,
+   "start": 355.56,
+   "end": 358.54,
+   "text": "That's a difference of roughly $18,000 a year."
+  },
+  {
+   "chapter": "Number 1 New York",
+   "src": "part_b",
+   "idx": 52,
+   "start": 358.93,
+   "end": 360.51,
+   "text": "And that's before the rest of daily life."
+  },
+  {
+   "chapter": "Number 1 New York",
+   "src": "part_b",
+   "idx": 53,
+   "start": 361.25,
+   "end": 364.2,
+   "text": "So the layout, the daylight and the actual commute all matter."
+  },
+  {
+   "chapter": "Number 1 New York",
+   "src": "part_b",
+   "idx": 54,
+   "start": 364.81,
+   "end": 365.99,
+   "text": "The famous view is a bonus."
+  },
+  {
+   "chapter": "Number 1 New York",
+   "src": "part_b",
+   "idx": 55,
+   "start": 366.69,
+   "end": 367.85,
+   "text": "The bill arrives every month."
+  },
+  {
+   "chapter": "Number 1 New York",
+   "src": "part_b",
+   "idx": 56,
+   "start": 368.6,
+   "end": 369.77,
+   "text": "Would the address be worth it to you?"
+  },
+  {
+   "chapter": "Closing question",
+   "src": "part_b",
+   "idx": 57,
+   "start": 371.55,
+   "end": 375.34,
+   "text": "Across these cities, the useful number is what you have left after the essentials."
+  },
+  {
+   "chapter": "Closing question",
+   "src": "part_b",
+   "idx": 58,
+   "start": 375.98,
+   "end": 376.83,
+   "text": "Compare like with like,"
+  },
+  {
+   "chapter": "Closing question",
+   "src": "part_b",
+   "idx": 59,
+   "start": 377.15,
+   "end": 377.92,
+   "text": "include the commute,"
+  },
+  {
+   "chapter": "Closing question",
+   "src": "part_b",
+   "idx": 60,
+   "start": 378.25,
+   "end": 380.27,
+   "text": "and treat any average as a starting point."
+  },
+  {
+   "chapter": "Closing question",
+   "src": "part_b",
+   "idx": 61,
+   "start": 381.07,
+   "end": 382.74,
+   "text": "Which city would you pay a premium for?"
+  },
+  {
+   "chapter": "Closing question",
+   "src": "part_b",
+   "idx": 62,
+   "start": 383.43,
+   "end": 387.47,
+   "text": "Tell us in the comments, and subscribe for more comparisons of what your money actually buys."
+  }
+ ],
+ "anchors": [
+  [
+   0.3,
+   2.96,
+   5.15,
+   9.91,
+   11.05,
+   12.11,
+   15.4,
+   17.15,
+   19.57,
+   25.65,
+   28.3,
+   34.49,
+   37.54,
+   38.76,
+   40.35,
+   41.46,
+   44.04,
+   46.32,
+   49.89,
+   53.81,
+   58.68,
+   61.37,
+   63.34,
+   68.14,
+   70.64,
+   73.7,
+   76.26,
+   77.99,
+   80.35,
+   81.64,
+   84.54,
+   89.44,
+   93.93,
+   96.56,
+   98.18,
+   100.73,
+   105.04,
+   109.17,
+   111.37,
+   113.39,
+   115.08,
+   117.16,
+   120.35,
+   121.84,
+   123.34,
+   131.09,
+   135.93,
+   138.85,
+   147.89,
+   150.45,
+   152.8,
+   155.37,
+   157.36,
+   160.35,
+   161.8,
+   163.58,
+   165.28,
+   168.55,
+   171.66,
+   174.77,
+   176.11,
+   179.29,
+   181.4,
+   186.22,
+   189.24,
+   193.97,
+   198.84,
+   202.85,
+   208.35,
+   209.55,
+   211.53,
+   214.78,
+   217.02,
+   221.39,
+   225.07,
+   229.66,
+   235.56,
+   241.43,
+   244.22,
+   248.35,
+   249.82,
+   252.57,
+   261.14,
+   264.49,
+   269.23,
+   273.12,
+   277.96,
+   282.54,
+   288.35,
+   290.45,
+   293.38,
+   297.86,
+   301.55,
+   306.29,
+   311.14,
+   315.74,
+   318.84,
+   322.34,
+   325.12,
+   328.35,
+   331.05,
+   333.91,
+   337.18,
+   340.46,
+   348.65,
+   353.65,
+   358.22,
+   363.27,
+   368.35,
+   369.57,
+   371.58,
+   374.74,
+   378.76,
+   381.0,
+   384.52,
+   387.68,
+   392.06,
+   395.17,
+   400.92,
+   404.27,
+   408.35,
+   409.8,
+   412.74,
+   415.12,
+   422.2,
+   424.25,
+   429.12,
+   435.06,
+   439.06,
+   442.57,
+   447.11,
+   450.11,
+   453.23,
+   456.4,
+   461.95,
+   463.69,
+   465.36,
+   469.59,
+   473.16
+  ],
+  [
+   0.04,
+   2.39,
+   3.91,
+   8.299999999999999,
+   9.209999999999999,
+   10.069999999999999,
+   12.569999999999999,
+   13.989999999999998,
+   15.93,
+   21.36,
+   23.759999999999998,
+   29.55,
+   32.4,
+   33.4,
+   35.39,
+   36.14,
+   37.79,
+   39.8,
+   42.51,
+   46.15,
+   50.269999999999996,
+   52.769999999999996,
+   54.39,
+   58.49,
+   60.71,
+   63.339999999999996,
+   65.61,
+   67.11,
+   69.19000000000001,
+   70.06,
+   72.01,
+   76.57000000000001,
+   80.4,
+   82.66000000000001,
+   84.03,
+   85.84,
+   89.72000000000001,
+   93.31,
+   95.28,
+   97.06,
+   98.41000000000001,
+   100.25,
+   102.89,
+   103.71000000000001,
+   104.63000000000001,
+   111.79,
+   116.02000000000001,
+   118.39,
+   126.75,
+   128.97,
+   131.25,
+   133.34,
+   135.03,
+   137.31,
+   138.2,
+   139.23999999999998,
+   140.48999999999998,
+   143.38,
+   146.20999999999998,
+   148.75,
+   149.82,
+   152.25,
+   153.72,
+   158.28,
+   160.67,
+   164.87,
+   169.15,
+   172.73,
+   177.45,
+   178.28,
+   179.59,
+   182.38,
+   184.4,
+   188.51,
+   191.63,
+   195.51,
+   201.0,
+   206.35999999999999,
+   208.78,
+   211.42,
+   212.22,
+   213.54,
+   221.57999999999998,
+   223.78,
+   227.93,
+   230.84,
+   235.13,
+   238.60999999999999,
+   243.7,
+   244.63,
+   245.92,
+   249.8,
+   252.89999999999998,
+   255.89999999999998,
+   260.06,
+   263.82,
+   266.4,
+   269.02,
+   271.23,
+   273.37,
+   274.44,
+   275.48,
+   277.76,
+   280.06,
+   286.48,
+   290.19,
+   293.13,
+   296.97,
+   301.11,
+   301.94,
+   303.37,
+   306.16999999999996,
+   309.95,
+   311.86,
+   314.95,
+   317.65,
+   321.6,
+   324.25,
+   329.64,
+   332.4,
+   336.53,
+   337.26,
+   338.73,
+   340.31,
+   345.93,
+   347.35,
+   350.68,
+   355.56,
+   358.93,
+   361.25,
+   364.81,
+   366.69,
+   368.6,
+   371.54999999999995,
+   375.98,
+   377.15,
+   378.25,
+   381.07,
+   383.43
+  ]
+ ],
+ "chapters": [
+  [
+   0.0,
+   "Opening hook"
+  ],
+  [
+   23.610000000000003,
+   "How the comparison works"
+  ],
+  [
+   35.24,
+   "Number 10 Dubai"
+  ],
+  [
+   69.03999999999999,
+   "Number 9 San Francisco"
+  ],
+  [
+   102.74,
+   "Number 8 Singapore"
+  ],
+  [
+   137.16,
+   "Number 7 Bern"
+  ],
+  [
+   177.29999999999998,
+   "Number 6 Tel Aviv"
+  ],
+  [
+   211.26999999999998,
+   "Number 5 Hong Kong"
+  ],
+  [
+   243.54999999999998,
+   "Number 4 Zurich"
+  ],
+  [
+   273.22,
+   "Number 3 London"
+  ],
+  [
+   300.96000000000004,
+   "Number 2 Geneva"
+  ],
+  [
+   336.38,
+   "Number 1 New York"
+  ],
+  [
+   371.40000000000003,
+   "Closing question"
+  ]
+ ],
+ "shots": [
+  {
+   "shot": 1,
+   "start": 0.0,
+   "end": 10.021,
+   "chapter": "Opening hook",
+   "id": "MUSE_01",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 2,
+   "start": 10.021,
+   "end": 20.021,
+   "chapter": "Opening hook",
+   "id": "MUSE_02",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 3,
+   "start": 20.021,
+   "end": 23.61,
+   "chapter": "Opening hook",
+   "id": "MUSE_03",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 4,
+   "start": 23.61,
+   "end": 35.24,
+   "chapter": "How the comparison works",
+   "id": "MUSE_04",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 5,
+   "start": 35.24,
+   "end": 40.021,
+   "chapter": "Number 10 Dubai",
+   "id": "MUSE_05",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 6,
+   "start": 40.021,
+   "end": 50.021,
+   "chapter": "Number 10 Dubai",
+   "id": "MUSE_06",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 7,
+   "start": 50.021,
+   "end": 60.021,
+   "chapter": "Number 10 Dubai",
+   "id": "MUSE_07",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 8,
+   "start": 60.021,
+   "end": 69.04,
+   "chapter": "Number 10 Dubai",
+   "id": "MUSE_08",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 9,
+   "start": 69.04,
+   "end": 70.021,
+   "chapter": "Number 9 San Francisco",
+   "id": "MUSE_09",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 10,
+   "start": 70.021,
+   "end": 80.021,
+   "chapter": "Number 9 San Francisco",
+   "id": "MUSE_10",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 11,
+   "start": 80.021,
+   "end": 90.021,
+   "chapter": "Number 9 San Francisco",
+   "id": "MUSE_11",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 12,
+   "start": 90.021,
+   "end": 100.021,
+   "chapter": "Number 9 San Francisco",
+   "id": "MUSE_12",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 13,
+   "start": 100.021,
+   "end": 102.74,
+   "chapter": "Number 9 San Francisco",
+   "id": "MUSE_13",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 14,
+   "start": 102.74,
+   "end": 115.021,
+   "chapter": "Number 8 Singapore",
+   "id": "MUSE_14",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 15,
+   "start": 115.021,
+   "end": 125.021,
+   "chapter": "Number 8 Singapore",
+   "id": "MUSE_15",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 16,
+   "start": 125.021,
+   "end": 135.021,
+   "chapter": "Number 8 Singapore",
+   "id": "MUSE_16",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 17,
+   "start": 135.021,
+   "end": 137.16,
+   "chapter": "Number 8 Singapore",
+   "id": "MUSE_17",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 18,
+   "start": 137.16,
+   "end": 155.021,
+   "chapter": "Number 7 Bern",
+   "id": "MUSE_18",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 19,
+   "start": 155.021,
+   "end": 165.021,
+   "chapter": "Number 7 Bern",
+   "id": "MUSE_19",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 20,
+   "start": 165.021,
+   "end": 175.021,
+   "chapter": "Number 7 Bern",
+   "id": "MUSE_20",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 21,
+   "start": 175.021,
+   "end": 177.3,
+   "chapter": "Number 7 Bern",
+   "id": "MUSE_21",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 22,
+   "start": 177.3,
+   "end": 191.021,
+   "chapter": "Number 6 Tel Aviv",
+   "id": "MUSE_22",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 23,
+   "start": 191.021,
+   "end": 201.021,
+   "chapter": "Number 6 Tel Aviv",
+   "id": "MUSE_23",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 24,
+   "start": 201.021,
+   "end": 211.021,
+   "chapter": "Number 6 Tel Aviv",
+   "id": "MUSE_24",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 25,
+   "start": 211.021,
+   "end": 221.021,
+   "chapter": "Number 5 Hong Kong",
+   "id": "MUSE_25",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 26,
+   "start": 221.021,
+   "end": 231.021,
+   "chapter": "Number 5 Hong Kong",
+   "id": "MUSE_26",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 27,
+   "start": 231.021,
+   "end": 241.021,
+   "chapter": "Number 5 Hong Kong",
+   "id": "MUSE_27",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 28,
+   "start": 241.021,
+   "end": 243.55,
+   "chapter": "Number 5 Hong Kong",
+   "id": "MUSE_28",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 29,
+   "start": 243.55,
+   "end": 251.021,
+   "chapter": "Number 4 Zurich",
+   "id": "MUSE_29",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 30,
+   "start": 251.021,
+   "end": 260.479,
+   "chapter": "Number 4 Zurich",
+   "id": "MUSE_30",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 31,
+   "start": 260.479,
+   "end": 261.021,
+   "chapter": "Number 4 Zurich",
+   "id": "MUSE_31",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 32,
+   "start": 261.021,
+   "end": 271.021,
+   "chapter": "Number 4 Zurich",
+   "id": "MUSE_32",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 33,
+   "start": 271.021,
+   "end": 273.22,
+   "chapter": "Number 4 Zurich",
+   "id": "MUSE_33",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 34,
+   "start": 273.22,
+   "end": 281.021,
+   "chapter": "Number 3 London",
+   "id": "MUSE_34",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 35,
+   "start": 281.021,
+   "end": 291.021,
+   "chapter": "Number 3 London",
+   "id": "MUSE_35",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 36,
+   "start": 291.021,
+   "end": 300.96,
+   "chapter": "Number 3 London",
+   "id": "MUSE_36",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 37,
+   "start": 300.96,
+   "end": 311.021,
+   "chapter": "Number 2 Geneva",
+   "id": "MUSE_37",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 38,
+   "start": 311.021,
+   "end": 321.021,
+   "chapter": "Number 2 Geneva",
+   "id": "MUSE_38",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 39,
+   "start": 321.021,
+   "end": 331.021,
+   "chapter": "Number 2 Geneva",
+   "id": "MUSE_39",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 40,
+   "start": 331.021,
+   "end": 336.38,
+   "chapter": "Number 2 Geneva",
+   "id": "MUSE_40",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 41,
+   "start": 336.38,
+   "end": 341.021,
+   "chapter": "Number 1 New York",
+   "id": "MUSE_41",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 42,
+   "start": 341.021,
+   "end": 351.021,
+   "chapter": "Number 1 New York",
+   "id": "MUSE_42",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 43,
+   "start": 351.021,
+   "end": 361.021,
+   "chapter": "Number 1 New York",
+   "id": "MUSE_43",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 44,
+   "start": 361.021,
+   "end": 371.021,
+   "chapter": "Number 1 New York",
+   "id": "MUSE_44",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 45,
+   "start": 371.021,
+   "end": 371.4,
+   "chapter": "Number 1 New York",
+   "id": "MUSE_45",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 46,
+   "start": 371.4,
+   "end": 381.021,
+   "chapter": "Closing question",
+   "id": "MUSE_46",
+   "description": "",
+   "illustrative_housing_label": false
+  },
+  {
+   "shot": 47,
+   "start": 381.021,
+   "end": 387.625,
+   "chapter": "Closing question",
+   "id": "MUSE_47",
+   "description": "",
+   "illustrative_housing_label": false
+  }
+ ]
+}

@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Pip at the cafe</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <!--
+      whatif-channel animation test, 10 s, 1920x1080, 30 fps.
+      Cut-paper street at dusk (three parallax layers) and Pip as a code rig: every pose is a pure
+      function of time, computed in pose(t) and written by draw(), driven by one ease:"none" tween.
+
+        0.0-4.8  Pip walks in reading the phone, camera slides right, stops at the cafe window (settle)
+        5.2-6.5  phone up, shaken for signal
+        6.6      phone dies: anticipation squash, startled hop, eyes wide
+        7.6-8.3  turns to camera
+        8.4-9.3  shrug, worried brows; blink 9.5
+      Brand: ../../whatif-channel/brand (style.txt, cast.txt). Sound: sfx.py -> assets/sfx.wav.
+    -->
+    <style>
+      @font-face {
+        font-family: "Luckiest Guy";
+        src: url("assets/fonts/LuckiestGuy-Regular.ttf") format("truetype");
+      }
+      :root {
+        --cream: #f4ead8;
+        --teal: #3fb0a6;
+        --teal-deep: #1f5a5a;
+        --coral: #ef7f6a;
+        --mustard: #f2c14e;
+        --navy: #232a4d;
+        --dusk: #6a6fa6;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--navy);
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--navy);
+      }
+      #stage {
+        position: absolute;
+        inset: 0;
+        width: 1920px;
+        height: 1080px;
+      }
+      .sign {
+        font-family: "Luckiest Guy", sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="10" data-width="1920" data-height="1080">
+      <svg id="stage" viewBox="0 0 1920 1080" data-layout-allow-overflow>
+        <defs>
+          <filter id="paper" x="-10%" y="-10%" width="120%" height="130%">
+            <feDropShadow dx="0" dy="6" stdDeviation="5" flood-color="#141833" flood-opacity="0.35" />
+          </filter>
+          <filter id="grain">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" />
+            <feColorMatrix values="0 0 0 0 0.5  0 0 0 0 0.45  0 0 0 0 0.4  0 0 0 0.09 0" />
+          </filter>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#3b3f78" />
+            <stop offset="0.6" stop-color="#b98aa8" />
+            <stop offset="1" stop-color="#ffd7a0" />
+          </linearGradient>
+          <radialGradient id="sun" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0" stop-color="#fff3d6" stop-opacity="1" />
+            <stop offset="0.35" stop-color="#ffd9a8" stop-opacity="0.7" />
+            <stop offset="1" stop-color="#ffd9a8" stop-opacity="0" />
+          </radialGradient>
+          <radialGradient id="lamp" cx="0.5" cy="0" r="1">
+            <stop offset="0" stop-color="#ffe7a8" stop-opacity="0.55" />
+            <stop offset="1" stop-color="#ffe7a8" stop-opacity="0" />
+          </radialGradient>
+          <radialGradient id="halo" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0" stop-color="#cdeeff" stop-opacity="0.8" />
+            <stop offset="1" stop-color="#cdeeff" stop-opacity="0" />
+          </radialGradient>
+          <linearGradient id="interior" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffe2a6" />
+            <stop offset="1" stop-color="#e9a86a" />
+          </linearGradient>
+        </defs>
+
+        <!-- far layer (0.45x camera): dusk sky and the sun low in the alley gap -->
+        <rect width="1920" height="1080" fill="url(#sky)" />
+        <g id="far">
+          <circle cx="1000" cy="640" r="420" fill="url(#sun)" />
+          <g fill="#8d7ea6" opacity="0.7">
+            <rect x="760" y="420" width="120" height="480" />
+            <rect x="900" y="360" width="90" height="540" />
+            <rect x="1010" y="460" width="140" height="440" />
+            <rect x="1700" y="400" width="130" height="500" />
+            <rect x="1850" y="470" width="160" height="430" />
+          </g>
+        </g>
+
+        <!-- street layer (1x camera): facades, cafe, pavement; Pip walks in this layer -->
+        <g id="street">
+          <!-- left house -->
+          <g filter="url(#paper)">
+            <rect x="-200" y="0" width="900" height="900" fill="#5b6496" />
+            <rect x="-200" y="410" width="900" height="16" fill="#e9e1d0" />
+            <g id="win-left"></g>
+            <rect x="120" y="610" width="150" height="290" rx="4" fill="#5a2f2a" />
+            <path d="M120 610 a75 75 0 0 1 150 0 Z" fill="#f2c98a" />
+            <circle cx="248" cy="760" r="6" fill="var(--mustard)" />
+          </g>
+          <!-- cafe -->
+          <g filter="url(#paper)">
+            <rect x="1150" y="0" width="900" height="900" fill="#6c74a8" />
+            <g id="win-cafe"></g>
+            <rect x="1150" y="410" width="900" height="16" fill="#e9e1d0" />
+            <rect x="1190" y="440" width="820" height="460" fill="var(--teal-deep)" />
+            <rect x="1230" y="460" width="740" height="92" rx="6" fill="#174646" />
+            <text class="sign" x="1600" y="530" text-anchor="middle" font-size="64" fill="var(--cream)" letter-spacing="6">LITTLE CAFÉ</text>
+            <rect x="1240" y="640" width="470" height="240" fill="url(#interior)" />
+            <g fill="#7a4a35">
+              <rect x="1260" y="680" width="200" height="8" />
+              <rect x="1260" y="740" width="200" height="8" />
+            </g>
+            <g id="cups"></g>
+            <rect x="1540" y="760" width="150" height="120" rx="8" fill="#e9e1d0" opacity="0.85" />
+            <rect x="1740" y="620" width="230" height="280" fill="#1a4b4b" />
+            <rect x="1762" y="645" width="186" height="140" fill="url(#interior)" opacity="0.8" />
+            <circle cx="1935" cy="790" r="7" fill="var(--mustard)" />
+            <g id="awning"></g>
+            <!-- chalkboard and plants -->
+            <path d="M1990 900 L2010 760 L2080 760 L2100 900" fill="none" stroke="#5a3a28" stroke-width="8" />
+            <rect x="2005" y="770" width="80" height="80" rx="4" fill="#2b3a33" />
+            <g transform="translate(1200 900)">
+              <path d="M-30 0 L-38 -70 L38 -70 L30 0 Z" fill="#b46a43" />
+              <path d="M0 -70 C-60 -110 -70 -150 -10 -120 C-20 -170 20 -170 10 -120 C70 -150 60 -110 0 -70 Z" fill="#4f8a62" />
+            </g>
+          </g>
+          <!-- shuttered shop -->
+          <g filter="url(#paper)">
+            <rect x="2050" y="0" width="700" height="900" fill="#565d8f" />
+            <rect x="2050" y="410" width="700" height="16" fill="#e9e1d0" />
+            <g id="win-shop"></g>
+            <rect x="2110" y="520" width="380" height="380" fill="#8b8fae" />
+            <g id="shutter" stroke="#6f7396" stroke-width="5"></g>
+          </g>
+          <!-- pavement and road -->
+          <rect x="-200" y="900" width="2950" height="96" fill="#cfc6dc" />
+          <rect x="-200" y="900" width="2950" height="8" fill="#b4abc7" />
+          <rect x="-200" y="996" width="2950" height="14" fill="#9d95b4" />
+          <rect x="-200" y="1010" width="2950" height="70" fill="#353a63" />
+
+          <!-- Pip (world x set in draw(); ground at y 950) -->
+          <g id="pip">
+            <ellipse id="pip-shadow" cx="0" cy="0" rx="46" ry="8" fill="#141833" opacity="0.22" />
+            <g id="pip-legR" stroke="var(--navy)" stroke-width="8" stroke-linecap="round">
+              <line x1="0" y1="0" x2="0" y2="66" />
+              <ellipse cx="7" cy="68" rx="12" ry="5.5" fill="var(--navy)" stroke="none" />
+            </g>
+            <g id="pip-legL" stroke="var(--navy)" stroke-width="8" stroke-linecap="round">
+              <line x1="0" y1="0" x2="0" y2="66" />
+              <ellipse cx="7" cy="68" rx="12" ry="5.5" fill="var(--navy)" stroke="none" />
+            </g>
+            <g id="pip-body">
+              <g id="pip-armB" stroke="var(--navy)" stroke-width="7" stroke-linecap="round">
+                <line x1="0" y1="0" x2="0" y2="56" />
+              </g>
+              <g filter="url(#paper)">
+                <path d="M-50 -76 C-62 -150 -40 -232 0 -232 C40 -232 62 -150 50 -76 C42 -62 -42 -62 -50 -76 Z" fill="var(--teal)" />
+                <path d="M-46 -200 C-38 -224 -18 -230 -4 -230 C-30 -220 -40 -200 -42 -170 Z" fill="#ffffff" opacity="0.18" />
+              </g>
+              <g id="pip-tail">
+                <path d="M-7 0 L7 0 L10 46 L-4 49 Z" fill="var(--mustard)" />
+                <path d="M-4 49 L-2 56 M2 48 L4 55 M7 47 L9 53" stroke="var(--mustard)" stroke-width="3" />
+              </g>
+              <path d="M-52 -156 Q0 -140 52 -156 L54 -138 Q0 -122 -54 -138 Z" fill="var(--mustard)" filter="url(#paper)" />
+              <g id="pip-face">
+                <ellipse id="pip-eyeL" cx="-17" cy="-188" rx="5.5" ry="5.5" fill="#141833" />
+                <ellipse id="pip-eyeR" cx="17" cy="-188" rx="5.5" ry="5.5" fill="#141833" />
+                <circle cx="-22" cy="-174" r="2" fill="#1d6f68" />
+                <line id="pip-browL" x1="-26" y1="-204" x2="-9" y2="-206" stroke="#141833" stroke-width="4" stroke-linecap="round" />
+                <line id="pip-browR" x1="9" y1="-206" x2="26" y2="-204" stroke="#141833" stroke-width="4" stroke-linecap="round" />
+                <ellipse id="pip-mouthO" cx="0" cy="-166" rx="5" ry="7" fill="#141833" opacity="0" />
+                <path id="pip-mouthW" d="M-9 -166 q4.5 -4 9 0 q4.5 4 9 0" fill="none" stroke="#141833" stroke-width="3" stroke-linecap="round" opacity="0" />
+              </g>
+              <g id="pip-armF" stroke="var(--navy)" stroke-width="7" stroke-linecap="round">
+                <line x1="0" y1="0" x2="0" y2="56" />
+                <g id="pip-phone">
+                  <circle id="pip-halo" cx="0" cy="12" r="44" fill="url(#halo)" stroke="none" />
+                  <rect x="-11" y="-6" width="22" height="36" rx="5" fill="var(--navy)" stroke="none" />
+                  <rect id="pip-screen" x="-8" y="-2" width="16" height="27" rx="2" fill="#bfe9ff" stroke="none" />
+                  <path id="pip-spinner" d="M0 6 a5 5 0 1 1 -5 5" fill="none" stroke="#3b82c4" stroke-width="2.4" />
+                </g>
+              </g>
+            </g>
+          </g>
+        </g>
+
+        <!-- near layer (1.3x camera): lamp post and a stray flyer -->
+        <g id="near">
+          <path d="M2500 1080 L2500 330 Q2500 290 2540 290 L2590 290" fill="none" stroke="#2a2f55" stroke-width="16" />
+          <path d="M2560 282 L2620 282 L2608 304 L2572 304 Z" fill="#2a2f55" />
+          <path d="M2572 304 L2608 304 L2820 1000 L2360 1000 Z" fill="url(#lamp)" />
+          <circle cx="2590" cy="306" r="10" fill="#fff1c4" />
+        </g>
+        <g id="flyer">
+          <path d="M-28 -20 L30 -26 L34 22 L-24 28 Z" fill="#f4ead8" filter="url(#paper)" />
+          <path d="M-16 -8 L20 -12 M-14 4 L22 0 M-12 14 L10 12" stroke="#9aa0bf" stroke-width="3" />
+        </g>
+        <rect width="1920" height="1080" filter="url(#grain)" opacity="0.6" pointer-events="none" />
+      </svg>
+    </div>
+
+    <audio id="sfx" class="clip" src="assets/sfx.wav" data-start="0" data-duration="10" data-track-index="2" data-volume="1"></audio>
+
+    <script>
+      (function () {
+        const NS = "http://www.w3.org/2000/svg";
+        const $ = (id) => document.getElementById(id);
+        const el = (parent, tag, attrs) => {
+          const e = document.createElementNS(NS, tag);
+          for (const k in attrs) e.setAttribute(k, attrs[k]);
+          parent.appendChild(e);
+          return e;
+        };
+
+        // ---- static set dressing (deterministic) ----
+        function windows(id, x0, n, lit) {
+          const g = $(id);
+          for (let row = 0; row < 2; row++)
+            for (let i = 0; i < n; i++) {
+              const x = x0 + i * 190, y = 70 + row * 170, on = lit[(row * n + i) % lit.length];
+              el(g, "rect", { x: x - 6, y: y - 6, width: 132, height: 142, fill: "#e9e1d0" });
+              el(g, "rect", { x, y, width: 120, height: 130, fill: on ? "#f6d28a" : "#3a416e" });
+              el(g, "path", { d: `M${x + 60} ${y} V${y + 130} M${x} ${y + 65} H${x + 120}`, stroke: "#e9e1d0", "stroke-width": 6 });
+              if (row === 1) el(g, "rect", { x: x - 4, y: y + 134, width: 128, height: 14, rx: 4, fill: "#4f8a62" });
+            }
+        }
+        windows("win-left", -120, 4, [1, 0, 0, 1, 0, 1, 1, 0]);
+        windows("win-cafe", 1200, 4, [1, 1, 0, 1, 0, 1, 1, 1]);
+        windows("win-shop", 2100, 3, [0, 1, 0, 0, 0, 1]);
+        const aw = $("awning");
+        for (let i = 0; i < 11; i++) {
+          const x = 1220 + i * 70;
+          el(aw, "path", { d: `M${x} 570 L${x + 70} 570 L${x + 70} 620 A35 22 0 0 1 ${x} 620 Z`, fill: i % 2 ? "#f4ead8" : "#ef7f6a" });
+        }
+        el(aw, "rect", { x: 1210, y: 560, width: 790, height: 14, rx: 4, fill: "#c9614f" });
+        const cups = $("cups"), cupCol = ["#f4ead8", "#ef7f6a", "#3fb0a6", "#f2c14e"];
+        for (let i = 0; i < 12; i++)
+          el(cups, "rect", { x: 1268 + (i % 6) * 32, y: i < 6 ? 656 : 716, width: 20, height: 24, rx: 3, fill: cupCol[(i * 7) % 4] });
+        const sh = $("shutter");
+        for (let y = 540; y < 900; y += 22) el(sh, "line", { x1: 2110, y1: y, x2: 2490, y2: y });
+
+        // ---- motion helpers ----
+        const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+        const lerp = (a, b, p) => a + (b - a) * p;
+        const smooth = (p) => { p = clamp(p); return p * p * (3 - 2 * p); };
+        const ramp = (t, a, b) => smooth((t - a) / (b - a));
+        const spring = (t, t0, amp, k = 9, w = 22) => (t < t0 ? 0 : amp * Math.exp(-(t - t0) * k) * Math.cos((t - t0) * w));
+        const blinkAt = (t, at) => { const d = Math.abs(t - at); return d < 0.09 ? d / 0.09 : 1; };
+
+        // walk: constant speed, then 0.6 s ease to a stop at x = 1420, in front of the cafe window.
+        // STRIDE matches the swing (2 x leg 82 px x sin 38deg ~ 100 px) so planted feet barely skate
+        const X0 = 120, X1 = 1420, T_DEC = 4.2, DEC = 0.6;
+        const V = (X1 - X0) / (T_DEC + DEC / 2), STRIDE = 100, GROUND = 950, SCALE = 1.25;
+        function walkX(t) {
+          if (t < T_DEC) return X0 + V * t;
+          const d = Math.min(t - T_DEC, DEC);
+          return X0 + V * T_DEC + V * (d - (d * d) / (2 * DEC));
+        }
+
+        function pose(t) {
+          const x = walkX(t);
+          const walking = 1 - ramp(t, T_DEC, T_DEC + DEC);
+          const ph = (Math.PI * (x - X0)) / STRIDE; // one step per stride, so feet don't skate
+          const p = { x, walking };
+          p.camX = lerp(-200, -500, smooth((t - 0.5) / 4.4));
+
+          // legs swing opposite, body bobs up at mid-stance; settle spring when it stops
+          p.legL = 38 * walking * Math.sin(ph);
+          p.legR = -p.legL;
+          p.bob = -6 * walking * Math.abs(Math.cos(ph));
+          let sy = 1 + 0.012 * Math.sin((t * Math.PI * 2) / 2.4) * (1 - walking); // idle breath
+          sy += spring(t, T_DEC + DEC, -0.06);
+
+          // phone dies at 6.6: anticipation squash, startled hop, settle
+          const shock = t - 6.6;
+          if (shock > 0 && shock < 0.14) sy -= 0.08 * Math.sin((shock / 0.14) * Math.PI);
+          if (shock >= 0.14) sy += spring(t, 6.74, 0.1, 7, 18);
+          p.hop = shock > 0.14 && shock < 0.5 ? -26 * Math.sin(((shock - 0.14) / 0.36) * Math.PI) : 0;
+          // shrug lifts the shoulders
+          sy += 0.035 * (ramp(t, 8.4, 8.6) - ramp(t, 9.1, 9.4));
+          p.sy = sy;
+          p.sx = 1 - (sy - 1) * 0.6;
+
+          // face: looks down-right at the phone, up at it when raised, then at camera
+          const toCam = ramp(t, 7.6, 8.2);
+          const up = ramp(t, 5.2, 5.6) * (1 - ramp(t, 6.9, 7.4));
+          p.faceX = lerp(12, 0, toCam);
+          p.faceY = lerp(5, 0, toCam) - 9 * up;
+          const wide = ramp(t, 6.62, 6.7) * (1 - ramp(t, 7.6, 8.4));
+          const blink = Math.min(blinkAt(t, 2.1), blinkAt(t, 5.0), blinkAt(t, 9.5));
+          p.eyeR = 5.5 + 2.5 * wide;
+          p.eyeOpen = blink;
+          p.browUp = -8 * wide - 3 * up;
+          p.worry = 14 * ramp(t, 8.45, 8.75);
+          p.mouthO = wide;
+          p.mouthW = ramp(t, 8.5, 8.8);
+
+          // arms: front arm holds the phone forward, raises and shakes it, drops; shrug offsets the arms
+          const raise = ramp(t, 5.2, 5.55) * (1 - ramp(t, 7.5, 8.1));
+          const shake = t > 5.6 && t < 6.5 ? 13 * Math.sin((t - 5.6) * 2 * Math.PI * 4.5) * Math.sin(((t - 5.6) / 0.9) * Math.PI) : 0;
+          const shrugF = ramp(t, 8.42, 8.62) * (1 - ramp(t, 9.2, 9.6));
+          const shrugB = ramp(t, 8.5, 8.72) * (1 - ramp(t, 9.26, 9.66)); // back arm follows 0.08 s later
+          const swing = 16 * walking * Math.sin(ph);
+          p.armF = lerp(lerp(-38, -158, raise) + shake + spring(t, 6.6, 10, 8, 26), -64, shrugF);
+          p.armB = lerp(lerp(swing + 6, 14, 1 - walking) * (1 - toCam) + 10 * toCam, 64, shrugB);
+          p.phoneTilt = shake * 0.6;
+          p.phoneShow = 1 - ramp(t, 7.9, 8.15);
+          p.screenOn = t < 6.6 ? 1 : 0;
+          p.spin = t * 360;
+
+          // scarf tail trails while walking, swings on the stop and the hop
+          p.tail = 30 * walking + 7 * walking * Math.sin(ph + 0.7) + spring(t, T_DEC + DEC, 16, 4, 9) + spring(t, 6.74, -14, 5, 12) + 3 * Math.sin(t * 2.6);
+
+          // stray flyer drifts across the top right from 7.6 s
+          const f = clamp((t - 7.6) / 2.4);
+          p.flyer = { x: lerp(2050, 1180, f), y: 300 + 40 * Math.sin(f * 7) + 120 * f, r: 30 * Math.sin(f * 5) + 200 * f };
+          return p;
+        }
+
+        const set = (id, a) => { const e = $(id); for (const k in a) e.setAttribute(k, a[k]); };
+        function draw(t) {
+          const p = pose(t);
+          set("far", { transform: `translate(${p.camX * 0.45} 0)` });
+          set("street", { transform: `translate(${p.camX} 0)` });
+          set("near", { transform: `translate(${p.camX * 1.3} 0)` });
+          set("pip", { transform: `translate(${p.x} ${GROUND}) scale(${SCALE})` });
+          set("pip-shadow", { rx: 46 + p.hop * 0.4, opacity: 0.22 + p.hop * 0.004 });
+          set("pip-legL", { transform: `translate(-13 ${-72 + p.hop}) rotate(${p.legL})` });
+          set("pip-legR", { transform: `translate(13 ${-72 + p.hop}) rotate(${p.legR})` });
+          set("pip-body", { transform: `translate(0 ${p.bob + p.hop - 72}) scale(${p.sx} ${p.sy}) translate(0 72)` });
+          set("pip-face", { transform: `translate(${p.faceX} ${p.faceY})` });
+          for (const id of ["pip-eyeL", "pip-eyeR"]) set(id, { rx: p.eyeR, ry: p.eyeR * p.eyeOpen });
+          set("pip-browL", { transform: `translate(0 ${p.browUp}) rotate(${-p.worry} -9 -206)` });
+          set("pip-browR", { transform: `translate(0 ${p.browUp}) rotate(${p.worry} 9 -206)` });
+          set("pip-mouthO", { opacity: p.mouthO });
+          set("pip-mouthW", { opacity: p.mouthW * (1 - p.mouthO) });
+          set("pip-armF", { transform: `translate(40 -128) rotate(${p.armF})` });
+          set("pip-armB", { transform: `translate(-40 -128) rotate(${p.armB})` });
+          set("pip-phone", { transform: `translate(0 54) rotate(${-p.armF + p.phoneTilt}) scale(${p.phoneShow})` });
+          set("pip-screen", { fill: p.screenOn ? "#bfe9ff" : "#1b2144" });
+          set("pip-halo", { opacity: p.screenOn * 0.9 });
+          set("pip-spinner", { opacity: p.screenOn, transform: `rotate(${p.spin} 0 11)` });
+          set("pip-tail", { transform: `translate(-34 -144) rotate(${p.tail})` });
+          set("flyer", { transform: `translate(${p.flyer.x} ${p.flyer.y}) rotate(${p.flyer.r})` });
+        }
+
+        const clock = { t: 0 };
+        draw(0);
+        const tl = gsap.timeline({ paused: true });
+        tl.to(clock, { t: 10, duration: 10, ease: "none", onUpdate: () => draw(clock.t) }, 0);
+        window.__timelines = window.__timelines || {};
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

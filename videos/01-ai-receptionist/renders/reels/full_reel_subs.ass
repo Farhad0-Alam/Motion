@@ -1,0 +1,96 @@
+[Script Info]
+Title: iAgentice Full Reel Subtitles
+ScriptType: v4.00+
+WrapStyle: 0
+ScaledBorderAndShadow: yes
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: ReelSub,Instrument Sans,58,&H00FFFFFF,&H000000FF,&H00000000,&H90000000,-1,0,0,0,100,100,0,0,1,6,3,2,60,60,490,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.71,0:00:01.83,ReelSub,,0,0,0,,It's {\c&H0049F3D1&}three in the morning{\c&H00FFFFFF&},
+Dialogue: 0,0:00:01.85,0:00:04.28,ReelSub,,0,0,0,,and a customer just messaged your business.
+Dialogue: 0,0:00:04.58,0:00:05.42,ReelSub,,0,0,0,,{\c&H0049F3D1&}Who answers?{\c&H00FFFFFF&}
+Dialogue: 0,0:00:05.82,0:00:08.40,ReelSub,,0,0,0,,If the answer is "{\c&H0049F3D1&}nobody until nine{\c&H00FFFFFF&}," that
+Dialogue: 0,0:00:08.42,0:00:11.84,ReelSub,,0,0,0,,customer is probably already {\c&H0049F3D1&}talking to someone else{\c&H00FFFFFF&}.
+Dialogue: 0,0:00:12.04,0:00:13.05,ReelSub,,0,0,0,,In the next few minutes,
+Dialogue: 0,0:00:13.07,0:00:16.10,ReelSub,,0,0,0,,I'll show you exactly how an {\c&H0049F3D1&}AI receptionist{\c&H00FFFFFF&}
+Dialogue: 0,0:00:16.12,0:00:18.62,ReelSub,,0,0,0,,answers that message, and what separates a good
+Dialogue: 0,0:00:18.64,0:00:20.58,ReelSub,,0,0,0,,one from an annoying one.
+Dialogue: 0,0:00:21.13,0:00:23.87,ReelSub,,0,0,0,,Most small businesses are open about {\c&H0049F3D1&}forty hours{\c&H00FFFFFF&}
+Dialogue: 0,0:00:23.89,0:00:24.54,ReelSub,,0,0,0,,a week.
+Dialogue: 0,0:00:24.56,0:00:27.74,ReelSub,,0,0,0,,Customers message all {\c&H0049F3D1&}one hundred and sixty-eight{\c&H00FFFFFF&}.
+Dialogue: 0,0:00:27.76,0:00:31.02,ReelSub,,0,0,0,,{\c&H0049F3D1&}Evenings{\c&H00FFFFFF&}, weekends, other time zones.
+Dialogue: 0,0:00:31.04,0:00:32.90,ReelSub,,0,0,0,,And every channel is different:
+Dialogue: 0,0:00:32.92,0:00:35.82,ReelSub,,0,0,0,,your website, {\c&H0049F3D1&}WhatsApp{\c&H00FFFFFF&}, the phone.
+Dialogue: 0,0:00:35.84,0:00:38.28,ReelSub,,0,0,0,,An {\c&H0049F3D1&}AI receptionist{\c&H00FFFFFF&} sits on all of them
+Dialogue: 0,0:00:38.30,0:00:40.90,ReelSub,,0,0,0,,at once, and {\c&H0049F3D1&}never goes off shift{\c&H00FFFFFF&}.
+Dialogue: 0,0:00:41.51,0:00:43.38,ReelSub,,0,0,0,,Part one: the {\c&H0049F3D1&}channels{\c&H00FFFFFF&}.
+Dialogue: 0,0:00:43.40,0:00:46.38,ReelSub,,0,0,0,,This is wherever your customers already are:
+Dialogue: 0,0:00:46.40,0:00:48.48,ReelSub,,0,0,0,,a chat window on your {\c&H0049F3D1&}website{\c&H00FFFFFF&},
+Dialogue: 0,0:00:48.50,0:00:50.03,ReelSub,,0,0,0,,a voice button in the browser,
+Dialogue: 0,0:00:50.05,0:00:51.38,ReelSub,,0,0,0,,your {\c&H0049F3D1&}WhatsApp{\c&H00FFFFFF&} number.
+Dialogue: 0,0:00:51.40,0:00:53.52,ReelSub,,0,0,0,,The trick is that all of them feed
+Dialogue: 0,0:00:53.54,0:00:56.00,ReelSub,,0,0,0,,{\c&H0049F3D1&}one single agent{\c&H00FFFFFF&}, so the answer is the
+Dialogue: 0,0:00:56.02,0:00:58.20,ReelSub,,0,0,0,,same wherever the customer asks.
+Dialogue: 0,0:00:58.42,0:01:00.67,ReelSub,,0,0,0,,Part two: the brain.
+Dialogue: 0,0:01:00.69,0:01:02.49,ReelSub,,0,0,0,,That's a large {\c&H0049F3D1&}language model{\c&H00FFFFFF&},
+Dialogue: 0,0:01:02.51,0:01:04.92,ReelSub,,0,0,0,,the same kind of AI behind the chat
+Dialogue: 0,0:01:04.94,0:01:06.29,ReelSub,,0,0,0,,assistants you've already used.
+Dialogue: 0,0:01:06.31,0:01:08.72,ReelSub,,0,0,0,,It's great at understanding messy,
+Dialogue: 0,0:01:08.74,0:01:11.43,ReelSub,,0,0,0,,real human messages, typos and all.
+Dialogue: 0,0:01:11.45,0:01:12.57,ReelSub,,0,0,0,,But on its own,
+Dialogue: 0,0:01:12.59,0:01:14.73,ReelSub,,0,0,0,,it knows nothing about your business.
+Dialogue: 0,0:01:14.75,0:01:16.29,ReelSub,,0,0,0,,{\c&H0049F3D1&}Ask it{\c&H00FFFFFF&} your opening hours,
+Dialogue: 0,0:01:16.31,0:01:18.09,ReelSub,,0,0,0,,and it'll {\c&H0049F3D1&}happily guess{\c&H00FFFFFF&}.
+Dialogue: 0,0:01:18.35,0:01:20.62,ReelSub,,0,0,0,,Which is why part three matters most:
+Dialogue: 0,0:01:20.64,0:01:22.28,ReelSub,,0,0,0,,the {\c&H0049F3D1&}knowledge base{\c&H00FFFFFF&}.
+Dialogue: 0,0:01:22.64,0:01:24.46,ReelSub,,0,0,0,,You give the agent your own information:
+Dialogue: 0,0:01:24.48,0:01:28.10,ReelSub,,0,0,0,,services, prices, hours, policies.
+Dialogue: 0,0:01:28.38,0:01:29.76,ReelSub,,0,0,0,,When a question comes in,
+Dialogue: 0,0:01:29.78,0:01:32.82,ReelSub,,0,0,0,,the system first finds the few passages that
+Dialogue: 0,0:01:32.84,0:01:35.07,ReelSub,,0,0,0,,actually answer it, and hands only those to
+Dialogue: 0,0:01:35.09,0:01:36.00,ReelSub,,0,0,0,,the brain.
+Dialogue: 0,0:01:36.26,0:01:39.73,ReelSub,,0,0,0,,Engineers call this {\c&H0049F3D1&}retrieval-augmented generation{\c&H00FFFFFF&},
+Dialogue: 0,0:01:39.75,0:01:40.56,ReelSub,,0,0,0,,{\c&H0049F3D1&}R-A-G{\c&H00FFFFFF&}.
+Dialogue: 0,0:01:40.82,0:01:42.51,ReelSub,,0,0,0,,In plain words: the AI looks it up
+Dialogue: 0,0:01:42.53,0:01:44.26,ReelSub,,0,0,0,,before it speaks.
+Dialogue: 0,0:01:44.41,0:01:47.23,ReelSub,,0,0,0,,That's the difference between "I think we're open
+Dialogue: 0,0:01:47.25,0:01:49.12,ReelSub,,0,0,0,,Sundays" and "We're open Sundays,
+Dialogue: 0,0:01:49.14,0:01:50.47,ReelSub,,0,0,0,,ten to four."
+Dialogue: 0,0:01:51.03,0:01:52.97,ReelSub,,0,0,0,,Part four: actions.
+Dialogue: 0,0:01:53.35,0:01:54.83,ReelSub,,0,0,0,,Answering questions is nice,
+Dialogue: 0,0:01:54.85,0:01:56.85,ReelSub,,0,0,0,,but the {\c&H0049F3D1&}goal is the lead{\c&H00FFFFFF&}.
+Dialogue: 0,0:01:57.05,0:01:59.45,ReelSub,,0,0,0,,A good receptionist collects the customer's name,
+Dialogue: 0,0:01:59.47,0:02:01.94,ReelSub,,0,0,0,,what they need, and how to reach them,
+Dialogue: 0,0:02:01.96,0:02:04.43,ReelSub,,0,0,0,,and sends it straight to the {\c&H0049F3D1&}owner's inbox{\c&H00FFFFFF&}.
+Dialogue: 0,0:02:04.71,0:02:06.68,ReelSub,,0,0,0,,You wake up to {\c&H0049F3D1&}booked conversations{\c&H00FFFFFF&},
+Dialogue: 0,0:02:06.70,0:02:08.31,ReelSub,,0,0,0,,not missed ones.
+Dialogue: 0,0:02:09.10,0:02:11.80,ReelSub,,0,0,0,,Now, we've all met a bad chatbot.
+Dialogue: 0,0:02:11.82,0:02:13.29,ReelSub,,0,0,0,,So here's the {\c&H0049F3D1&}checklist{\c&H00FFFFFF&}.
+Dialogue: 0,0:02:13.31,0:02:16.41,ReelSub,,0,0,0,,One: it answers only from your information,
+Dialogue: 0,0:02:16.43,0:02:18.81,ReelSub,,0,0,0,,and says "{\c&H0049F3D1&}I don't know{\c&H00FFFFFF&}" instead of guessing.
+Dialogue: 0,0:02:18.83,0:02:20.99,ReelSub,,0,0,0,,Two: it {\c&H0049F3D1&}hands off to a human{\c&H00FFFFFF&} for
+Dialogue: 0,0:02:21.01,0:02:23.13,ReelSub,,0,0,0,,anything it shouldn't decide.
+Dialogue: 0,0:02:23.15,0:02:25.95,ReelSub,,0,0,0,,Three: it {\c&H0049F3D1&}captures the lead every time{\c&H00FFFFFF&},
+Dialogue: 0,0:02:25.97,0:02:28.41,ReelSub,,0,0,0,,not just the conversation.
+Dialogue: 0,0:02:28.83,0:02:29.56,ReelSub,,0,0,0,,Get those three right,
+Dialogue: 0,0:02:29.58,0:02:32.62,ReelSub,,0,0,0,,and customers barely notice they're talking to an
+Dialogue: 0,0:02:32.64,0:02:33.37,ReelSub,,0,0,0,,AI.
+Dialogue: 0,0:02:33.95,0:02:36.55,ReelSub,,0,0,0,,This is exactly how we built {\c&H0049F3D1&}ClientFalcon Voice{\c&H00FFFFFF&}
+Dialogue: 0,0:02:36.57,0:02:39.55,ReelSub,,0,0,0,,at {\c&H0049F3D1&}iAgentice{\c&H00FFFFFF&}: voice and chat assistants trained on
+Dialogue: 0,0:02:39.57,0:02:41.77,ReelSub,,0,0,0,,a business's own information,
+Dialogue: 0,0:02:42.07,0:02:45.14,ReelSub,,0,0,0,,answering website visitors and {\c&H0049F3D1&}WhatsApp{\c&H00FFFFFF&} messages around the
+Dialogue: 0,0:02:45.16,0:02:47.63,ReelSub,,0,0,0,,clock, and sending every lead to the owner's
+Dialogue: 0,0:02:47.65,0:02:48.45,ReelSub,,0,0,0,,inbox.
+Dialogue: 0,0:02:48.65,0:02:50.15,ReelSub,,0,0,0,,If you want one for your business,
+Dialogue: 0,0:02:50.17,0:02:52.27,ReelSub,,0,0,0,,or want us to build a custom agent,
+Dialogue: 0,0:02:52.33,0:02:53.57,ReelSub,,0,0,0,,the link's in the description.
+Dialogue: 0,0:02:53.85,0:02:55.21,ReelSub,,0,0,0,,And if you'd like to see the build
+Dialogue: 0,0:02:55.23,0:02:56.61,ReelSub,,0,0,0,,itself, step by step,
+Dialogue: 0,0:02:56.63,0:02:57.53,ReelSub,,0,0,0,,{\c&H0049F3D1&}subscribe{\c&H00FFFFFF&}.
+Dialogue: 0,0:02:57.81,0:02:59.29,ReelSub,,0,0,0,,That's the next video.

@@ -1,0 +1,251 @@
+<!doctype html>
+<html
+  lang="en"
+  data-composition-variables='[
+    {"id":"link","type":"string","label":"Demo link","default":"clientfalcon.com/demo","maxLength":28}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=720, height=1280" />
+    <title>ClientFalcon end card</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <!--
+      Reusable After Hours end card (iAgentice channel), 3.0 s, 720x1280, 24 fps.
+      The Stoop geometry is the locked mark from /root/ClientFalcon/backend/brand-src/cf_final.py
+      (circle breaking at 325 deg onto a 40-degree log spiral, coral customer dot), drawn here as
+      its centreline so it can draw itself. The wordmark is the outlined path from
+      clientfalcon-lockup-night.svg (round tittles). Tokens: plan/rules.md.
+    -->
+    <style>
+      @font-face {
+        font-family: "Instrument Sans";
+        src: url("assets/fonts/InstrumentSans-600.ttf") format("truetype");
+        font-weight: 600;
+      }
+      @font-face {
+        font-family: "IBM Plex Mono";
+        src: url("assets/fonts/IBMPlexMono.ttf") format("truetype");
+        font-weight: 500;
+      }
+      :root {
+        --slate: #101215;
+        --limestone: #e9e8e3;
+        --paper: #f3f4f1;
+        --dusk: #ff6b57;
+        --night: #9385ff;
+        --dawn: #f7a63b;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 720px;
+        height: 1280px;
+        overflow: hidden;
+        background: var(--slate);
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--slate);
+      }
+      #card {
+        position: absolute;
+        inset: 0;
+      }
+      /* background: the night sky at the top, dawn rising from the bottom */
+      .sky {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      #sky-night {
+        background: radial-gradient(120% 55% at 50% -12%, rgba(147, 133, 255, 0.22), rgba(147, 133, 255, 0) 70%);
+      }
+      #sky-dawn {
+        background: radial-gradient(110% 48% at 50% 112%, rgba(247, 166, 59, 0.34), rgba(247, 166, 59, 0) 72%);
+      }
+      .mark-wrap {
+        position: relative;
+        width: 252px;
+        height: 252px;
+      }
+      /* centred on the dot: dot at ({{GLOW_X}}+280, {{GLOW_Y}}+280) px inside the 252 px mark box */
+      #mark-glow {
+        position: absolute;
+        left: {{GLOW_X}}px;
+        top: {{GLOW_Y}}px;
+        width: 560px;
+        height: 560px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 107, 87, 0.3), rgba(255, 107, 87, 0) 62%);
+      }
+      /* content column, kept clear of the Shorts/Reels caption and button overlays */
+      .stack {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 140px 64px 320px;
+        text-align: center;
+      }
+      #mark {
+        position: relative;
+        display: block;
+        width: 252px;
+        height: 252px;
+        overflow: visible;
+      }
+      #wordmark {
+        display: block;
+        width: 292px;
+        height: 39px;
+        margin-top: 18px;
+        overflow: visible;
+      }
+      #tagline {
+        margin-top: 64px;
+        font-family: "Instrument Sans", sans-serif;
+        font-weight: 600;
+        font-size: 84px;
+        line-height: 0.98;
+        letter-spacing: -0.025em;
+        color: var(--limestone);
+      }
+      .line {
+        display: block;
+      }
+      #period {
+        display: inline-block;
+        color: var(--dusk);
+      }
+      #cta {
+        margin-top: 52px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+      }
+      #cta-label {
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 500;
+        font-size: 20px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--dusk);
+      }
+      #link-pill {
+        display: block;
+        padding: 15px 30px 16px;
+        border: 2px solid var(--dusk);
+        border-radius: 999px;
+        background: rgba(255, 107, 87, 0.1);
+      }
+      #link {
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 500;
+        font-size: 30px;
+        letter-spacing: 0.01em;
+        color: var(--paper);
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="endcard"
+      data-start="0"
+      data-duration="3"
+      data-fps="24"
+      data-width="720"
+      data-height="1280"
+    >
+      <section id="card">
+        <div id="sky-night" class="sky"></div>
+        <div id="sky-dawn" class="sky"></div>
+        <div class="stack">
+          <div class="mark-wrap">
+          <div id="mark-glow" data-layout-allow-overflow="true"></div>
+          <svg id="mark" viewBox="0 0 1000 1000" aria-label="ClientFalcon">
+            <circle id="ring-a" cx="{{DOT_CX}}" cy="{{DOT_CY}}" r="{{DOT_R}}" fill="none" stroke="#FF6B57" stroke-width="10" opacity="0" />
+            <circle id="ring-b" cx="{{DOT_CX}}" cy="{{DOT_CY}}" r="{{DOT_R}}" fill="none" stroke="#FF6B57" stroke-width="8" opacity="0" />
+            <path
+              id="stoop"
+              d="{{STOOP_D}}"
+              fill="none"
+              stroke="#F3F4F1"
+              stroke-width="{{STOOP_W}}"
+              stroke-linecap="butt"
+              stroke-linejoin="round"
+            />
+            <circle id="dot" cx="{{DOT_CX}}" cy="{{DOT_CY}}" r="{{DOT_R}}" fill="#FF6B57" />
+          </svg>
+          </div>
+          <svg id="wordmark" viewBox="283 97 753 100" aria-label="ClientFalcon">
+            <path d="{{WORDMARK_D}}" fill="#F3F4F1" />
+          </svg>
+          <h1 id="tagline">
+            <span id="line-1" class="line">Work that</span>
+            <span id="line-2" class="line">never sleeps<span id="period">.</span></span>
+          </h1>
+          <div id="cta">
+            <div id="cta-label">Try the demo</div>
+            <div id="link-pill"><span id="link" data-var-text="link">clientfalcon.com/demo</span></div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <script>
+      const DOT = { x: {{DOT_CX}}, y: {{DOT_CY}}, r: {{DOT_R}} };
+      // Draw-on in the path's own units: dash = whole length, gap longer than the path.
+      const stoop = document.getElementById("stoop");
+      const L = stoop.getTotalLength();
+      const ARC_LEFT = L * {{ARC_LEFT}}; // offset when the circle is drawn and the spiral is not
+      stoop.setAttribute("stroke-dasharray", `${L} ${L * 2}`);
+
+      const tl = gsap.timeline({ paused: true });
+
+      // sky: night is already there; dawn rises under everything for the whole card
+      tl.fromTo("#sky-night", { opacity: 0.55 }, { opacity: 1, duration: 0.5, ease: "sine.out" }, 0);
+      tl.fromTo("#sky-dawn", { opacity: 0, y: 120 }, { opacity: 1, y: 0, duration: 2.7, ease: "sine.inOut" }, 0.25);
+
+      // 1. a customer appears: the coral dot pops and rings
+      tl.fromTo("#dot", { scale: 0, svgOrigin: `${DOT.x} ${DOT.y}` }, { scale: 1, duration: 0.3, ease: "back.out(2.6)" }, 0.08);
+      tl.fromTo("#ring-a", { attr: { r: DOT.r }, opacity: 0.9 }, { attr: { r: DOT.r * 3.4 }, opacity: 0, duration: 0.62, ease: "power2.out" }, 0.14);
+
+      // 2. the waiting-on circle draws around, 3. breaks at 325 deg and stoops into the dot, accelerating
+      tl.fromTo("#stoop", { strokeDashoffset: L }, { strokeDashoffset: ARC_LEFT, duration: 0.58, ease: "sine.inOut" }, 0.22);
+      tl.to("#stoop", { strokeDashoffset: 0, duration: 0.22, ease: "power2.in" }, 0.8);
+
+      // 4. answered: the dot pulses, a second ring, the coral glow blooms then settles
+      tl.to("#dot", { keyframes: [{ scale: 1.42, duration: 0.12, ease: "power2.out" }, { scale: 1, duration: 0.3, ease: "back.out(3)" }], svgOrigin: `${DOT.x} ${DOT.y}` }, 1.02);
+      tl.fromTo("#ring-b", { attr: { r: DOT.r * 1.2 }, opacity: 0.8 }, { attr: { r: DOT.r * 4.2 }, opacity: 0, duration: 0.7, ease: "expo.out" }, 1.02);
+      tl.fromTo("#mark-glow", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.32, ease: "power2.out" }, 1.02);
+      tl.to("#mark-glow", { opacity: 0.55, scale: 1.08, duration: 1.4, ease: "sine.inOut" }, 1.34);
+
+      // wordmark wipes on left to right under the mark
+      tl.fromTo("#wordmark", { clipPath: "inset(0% 100% 0% 0%)", opacity: 0.4 }, { clipPath: "inset(0% 0% 0% 0%)", opacity: 1, duration: 0.42, ease: "power2.out" }, 1.06);
+
+      // tagline: two lines rise, the coral period lands last
+      tl.fromTo("#line-1", { opacity: 0, y: 34 }, { opacity: 1, y: 0, duration: 0.5, ease: "expo.out" }, 1.14);
+      tl.fromTo("#line-2", { opacity: 0, y: 34 }, { opacity: 1, y: 0, duration: 0.55, ease: "power4.out" }, 1.25);
+      tl.fromTo("#period", { scale: 0, transformOrigin: "50% 80%" }, { scale: 1, duration: 0.34, ease: "back.out(3.2)" }, 1.6);
+
+      // the demo link settles and holds still to the end
+      tl.fromTo("#link-pill", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.36, ease: "back.out(1.8)" }, 1.58);
+      tl.fromTo("#cta-label", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.42, ease: "circ.out" }, 1.68);
+
+      window.__timelines["endcard"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

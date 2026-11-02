@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EP.01 - How an AI receptionist answers customers 24/7 (Vertical 9:16)</title>
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Instrument Sans"; font-weight: 400 700; src: url("assets/fonts/InstrumentSans-400_700.woff2") format("woff2"); }
+      @font-face { font-family: "IBM Plex Mono"; font-weight: 400; src: url("assets/fonts/IBMPlexMono-400.woff2") format("woff2"); }
+      @font-face { font-family: "IBM Plex Mono"; font-weight: 500; src: url("assets/fonts/IBMPlexMono-500.woff2") format("woff2"); }
+      @font-face { font-family: "IBM Plex Mono"; font-weight: 600; src: url("assets/fonts/IBMPlexMono-600.woff2") format("woff2"); }
+
+      :root {
+        --bg: #12171a; --fg: #f3f6f1; --muted: #b9c3ba; --faint: #7d887e;
+        --lime: #c8f04f; --gold: #f0c05f; --dawn: #f7a63b; --dusk: #ff6b57;
+        --night: #9385ff; --teal: #4ecdc4; --red: #ff6b6b;
+        --slate: #1b2126; --slate2: #232a31; --slate3: #2b333b;
+        --hair: #ffffff1c; --hair2: #ffffff3d;
+        --sans: "Instrument Sans", "Noto Sans", sans-serif;
+        --mono: "IBM Plex Mono", monospace;
+        --t-meta: 26px; --t-body: 34px; --t-em: 42px; --t-cap: 50px; --t-h3: 64px; --t-h2: 80px; --t-h1: 96px;
+      }
+      html, body { margin: 0; padding: 0; width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden;
+        background: radial-gradient(ellipse at 50% 30%, #1f2a27 0%, #151b1e 55%, #0f1416 100%);
+        font-family: var(--sans); color: var(--fg); }
+      .grid { position: absolute; inset: 0;
+        background-image: linear-gradient(var(--hair) 1px, transparent 1px), linear-gradient(90deg, var(--hair) 1px, transparent 1px);
+        background-size: 80px 80px; background-position: -1px -1px; opacity: 0.45; }
+      .vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, transparent 55%, #00000077 100%); pointer-events: none; }
+      .abs { position: absolute; }
+      .mono { font-family: var(--mono); letter-spacing: 0.04em; }
+      .label { font-family: var(--mono); font-size: var(--t-meta); font-weight: 500; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; }
+      .scene { position: absolute; inset: 0; visibility: hidden; opacity: 0; }
+
+      /* HUD (Top Safe Zone) */
+      #hud-left { left: 48px; top: 60px; display: flex; align-items: center; gap: 16px; z-index: 50; }
+      #hud-right { right: 48px; top: 68px; font-size: 24px; z-index: 50; }
+      .scn-label { left: 130px; top: 68px; color: var(--lime); font-size: 24px; z-index: 50; }
+
+      /* Bubbles and cards */
+      .bubble { font-size: var(--t-body); line-height: 1.25; padding: 22px 30px; border-radius: 26px; background: var(--slate3);
+        border: 1px solid var(--hair2); max-width: 720px; }
+      .bubble.out { background: #24331a; border-color: #c8f04f77; }
+      .bubble.bad { background: #351b1b; border-color: #ff6b6b88; }
+      .chip { display: flex; align-items: center; gap: 18px; padding: 20px 30px; border-radius: 20px; background: var(--slate2);
+        border: 1px solid var(--hair2); font-size: var(--t-body); font-weight: 600; white-space: nowrap; }
+      .chip svg { width: 44px; height: 44px; flex: none; }
+      .card { background: var(--slate); border: 1px solid var(--hair2); border-radius: 24px; }
+
+      /* Scene 1 (Vertical) */
+      #clock { left: 0; right: 0; top: 160px; text-align: center; font-family: var(--mono); font-size: 130px; font-weight: 600; color: var(--night); line-height: 1; }
+      #clock small { font-size: var(--t-h3); color: var(--muted); margin-left: 14px; }
+      #clock-sub { left: 0; right: 0; top: 300px; text-align: center; }
+      #phone { left: 90px; top: 380px; width: 900px; height: 740px; border-radius: 50px; background: var(--slate);
+        border: 2px solid var(--hair2); box-shadow: 0 40px 120px #00000088; overflow: hidden; }
+      #phone .top { height: 110px; border-bottom: 1px solid var(--hair); display: flex; align-items: center; padding: 0 32px; gap: 18px; }
+      #phone .avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--slate3); border: 1px solid var(--hair2); }
+      #s1-msg { left: 32px; top: 150px; max-width: 680px; }
+      #s1-status { left: 40px; top: 350px; font-size: var(--t-meta); color: var(--muted); }
+      #s1-timer { left: 40px; top: 420px; font-size: var(--t-meta); max-width: 680px; color: var(--red); line-height: 1.35; }
+      #rival { left: 90px; top: 1170px; width: 900px; box-sizing: border-box; padding: 32px 38px; }
+      #rival .who { font-size: var(--t-meta); color: var(--teal); font-family: var(--mono); letter-spacing: 0.06em; }
+      #rival .txt { font-size: var(--t-em); margin-top: 14px; font-weight: 600; }
+      #rival .t { font-size: var(--t-meta); color: var(--muted); margin-top: 14px; font-family: var(--mono); }
+      #title-card { left: 50px; right: 50px; top: 580px; text-align: center; }
+      #title-card .ep { color: var(--lime); }
+      #title-card h1 { font-size: 78px; line-height: 1.08; margin: 26px auto 0; font-weight: 700; letter-spacing: -0.025em; }
+      #title-line { left: 190px; top: 960px; width: 700px; height: 8px; border-radius: 4px; background: var(--lime); transform-origin: left center; }
+
+      /* Scene 2 (Vertical) */
+      #ring { left: 240px; top: 220px; width: 600px; height: 600px; }
+      #ring-center { left: 240px; top: 220px; width: 600px; height: 600px; }
+      .big-num { font-size: 150px; font-weight: 700; line-height: 1; letter-spacing: -0.03em; }
+      .rc { position: absolute; text-align: center; width: 600px; left: 0; }
+      #s2-head { left: 0; right: 0; top: 880px; text-align: center; }
+      #s2-chips { left: 120px; top: 960px; width: 840px; display: flex; flex-direction: column; gap: 24px; }
+      #s2-chips .chip { justify-content: flex-start; padding: 24px 36px; font-size: 38px; }
+
+      /* Scene 3 (Vertical) */
+      .block-h { font-family: var(--mono); font-size: var(--t-meta); font-weight: 500; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 16px; }
+      #b-ch { left: 90px; top: 190px; width: 900px; }
+      #b-ch .chip { margin-bottom: 18px; padding: 18px 28px; }
+      #brain { left: 350px; top: 620px; width: 380px; height: 380px; }
+      #brain-core { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 50% 45%, #c8f04f40, #c8f04f12 60%, transparent 70%);
+        border: 3px solid #c8f04faa; }
+      #brain-label { position: absolute; left: 0; right: 0; top: 136px; text-align: center; font-size: var(--t-em); font-weight: 700; line-height: 1.1; }
+      #w1 { position: absolute; left: 538px; top: 480px; width: 4px; height: 140px; background: var(--lime); transform-origin: top center; }
+      #w3 { position: absolute; left: 538px; top: 1000px; width: 4px; height: 110px; background: var(--lime); transform-origin: top center; }
+      #w2 { position: absolute; left: 538px; top: 1000px; width: 4px; height: 110px; background: var(--lime); transform-origin: top center; }
+      #msg-messy { left: 90px; top: 540px; width: 720px; }
+      #msg-q { left: 90px; top: 540px; width: 720px; }
+      #b-kb { left: 60px; top: 1110px; width: 960px; padding: 24px 30px; box-sizing: border-box; }
+      .docs { display: flex; gap: 16px; margin-top: 6px; }
+      .doc { flex: 1; height: 130px; border-radius: 16px; background: var(--slate3); border: 2px solid var(--hair2); position: relative; padding: 18px 16px; box-sizing: border-box; }
+      .doc .n { font-size: var(--t-meta); font-weight: 600; }
+      .doc .ln { height: 8px; border-radius: 4px; background: #ffffff26; margin-top: 14px; }
+      .doc .hl { position: absolute; inset: -2px; border-radius: 16px; border: 4px solid var(--lime); box-shadow: 0 0 34px #c8f04f77; opacity: 0; }
+      #snippet { left: 360px; top: 1170px; font-size: 34px; padding: 14px 26px; border-radius: 14px; background: #c8f04f; color: #12171a; font-weight: 600; }
+      #rag { left: 60px; top: 1060px; }
+      #ans-guess { left: 90px; top: 1080px; width: 900px; box-sizing: border-box; font-size: 40px; }
+      #stamp-guess { left: 680px; top: 1180px; }
+      #ans-think { left: 90px; top: 1380px; width: 900px; box-sizing: border-box; font-size: 38px; }
+      #ans-right { left: 90px; top: 1510px; width: 900px; box-sizing: border-box; font-size: 38px; }
+
+      #b-act { left: 390px; top: 680px; width: 300px; text-align: center; }
+      #inbox { width: 240px; height: 185px; position: relative; margin: 0 auto; }
+      #inbox-badge { position: absolute; top: -14px; right: -14px; width: 48px; height: 48px; border-radius: 50%;
+        background: var(--lime); color: #12171a; font-weight: 700; font-size: 26px; display: flex; align-items: center; justify-content: center; }
+      #lead { left: 90px; top: 1020px; width: 900px; box-sizing: border-box; padding: 34px 40px; }
+      #lead .row { display: flex; align-items: baseline; gap: 24px; font-size: var(--t-em); font-weight: 600; margin-top: 18px; }
+      #lead .k { font-family: var(--mono); font-size: var(--t-meta); color: var(--muted); width: 140px; flex: none; }
+      .stamp { border: 4px solid var(--red); color: var(--red); font-family: var(--mono); font-size: 32px; font-weight: 700; padding: 6px 18px; border-radius: 10px; transform: rotate(-8deg); }
+
+      /* Scene 4 (Vertical Checklist) */
+      .col { width: 920px; padding: 32px 38px; box-sizing: border-box; border-radius: 28px; background: var(--slate); border: 1px solid var(--hair2); }
+      .col h2 { margin: 0 0 24px; font-size: 44px; font-weight: 700; }
+      .col .item { display: flex; align-items: center; gap: 22px; font-size: 34px; line-height: 1.3; margin-bottom: 22px; }
+      .col .ic { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 26px; flex: none; }
+      .col.bad .ic { background: #3d1f1f; color: var(--red); }
+      .col.good .ic { background: #283a1d; color: var(--lime); }
+      #col-bad { left: 80px; top: 220px; }
+      #col-good { left: 80px; top: 860px; }
+
+      /* Scene 5 (Vertical Brand + CTA) */
+      #cf-logo { left: 470px; top: 220px; width: 140px; height: 140px; }
+      #cf-name { left: 0; right: 0; top: 380px; text-align: center; font-size: 64px; font-weight: 700; }
+      #cf-by { left: 0; right: 0; top: 460px; text-align: center; font-size: var(--t-meta); }
+      #cf-chips { left: 90px; top: 540px; width: 900px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+      #cf-chips .chip { justify-content: center; font-size: 32px; }
+      #cf-flow { left: 90px; top: 780px; width: 900px; display: flex; align-items: center; justify-content: space-between; font-size: 30px; }
+      #url { left: 90px; right: 90px; top: 980px; text-align: center; }
+      #url .u { font-family: var(--mono); font-size: 72px; font-weight: 700; color: var(--lime); }
+      #endcard { left: 90px; right: 90px; top: 980px; text-align: center; }
+      #sub-btn { left: 340px; top: 1420px; width: 400px; padding: 22px 0; text-align: center; font-size: 38px; font-weight: 700; border-radius: 24px; background: var(--lime); color: #12171a; }
+
+      /* Subtitles Container (Mobile Eye-Level Safe Zone) */
+      #captions { left: 0; right: 0; bottom: 140px; height: 120px; position: absolute; }
+      .cap { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); white-space: nowrap; font-size: 44px; font-weight: 600;
+        line-height: 1.15; padding: 16px 36px; border-radius: 22px; background: #0b0f11f2; border: 1px solid var(--hair2); visibility: hidden; opacity: 0; }
+      .cap span { opacity: 0.55; }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-vw3s" id="root" data-composition-id="master" data-width="1080" data-height="1920" data-start="0" data-duration="186.39">
+      <div data-hf-id="hf-kxq8" class="grid"></div>
+
+      <!-- ===== Scene 1: hook ===== -->
+      <div data-hf-id="hf-pmhl" id="sc1" class="scene">
+        <div data-hf-id="hf-12b3" id="clock" class="abs">03:02<small data-hf-id="hf-ztxy">AM</small></div>
+        <div data-hf-id="hf-c5e0" id="clock-sub" class="abs label">Local time · business closed</div>
+
+        <div data-hf-id="hf-8xdq" id="phone" class="abs">
+          <div data-hf-id="hf-sijt" class="top"><div data-hf-id="hf-o4a3" class="avatar"></div><div data-hf-id="hf-yeow"><div data-hf-id="hf-f6mw" style="font-size:36px;font-weight:600">Customer</div>
+            <div data-hf-id="hf-2k13" class="mono" style="font-size:28px;color:var(--muted)">WhatsApp</div></div></div>
+          <div data-hf-id="hf-csh8" id="s1-msg" class="abs bubble">Hi, are you open tomorrow? I need a quote.</div>
+          <div data-hf-id="hf-30j2" id="s1-status" class="abs mono">✓✓ Delivered · 03:02</div>
+          <div data-hf-id="hf-vhng" id="s1-timer" class="abs mono">No reply · opens 09:00 (6h 58m)</div>
+        </div>
+
+        <div data-hf-id="hf-klas" id="rival" class="abs card">
+          <div data-hf-id="hf-1w6c" class="who">COMPETITOR · REPLIED IN 4 S</div>
+          <div data-hf-id="hf-gs41" class="txt">"Yes, we're open! Here's your quote →"</div>
+          <div data-hf-id="hf-zgkc" class="t">03:02 · ✓✓ Read</div>
+        </div>
+
+        <div data-hf-id="hf-8giv" id="title-card" class="abs">
+          <div data-hf-id="hf-b8t6" class="label ep">[EP.01 // AI RECEPTIONIST]</div>
+          <h1 data-hf-id="hf-d3do">How an AI receptionist answers customers 24/7</h1>
+        </div>
+        <div data-hf-id="hf-xj9n" id="title-line" class="abs"></div>
+      </div>
+
+      <!-- ===== Scene 2: the problem ===== -->
+      <div data-hf-id="hf-tklm" id="sc2" class="scene">
+        <svg data-hf-id="hf-hiaf" id="ring" class="abs" viewBox="0 0 600 600" data-layout-allow-overflow>
+          <circle data-hf-id="hf-mfy5" cx="300" cy="300" r="230" fill="none" stroke="#1e2228" stroke-width="46" />
+          <circle data-hf-id="hf-u7p2" id="ring-open" cx="300" cy="300" r="230" fill="none" stroke="#f0c05f" stroke-width="46"
+            stroke-dasharray="481.71 1445.13" stroke-dashoffset="481.71" transform="rotate(45 300 300)" />
+          <circle data-hf-id="hf-wqxr" id="ring-all" cx="300" cy="300" r="230" fill="none" stroke="#c8f04f" stroke-width="46"
+            stroke-dasharray="1445.13 1445.13" stroke-dashoffset="1445.13" transform="rotate(-90 300 300)" />
+          <g data-hf-id="hf-e06p" font-family="IBM Plex Mono" font-size="30" font-weight="500" fill="#b9c3ba" text-anchor="middle">
+            <text data-hf-id="hf-c9q1" x="300" y="40">00</text><text data-hf-id="hf-zqkq" x="578" y="310">06</text><text data-hf-id="hf-7dmf" x="300" y="586">12</text><text data-hf-id="hf-ukrx" x="22" y="310">18</text>
+          </g>
+          <g data-hf-id="hf-lr23" id="dots"></g>
+        </svg>
+        <div data-hf-id="hf-dnu6" id="ring-center" class="abs">
+          <div data-hf-id="hf-szfh" id="rc-40" class="rc" style="top:250px"><div data-hf-id="hf-2vd0" class="big-num" style="color:var(--gold)">40 h</div><div data-hf-id="hf-fvvg" class="label" style="margin-top:14px">open per week</div></div>
+          <div data-hf-id="hf-r8ws" id="rc-168" class="rc" style="top:250px"><div data-hf-id="hf-9pf6" class="big-num">168 h</div><div data-hf-id="hf-tlvr" class="label" style="margin-top:14px">customers message</div></div>
+          <div data-hf-id="hf-5kaa" id="rc-247" class="rc" style="top:250px"><div data-hf-id="hf-qair" class="big-num" style="color:var(--lime)">24/7</div><div data-hf-id="hf-p8yz" class="label" style="margin-top:14px">always on shift</div></div>
+        </div>
+        <div data-hf-id="hf-nv3l" id="s2-head" class="abs label">Every channel, every hour</div>
+        <div data-hf-id="hf-txpn" id="s2-chips" class="abs">
+          <div data-hf-id="hf-zmcx" id="ch-web" class="chip"><svg data-hf-id="hf-5h55" viewBox="0 0 24 24" fill="none" stroke="#e8ede6" stroke-width="1.8"><rect data-hf-id="hf-mqay" x="3" y="4" width="18" height="13" rx="3"/><path data-hf-id="hf-0pm3" d="M8 21l4-4h0"/></svg>Website chat</div>
+          <div data-hf-id="hf-ahg8" id="ch-wa" class="chip"><svg data-hf-id="hf-7ldp" viewBox="0 0 24 24" fill="none" stroke="#e8ede6" stroke-width="1.8"><path data-hf-id="hf-2rrn" d="M4 20l1.5-4A8 8 0 1 1 9 19.5z"/></svg>WhatsApp</div>
+          <div data-hf-id="hf-khe2" id="ch-ph" class="chip"><svg data-hf-id="hf-8sas" viewBox="0 0 24 24" fill="none" stroke="#e8ede6" stroke-width="1.8"><path data-hf-id="hf-hn28" d="M6 3h4l2 5-3 2a11 11 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 4 5a2 2 0 0 1 2-2z"/></svg>Phone</div>
+        </div>
+      </div>
+
+      <!-- ===== Scene 3: the four parts ===== -->
+      <div data-hf-id="hf-zqbf" id="sc3" class="scene">
+        <div data-hf-id="hf-g9uk" id="b-ch" class="abs">
+          <div data-hf-id="hf-9rjm" class="block-h">01 · CHANNELS</div>
+          <div data-hf-id="hf-9vyi" id="c-chat" class="chip"><svg data-hf-id="hf-nrqp" viewBox="0 0 24 24" fill="none" stroke="#c8f04f" stroke-width="1.8"><rect data-hf-id="hf-ejji" x="3" y="4" width="18" height="13" rx="3"/><path data-hf-id="hf-tluz" d="M8 21l4-4"/></svg>Web chat</div>
+          <div data-hf-id="hf-b16w" id="c-voice" class="chip"><svg data-hf-id="hf-evxh" viewBox="0 0 24 24" fill="none" stroke="#c8f04f" stroke-width="1.8"><rect data-hf-id="hf-6g2q" x="9" y="3" width="6" height="11" rx="3"/><path data-hf-id="hf-342a" d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>Browser voice</div>
+          <div data-hf-id="hf-46hm" id="c-wa" class="chip"><svg data-hf-id="hf-g2uk" viewBox="0 0 24 24" fill="none" stroke="#c8f04f" stroke-width="1.8"><path data-hf-id="hf-tn5f" d="M4 20l1.5-4A8 8 0 1 1 9 19.5z"/></svg>WhatsApp</div>
+        </div>
+
+        <div data-hf-id="hf-x6f2" id="w1" class="abs"></div>
+
+        <div data-hf-id="hf-xu52" id="msg-messy" class="abs bubble" data-layout-allow-overlap>hiii r u open sundy??</div>
+        <div data-hf-id="hf-iyg1" id="msg-q" class="abs bubble" data-layout-allow-overlap>Are you open on Sundays?</div>
+
+        <div data-hf-id="hf-v2l6" id="brain" class="abs">
+          <div data-hf-id="hf-wnj9" id="brain-core"></div>
+          <div data-hf-id="hf-yn7w" class="block-h" style="position:absolute;left:0;right:0;top:-46px;text-align:center">02 · BRAIN</div>
+          <div data-hf-id="hf-q3dp" id="brain-label">Language<br data-hf-id="hf-x5px" />model</div>
+        </div>
+
+        <div data-hf-id="hf-sgn8" id="w3" class="abs"></div>
+
+        <div data-hf-id="hf-goj2" id="rag" class="abs label"><b data-hf-id="hf-83oh">RAG</b> · retrieval-augmented generation</div>
+
+        <div data-hf-id="hf-tzje" id="b-kb" class="abs card" data-layout-allow-overlap>
+          <div data-hf-id="hf-ais6" class="block-h" style="margin:0 0 12px">03 · KNOWLEDGE BASE</div>
+          <div data-hf-id="hf-hep9" class="docs">
+            <div data-hf-id="hf-vdxd" id="d-serv" class="doc"><div data-hf-id="hf-na2q" class="n">Services</div><div data-hf-id="hf-gmyq" class="ln"></div><div data-hf-id="hf-w07i" class="ln" style="width:70%"></div><div data-hf-id="hf-92b8" class="hl"></div></div>
+            <div data-hf-id="hf-ibv8" id="d-price" class="doc"><div data-hf-id="hf-4nhg" class="n">Prices</div><div data-hf-id="hf-ru7a" class="ln"></div><div data-hf-id="hf-rzpj" class="ln" style="width:60%"></div><div data-hf-id="hf-6gwc" class="hl"></div></div>
+            <div data-hf-id="hf-3fvy" id="d-hours" class="doc"><div data-hf-id="hf-1ibx" class="n">Hours</div><div data-hf-id="hf-s8ib" class="ln"></div><div data-hf-id="hf-zpkp" class="ln" style="width:80%"></div><div data-hf-id="hf-58b0" id="hours-hl" class="hl"></div></div>
+            <div data-hf-id="hf-6spa" id="d-pol" class="doc"><div data-hf-id="hf-ppfo" class="n">Policies</div><div data-hf-id="hf-smtc" class="ln"></div><div data-hf-id="hf-k7vo" class="ln" style="width:50%"></div><div data-hf-id="hf-59z9" class="hl"></div></div>
+          </div>
+        </div>
+        <div data-hf-id="hf-sm91" id="snippet" class="abs mono" data-layout-allow-overlap>Sun 10:00–16:00</div>
+
+        <div data-hf-id="hf-rnza" id="ans-guess" class="abs bubble bad" data-layout-allow-overlap>"Probably 9 to 5?"</div>
+        <div data-hf-id="hf-rnxh" id="stamp-guess" class="abs stamp">GUESS</div>
+        <div data-hf-id="hf-v8e2" id="ans-think" class="abs bubble bad" data-layout-allow-overlap>"I think we're open Sundays…"</div>
+        <div data-hf-id="hf-3obc" id="ans-right" class="abs bubble out" data-layout-allow-overlap>"We're open Sundays, 10 to 4."</div>
+
+        <div data-hf-id="hf-t8b1" id="w2" class="abs"></div>
+
+        <div data-hf-id="hf-9ssn" id="b-act" class="abs">
+          <div data-hf-id="hf-9h0a" class="block-h">04 · ACTIONS</div>
+          <div data-hf-id="hf-6adb" id="inbox">
+            <svg data-hf-id="hf-1zji" viewBox="0 0 220 170" width="240" height="185" fill="none" stroke="#e8ede6" stroke-width="5">
+              <rect data-hf-id="hf-xjp2" x="8" y="8" width="204" height="154" rx="22" fill="#101215" stroke="#ffffff33"/>
+              <path data-hf-id="hf-5jsi" d="M8 100h56l14 26h64l14-26h56" stroke="#c8f04f"/>
+              <path data-hf-id="hf-zn8a" d="M70 46h80M80 70h60" stroke="#ffffff44"/>
+            </svg>
+            <div data-hf-id="hf-jnhc" id="inbox-badge">1</div>
+          </div>
+          <div data-hf-id="hf-egvm" class="label" style="margin-top:16px">OWNER'S INBOX</div>
+        </div>
+
+        <div data-hf-id="hf-8m9g" id="lead" class="abs card" data-layout-allow-overlap>
+          <div data-hf-id="hf-rcaw" class="mono" style="font-size:30px;font-weight:600;color:var(--lime);letter-spacing:0.08em">NEW LEAD · 03:04</div>
+          <div data-hf-id="hf-i6ns" id="lead-name" class="row"><div data-hf-id="hf-4m9s" class="k">NAME</div><div data-hf-id="hf-gqbi">Maria Lopez</div></div>
+          <div data-hf-id="hf-odsl" id="lead-need" class="row"><div data-hf-id="hf-qo78" class="k">NEEDS</div><div data-hf-id="hf-nl1d">Kitchen repair quote</div></div>
+          <div data-hf-id="hf-cq4e" id="lead-reach" class="row"><div data-hf-id="hf-j9z1" class="k">CONTACT</div><div data-hf-id="hf-itzp">+1 555 0143</div></div>
+        </div>
+      </div>
+
+      <!-- ===== Scene 4: good vs annoying ===== -->
+      <div data-hf-id="hf-c8tw" id="sc4" class="scene">
+        <div data-hf-id="hf-ixnf" id="col-bad" class="abs col bad">
+          <h2 data-hf-id="hf-hcxq" style="color:var(--red)">✕ ANNOYING</h2>
+          <div data-hf-id="hf-keyx" class="item" id="bad1"><div data-hf-id="hf-5115" class="ic">↻</div><div data-hf-id="hf-8l1l">"Sorry, I didn't get that." <span data-hf-id="hf-jliy" style="color:var(--muted)">×3</span></div></div>
+          <div data-hf-id="hf-od2y" class="item" id="bad2"><div data-hf-id="hf-h2dh" class="ic">?</div><div data-hf-id="hf-pyp4">Makes up prices and hours</div></div>
+          <div data-hf-id="hf-sb6z" class="item" id="bad3"><div data-hf-id="hf-9u6v" class="ic">✕</div><div data-hf-id="hf-gu1s">No way to reach a human</div></div>
+        </div>
+        <div data-hf-id="hf-xvoz" id="col-good" class="abs col good">
+          <h2 data-hf-id="hf-ajyi" style="color:var(--lime)">✓ GOOD</h2>
+          <div data-hf-id="hf-w33t" class="item" id="good1"><div data-hf-id="hf-g9rf" class="ic">1</div><div data-hf-id="hf-uayh">Answers only from your info, and says "I don't know"</div></div>
+          <div data-hf-id="hf-28tm" class="item" id="good2"><div data-hf-id="hf-fvge" class="ic">2</div><div data-hf-id="hf-isiq">Hands off to a human when it should</div></div>
+          <div data-hf-id="hf-66xn" class="item" id="good3"><div data-hf-id="hf-fh5d" class="ic">3</div><div data-hf-id="hf-pk1m">Captures the lead, every time</div></div>
+        </div>
+      </div>
+
+      <!-- ===== Scene 5: real example + CTA ===== -->
+      <div data-hf-id="hf-d0hp" id="sc5" class="scene">
+        <div data-hf-id="hf-d7g2" id="cf-group" class="abs" style="inset:0">
+          <img data-hf-id="hf-hgdu" id="cf-logo" class="abs" src="assets/brand/clientfalcon-symbol-paper.svg" alt="ClientFalcon" />
+          <div data-hf-id="hf-mo3f" id="cf-name" class="abs">ClientFalcon Voice</div>
+          <div data-hf-id="hf-zrol" id="cf-by" class="abs label">built by iAgentice</div>
+          <div data-hf-id="hf-hz4n" id="cf-chips" class="abs">
+            <div data-hf-id="hf-kzls" id="cf-c1" class="chip">Web chat</div>
+            <div data-hf-id="hf-s5tn" id="cf-c2" class="chip">Browser voice</div>
+            <div data-hf-id="hf-zckk" id="cf-c3" class="chip">WhatsApp</div>
+            <div data-hf-id="hf-al5v" id="cf-c4" class="chip" style="color:var(--muted)">Phone · soon</div>
+          </div>
+          <div data-hf-id="hf-t4cm" id="cf-flow" class="abs">
+            <div data-hf-id="hf-ftgz" class="chip">Visitor message</div><div data-hf-id="hf-fel1" style="color:var(--lime);font-size:32px">↓</div>
+            <div data-hf-id="hf-yt1c" class="chip">Agent answers</div><div data-hf-id="hf-33d5" style="color:var(--lime);font-size:32px">↓</div>
+            <div data-hf-id="hf-ecyw" class="chip" style="border-color:#c8f04f99;color:var(--lime)">Lead in inbox</div>
+          </div>
+        </div>
+        <div data-hf-id="hf-k41d" id="url" class="abs">
+          <div data-hf-id="hf-7rtq" class="label">Get one for your business</div>
+          <div data-hf-id="hf-hk4j" class="u" style="margin-top:20px">iagentice.com</div>
+          <div data-hf-id="hf-zi4k" class="label" style="margin-top:24px">Link in the description</div>
+        </div>
+        <div data-hf-id="hf-ef1n" id="endcard" class="abs">
+          <div data-hf-id="hf-a1j0" class="abs" style="left:0;right:0;top:320px;text-align:center">
+            <svg data-hf-id="hf-6lq6" width="108" height="108" viewBox="0 0 64 64"><rect data-hf-id="hf-zbyq" width="64" height="64" rx="14" fill="#101215"/><path data-hf-id="hf-x9qx" d="M22.20 55.22 L22.20 18.18 L29.98 18.18 L46.00 55.22 L37.53 55.22 L34.07 47.22 L29.98 47.22 L29.98 55.22 Z M29.98 41.00 L31.37 41.00 L29.98 37.77 Z" fill="#F3F4F1" fill-rule="evenodd"/><circle data-hf-id="hf-5mu4" cx="26.09" cy="9.55" r="5.52" fill="#C8F04F"/></svg>
+            <div data-hf-id="hf-3398" style="font-size:68px;font-weight:700;margin-top:28px">iAgentice</div>
+            <div data-hf-id="hf-ba04" class="label" style="margin-top:16px;font-size:30px">Work that never sleeps.</div>
+            <div data-hf-id="hf-2ecx" class="label" style="margin-top:36px;color:var(--fg);font-size:34px">Next video: the build, step by step</div>
+          </div>
+          <div data-hf-id="hf-iq5d" id="sub-btn" class="abs">Subscribe</div>
+        </div>
+      </div>
+
+      <!-- HUD (above scenes) -->
+      <div data-hf-id="hf-msk9" id="hud-left" class="abs">
+        <svg data-hf-id="hf-odew" width="52" height="52" viewBox="0 0 64 64"><rect data-hf-id="hf-xgf8" width="64" height="64" rx="14" fill="#101215" stroke="#ffffff24"/><path data-hf-id="hf-vsdp" d="M22.20 55.22 L22.20 18.18 L29.98 18.18 L46.00 55.22 L37.53 55.22 L34.07 47.22 L29.98 47.22 L29.98 55.22 Z M29.98 41.00 L31.37 41.00 L29.98 37.77 Z" fill="#F3F4F1" fill-rule="evenodd"/><circle data-hf-id="hf-syj8" cx="26.09" cy="9.55" r="5.52" fill="#C8F04F"/></svg>
+      </div>
+      <div data-hf-id="hf-35sj" id="lbl1" class="abs label scn-label" style="opacity:0">[SCN.01 // 03:02 AM]</div>
+      <div data-hf-id="hf-73vc" id="lbl2" class="abs label scn-label" style="opacity:0">[SCN.02 // THE PROBLEM]</div>
+      <div data-hf-id="hf-r331" id="lbl3" class="abs label scn-label" style="opacity:0">[SCN.03 // HOW IT WORKS]</div>
+      <div data-hf-id="hf-d4uh" id="lbl4" class="abs label scn-label" style="opacity:0">[SCN.04 // THE CHECKLIST]</div>
+      <div data-hf-id="hf-bneg" id="lbl5" class="abs label scn-label" style="opacity:0">[SCN.05 // REAL EXAMPLE]</div>
+      <div data-hf-id="hf-kzfj" id="hud-right" class="abs label">EP.01 · REEL</div>
+
+      <div data-hf-id="hf-q7bi" class="vignette"></div>
+      <div data-hf-id="hf-ptov" id="captions" class="abs"></div>
+
+      <audio data-hf-id="hf-wwpx" id="music" src="assets/audio/music.wav" data-start="0" data-duration="186.39" data-volume="1" data-fade-in="1" data-fade-out="3" data-track-index="10" data-automation='{"version":1,"lanes":[{"target":"volume","points":[{"t":0,"v":0.9},{"t":0.25,"v":0.9},{"t":0.6,"v":0.35},{"t":20.32,"v":0.35},{"t":20.72,"v":0.9},{"t":20.77,"v":0.9},{"t":21.12,"v":0.35},{"t":40.69,"v":0.35},{"t":41.09,"v":0.9},{"t":41.14,"v":0.9},{"t":41.49,"v":0.35},{"t":58.0,"v":0.35},{"t":58.4,"v":0.9},{"t":58.1,"v":0.9},{"t":58.45,"v":0.35},{"t":77.94,"v":0.35},{"t":78.34,"v":0.9},{"t":78.04,"v":0.9},{"t":78.39,"v":0.35},{"t":110.75,"v":0.35},{"t":111.15,"v":0.9},{"t":110.85,"v":0.9},{"t":111.2,"v":0.35},{"t":128.44,"v":0.35},{"t":128.84,"v":0.9},{"t":128.89,"v":0.9},{"t":129.24,"v":0.35},{"t":153.35,"v":0.35},{"t":153.75,"v":0.9},{"t":153.8,"v":0.9},{"t":154.15,"v":0.35},{"t":179.39,"v":0.35},{"t":179.79,"v":0.9}]}]}'></audio>
+      <audio data-hf-id="hf-5so4" id="vo-s1" src="assets/audio/vo/s1.norm.wav" data-start="0.6" data-duration="19.722" data-volume="1" data-track-index="11"></audio>
+      <audio data-hf-id="hf-luia" id="vo-s2" src="assets/audio/vo/s2.norm.wav" data-start="21.122" data-duration="19.566" data-volume="1" data-track-index="11"></audio>
+      <audio data-hf-id="hf-xghr" id="vo-s3a" src="assets/audio/vo/s3a.norm.wav" data-start="41.488" data-duration="16.509" data-volume="1" data-track-index="11"></audio>
+      <audio data-hf-id="hf-7uad" id="vo-s3b" src="assets/audio/vo/s3b.norm.wav" data-start="58.448" data-duration="19.487" data-volume="1" data-track-index="11"></audio>
+      <audio data-hf-id="hf-pyay" id="vo-s3c" src="assets/audio/vo/s3c.norm.wav" data-start="78.385" data-duration="32.366" data-volume="1" data-track-index="11"></audio>
+      <audio data-hf-id="hf-y4tg" id="vo-s3d" src="assets/audio/vo/s3d.norm.wav" data-start="111.201" data-duration="17.241" data-volume="1" data-track-index="11"></audio>
+      <audio data-hf-id="hf-6ug7" id="vo-s4" src="assets/audio/vo/s4.norm.wav" data-start="129.241" data-duration="24.111" data-volume="1" data-track-index="11"></audio>
+      <audio data-hf-id="hf-mool" id="vo-s5" src="assets/audio/vo/s5.norm.wav" data-start="154.152" data-duration="25.234" data-volume="1" data-track-index="11"></audio>
+      <audio data-hf-id="hf-24o3" id="sfx-0" src="assets/audio/sfx/notification.mp3" data-start="2.92" data-duration="2.46" data-volume="0.35" data-track-index="12"></audio>
+      <audio data-hf-id="hf-r9a0" id="sfx-1" src="assets/audio/sfx/impact-bass-1.mp3" data-start="12.05" data-duration="2.12" data-volume="0.12" data-track-index="12"></audio>
+      <audio data-hf-id="hf-833i" id="sfx-2" src="assets/audio/sfx/whoosh.mp3" data-start="20.62" data-duration="0.57" data-volume="0.25" data-track-index="12"></audio>
+      <audio data-hf-id="hf-myhu" id="sfx-3" src="assets/audio/sfx/pop.mp3" data-start="33.3" data-duration="0.72" data-volume="0.25" data-track-index="12"></audio>
+      <audio data-hf-id="hf-b1tq" id="sfx-4" src="assets/audio/sfx/pop.mp3" data-start="34.07" data-duration="0.72" data-volume="0.25" data-track-index="12"></audio>
+      <audio data-hf-id="hf-00o1" id="sfx-5" src="assets/audio/sfx/pop.mp3" data-start="35.17" data-duration="0.72" data-volume="0.25" data-track-index="12"></audio>
+      <audio data-hf-id="hf-5yj0" id="sfx-6" src="assets/audio/sfx/sparkle.mp3" data-start="39.28" data-duration="1.8" data-volume="0.22" data-track-index="12"></audio>
+      <audio data-hf-id="hf-4tam" id="sfx-7" src="assets/audio/sfx/whoosh.mp3" data-start="40.99" data-duration="0.57" data-volume="0.25" data-track-index="13"></audio>
+      <audio data-hf-id="hf-689o" id="sfx-8" src="assets/audio/sfx/pop.mp3" data-start="46.6" data-duration="0.72" data-volume="0.25" data-track-index="12"></audio>
+      <audio data-hf-id="hf-qo0s" id="sfx-9" src="assets/audio/sfx/pop.mp3" data-start="48.9" data-duration="0.72" data-volume="0.25" data-track-index="12"></audio>
+      <audio data-hf-id="hf-n2jz" id="sfx-10" src="assets/audio/sfx/pop.mp3" data-start="50.43" data-duration="0.72" data-volume="0.25" data-track-index="12"></audio>
+      <audio data-hf-id="hf-kqfn" id="sfx-11" src="assets/audio/sfx/whoosh-short.mp3" data-start="58.54" data-duration="0.57" data-volume="0.25" data-track-index="12"></audio>
+      <audio data-hf-id="hf-ehmy" id="sfx-12" src="assets/audio/sfx/error.mp3" data-start="77.53" data-duration="1.62" data-volume="0.18" data-track-index="12"></audio>
+      <audio data-hf-id="hf-06ht" id="sfx-13" src="assets/audio/sfx/whoosh-short.mp3" data-start="81.23" data-duration="0.57" data-volume="0.25" data-track-index="12"></audio>
+      <audio data-hf-id="hf-6ye0" id="sfx-14" src="assets/audio/sfx/click-soft.mp3" data-start="90.94" data-duration="0.37" data-volume="0.3" data-track-index="12"></audio>
+      <audio data-hf-id="hf-im6v" id="sfx-15" src="assets/audio/sfx/whoosh-short.mp3" data-start="94.11" data-duration="0.57" data-volume="0.22" data-track-index="12"></audio>
+      <audio data-hf-id="hf-ym7f" id="sfx-16" src="assets/audio/sfx/whoosh-short.mp3" data-start="111.24" data-duration="0.57" data-volume="0.25" data-track-index="12"></audio>
+      <audio data-hf-id="hf-q3lf" id="sfx-17" src="assets/audio/sfx/ping.mp3" data-start="124.2" data-duration="1.32" data-volume="0.3" data-track-index="12"></audio>
+      <audio data-hf-id="hf-pxjl" id="sfx-18" src="assets/audio/sfx/whoosh.mp3" data-start="128.74" data-duration="0.57" data-volume="0.25" data-track-index="12"></audio>
+      <audio data-hf-id="hf-kb72" id="sfx-19" src="assets/audio/sfx/click.mp3" data-start="133.56" data-duration="0.37" data-volume="0.3" data-track-index="12"></audio>
+      <audio data-hf-id="hf-qb7r" id="sfx-20" src="assets/audio/sfx/click.mp3" data-start="139.08" data-duration="0.37" data-volume="0.3" data-track-index="12"></audio>
+      <audio data-hf-id="hf-lykz" id="sfx-21" src="assets/audio/sfx/click.mp3" data-start="143.4" data-duration="0.37" data-volume="0.3" data-track-index="12"></audio>
+      <audio data-hf-id="hf-5g22" id="sfx-22" src="assets/audio/sfx/whoosh.mp3" data-start="153.65" data-duration="0.57" data-volume="0.25" data-track-index="12"></audio>
+      <audio data-hf-id="hf-dg04" id="sfx-23" src="assets/audio/sfx/chime.mp3" data-start="176.91" data-duration="2.5" data-volume="0.25" data-track-index="12"></audio>
+
+      <script>
+        (function () {
+          const V = {"total": 186.39, "scenes": {"s1": {"start": 0.6, "dur": 19.722}, "s2": {"start": 21.122, "dur": 19.566}, "s3a": {"start": 41.488, "dur": 16.509}, "s3b": {"start": 58.448, "dur": 19.487}, "s3c": {"start": 78.385, "dur": 32.366}, "s3d": {"start": 111.201, "dur": 17.241}, "s4": {"start": 129.241, "dur": 24.111}, "s5": {"start": 154.152, "dur": 25.234}}, "words": [{"w": "It's", "s": 0.71, "e": 0.82, "sc": "s1"}, {"w": "three", "s": 0.82, "e": 0.905, "sc": "s1"}, {"w": "in", "s": 0.99, "e": 1.1, "sc": "s1"}, {"w": "the", "s": 1.1, "e": 1.27, "sc": "s1"}, {"w": "morning,", "s": 1.27, "e": 1.85, "sc": "s1"}, {"w": "and", "s": 1.85, "e": 2.14, "sc": "s1"}, {"w": "a", "s": 2.14, "e": 2.15, "sc": "s1"}, {"w": "customer", "s": 2.15, "e": 2.74, "sc": "s1"}, {"w": "just", "s": 2.74, "e": 2.92, "sc": "s1"}, {"w": "messaged", "s": 2.92, "e": 3.27, "sc": "s1"}, {"w": "your", "s": 3.27, "e": 3.46, "sc": "s1"}, {"w": "business.", "s": 3.46, "e": 3.98, "sc": "s1"}, {"w": "Who", "s": 4.58, "e": 4.69, "sc": "s1"}, {"w": "answers?", "s": 4.69, "e": 5.12, "sc": "s1"}, {"w": "If", "s": 5.82, "e": 5.82, "sc": "s1"}, {"w": "the", "s": 5.82, "e": 5.94, "sc": "s1"}, {"w": "answer", "s": 5.94, "e": 6.26, "sc": "s1"}, {"w": "is", "s": 6.26, "e": 6.47, "sc": "s1"}, {"w": "\"nobody", "s": 6.47, "e": 7.36, "sc": "s1"}, {"w": "until", "s": 7.36, "e": 7.61, "sc": "s1"}, {"w": "nine,\"", "s": 7.61, "e": 7.885, "sc": "s1"}, {"w": "that", "s": 8.16, "e": 8.42, "sc": "s1"}, {"w": "customer", "s": 8.42, "e": 8.93, "sc": "s1"}, {"w": "is", "s": 8.93, "e": 9.06, "sc": "s1"}, {"w": "probably", "s": 9.06, "e": 9.9, "sc": "s1"}, {"w": "already", "s": 9.9, "e": 10.02, "sc": "s1"}, {"w": "talking", "s": 10.02, "e": 10.37, "sc": "s1"}, {"w": "to", "s": 10.37, "e": 11.05, "sc": "s1"}, {"w": "someone", "s": 11.05, "e": 11.12, "sc": "s1"}, {"w": "else.", "s": 11.12, "e": 11.54, "sc": "s1"}, {"w": "In", "s": 12.04, "e": 12.04, "sc": "s1"}, {"w": "the", "s": 12.04, "e": 12.15, "sc": "s1"}, {"w": "next", "s": 12.15, "e": 12.19, "sc": "s1"}, {"w": "few", "s": 12.19, "e": 12.41, "sc": "s1"}, {"w": "minutes,", "s": 12.41, "e": 13.07, "sc": "s1"}, {"w": "I'll", "s": 13.07, "e": 13.58, "sc": "s1"}, {"w": "show", "s": 13.58, "e": 13.65, "sc": "s1"}, {"w": "you", "s": 13.65, "e": 13.87, "sc": "s1"}, {"w": "exactly", "s": 13.87, "e": 14.39, "sc": "s1"}, {"w": "how", "s": 14.39, "e": 14.61, "sc": "s1"}, {"w": "an", "s": 14.61, "e": 14.75, "sc": "s1"}, {"w": "AI", "s": 14.75, "e": 14.89, "sc": "s1"}, {"w": "receptionist", "s": 14.89, "e": 16.12, "sc": "s1"}, {"w": "answers", "s": 16.12, "e": 16.3, "sc": "s1"}, {"w": "that", "s": 16.3, "e": 16.59, "sc": "s1"}, {"w": "message,", "s": 16.59, "e": 17.1, "sc": "s1"}, {"w": "and", "s": 17.1, "e": 17.31, "sc": "s1"}, {"w": "what", "s": 17.31, "e": 17.59, "sc": "s1"}, {"w": "separates", "s": 17.59, "e": 18.22, "sc": "s1"}, {"w": "a", "s": 18.22, "e": 18.3, "sc": "s1"}, {"w": "good", "s": 18.3, "e": 18.64, "sc": "s1"}, {"w": "one", "s": 18.64, "e": 18.86, "sc": "s1"}, {"w": "from", "s": 18.86, "e": 19.07, "sc": "s1"}, {"w": "an", "s": 19.07, "e": 19.21, "sc": "s1"}, {"w": "annoying", "s": 19.21, "e": 19.77, "sc": "s1"}, {"w": "one.", "s": 19.77, "e": 20.28, "sc": "s1"}, {"w": "Most", "s": 21.172, "e": 21.372, "sc": "s2"}, {"w": "small", "s": 21.372, "e": 21.682, "sc": "s2"}, {"w": "businesses", "s": 21.682, "e": 22.312, "sc": "s2"}, {"w": "are", "s": 22.312, "e": 22.492, "sc": "s2"}, {"w": "open", "s": 22.492, "e": 22.762, "sc": "s2"}, {"w": "about", "s": 22.762, "e": 23.192, "sc": "s2"}, {"w": "forty", "s": 23.192, "e": 23.382, "sc": "s2"}, {"w": "hours", "s": 23.572, "e": 23.932, "sc": "s2"}, {"w": "a", "s": 23.932, "e": 24.002, "sc": "s2"}, {"w": "week.", "s": 24.002, "e": 24.602, "sc": "s2"}, {"w": "Customers", "s": 24.602, "e": 25.622, "sc": "s2"}, {"w": "message", "s": 25.622, "e": 26.412, "sc": "s2"}, {"w": "all", "s": 26.412, "e": 26.752, "sc": "s2"}, {"w": "one", "s": 26.752, "e": 26.962, "sc": "s2"}, {"w": "hundred", "s": 26.962, "e": 27.172, "sc": "s2"}, {"w": "and", "s": 27.172, "e": 27.382, "sc": "s2"}, {"w": "sixty-eight.", "s": 27.382, "e": 27.592, "sc": "s2"}, {"w": "Evenings,", "s": 27.802, "e": 28.642, "sc": "s2"}, {"w": "weekends,", "s": 28.642, "e": 29.622, "sc": "s2"}, {"w": "other", "s": 29.622, "e": 30.142, "sc": "s2"}, {"w": "time", "s": 30.142, "e": 30.552, "sc": "s2"}, {"w": "zones.", "s": 30.552, "e": 31.082, "sc": "s2"}, {"w": "And", "s": 31.082, "e": 31.272, "sc": "s2"}, {"w": "every", "s": 31.272, "e": 31.592, "sc": "s2"}, {"w": "channel", "s": 31.592, "e": 32.042, "sc": "s2"}, {"w": "is", "s": 32.042, "e": 32.172, "sc": "s2"}, {"w": "different:", "s": 32.172, "e": 32.962, "sc": "s2"}, {"w": "your", "s": 32.962, "e": 33.302, "sc": "s2"}, {"w": "website,", "s": 33.302, "e": 34.072, "sc": "s2"}, {"w": "WhatsApp,", "s": 34.072, "e": 35.032, "sc": "s2"}, {"w": "the", "s": 35.032, "e": 35.172, "sc": "s2"}, {"w": "phone.", "s": 35.172, "e": 35.882, "sc": "s2"}, {"w": "An", "s": 35.882, "e": 36.032, "sc": "s2"}, {"w": "AI", "s": 36.032, "e": 36.172, "sc": "s2"}, {"w": "receptionist", "s": 36.172, "e": 37.122, "sc": "s2"}, {"w": "sits", "s": 37.122, "e": 37.432, "sc": "s2"}, {"w": "on", "s": 37.432, "e": 37.582, "sc": "s2"}, {"w": "all", "s": 37.582, "e": 37.912, "sc": "s2"}, {"w": "of", "s": 37.912, "e": 37.962, "sc": "s2"}, {"w": "them", "s": 37.962, "e": 38.342, "sc": "s2"}, {"w": "at", "s": 38.342, "e": 38.582, "sc": "s2"}, {"w": "once,", "s": 38.582, "e": 39.082, "sc": "s2"}, {"w": "and", "s": 39.082, "e": 39.282, "sc": "s2"}, {"w": "never", "s": 39.282, "e": 39.612, "sc": "s2"}, {"w": "goes", "s": 39.612, "e": 39.882, "sc": "s2"}, {"w": "off", "s": 39.882, "e": 40.082, "sc": "s2"}, {"w": "shift.", "s": 40.082, "e": 40.642, "sc": "s2"}, {"w": "Part", "s": 41.598, "e": 41.908, "sc": "s3a"}, {"w": "one:", "s": 41.908, "e": 42.628, "sc": "s3a"}, {"w": "the", "s": 42.628, "e": 42.678, "sc": "s3a"}, {"w": "channels.", "s": 42.678, "e": 43.488, "sc": "s3a"}, {"w": "This", "s": 43.488, "e": 43.838, "sc": "s3a"}, {"w": "is", "s": 43.838, "e": 43.918, "sc": "s3a"}, {"w": "wherever", "s": 43.918, "e": 44.668, "sc": "s3a"}, {"w": "your", "s": 44.668, "e": 44.798, "sc": "s3a"}, {"w": "customers", "s": 44.798, "e": 45.998, "sc": "s3a"}, {"w": "already", "s": 45.998, "e": 46.178, "sc": "s3a"}, {"w": "are:", "s": 46.178, "e": 46.488, "sc": "s3a"}, {"w": "a", "s": 46.488, "e": 46.598, "sc": "s3a"}, {"w": "chat", "s": 46.598, "e": 46.898, "sc": "s3a"}, {"w": "window", "s": 46.898, "e": 47.378, "sc": "s3a"}, {"w": "on", "s": 47.378, "e": 47.678, "sc": "s3a"}, {"w": "your", "s": 47.678, "e": 47.878, "sc": "s3a"}, {"w": "website,", "s": 47.878, "e": 48.588, "sc": "s3a"}, {"w": "a", "s": 48.588, "e": 48.898, "sc": "s3a"}, {"w": "voice", "s": 48.898, "e": 48.998, "sc": "s3a"}, {"w": "button", "s": 48.998, "e": 49.208, "sc": "s3a"}, {"w": "in", "s": 49.208, "e": 49.308, "sc": "s3a"}, {"w": "the", "s": 49.308, "e": 49.488, "sc": "s3a"}, {"w": "browser,", "s": 49.488, "e": 50.138, "sc": "s3a"}, {"w": "your", "s": 50.138, "e": 50.428, "sc": "s3a"}, {"w": "WhatsApp", "s": 50.428, "e": 51.018, "sc": "s3a"}, {"w": "number.", "s": 51.018, "e": 51.488, "sc": "s3a"}, {"w": "The", "s": 51.488, "e": 51.698, "sc": "s3a"}, {"w": "trick", "s": 51.698, "e": 52.048, "sc": "s3a"}, {"w": "is", "s": 52.048, "e": 52.158, "sc": "s3a"}, {"w": "that", "s": 52.158, "e": 52.668, "sc": "s3a"}, {"w": "all", "s": 52.668, "e": 52.698, "sc": "s3a"}, {"w": "of", "s": 52.698, "e": 52.838, "sc": "s3a"}, {"w": "them", "s": 52.838, "e": 53.128, "sc": "s3a"}, {"w": "feed", "s": 53.128, "e": 53.628, "sc": "s3a"}, {"w": "one", "s": 53.628, "e": 53.998, "sc": "s3a"}, {"w": "single", "s": 53.998, "e": 54.058, "sc": "s3a"}, {"w": "agent,", "s": 54.058, "e": 54.658, "sc": "s3a"}, {"w": "so", "s": 54.658, "e": 54.848, "sc": "s3a"}, {"w": "the", "s": 54.848, "e": 55.118, "sc": "s3a"}, {"w": "answer", "s": 55.118, "e": 55.658, "sc": "s3a"}, {"w": "is", "s": 55.658, "e": 55.838, "sc": "s3a"}, {"w": "the", "s": 55.838, "e": 56.108, "sc": "s3a"}, {"w": "same", "s": 56.108, "e": 56.868, "sc": "s3a"}, {"w": "wherever", "s": 56.868, "e": 56.948, "sc": "s3a"}, {"w": "the", "s": 56.948, "e": 57.118, "sc": "s3a"}, {"w": "customer", "s": 57.118, "e": 57.578, "sc": "s3a"}, {"w": "asks.", "s": 57.578, "e": 57.988, "sc": "s3a"}, {"w": "Part", "s": 58.538, "e": 58.838, "sc": "s3b"}, {"w": "two:", "s": 58.838, "e": 59.588, "sc": "s3b"}, {"w": "the", "s": 59.588, "e": 59.608, "sc": "s3b"}, {"w": "brain.", "s": 59.608, "e": 60.808, "sc": "s3b"}, {"w": "That's", "s": 60.808, "e": 61.228, "sc": "s3b"}, {"w": "a", "s": 61.228, "e": 61.308, "sc": "s3b"}, {"w": "large", "s": 61.308, "e": 61.958, "sc": "s3b"}, {"w": "language", "s": 61.958, "e": 62.248, "sc": "s3b"}, {"w": "model,", "s": 62.248, "e": 62.628, "sc": "s3b"}, {"w": "the", "s": 62.628, "e": 62.868, "sc": "s3b"}, {"w": "same", "s": 62.868, "e": 63.188, "sc": "s3b"}, {"w": "kind", "s": 63.188, "e": 63.668, "sc": "s3b"}, {"w": "of", "s": 63.668, "e": 63.768, "sc": "s3b"}, {"w": "AI", "s": 63.768, "e": 63.848, "sc": "s3b"}, {"w": "behind", "s": 63.848, "e": 64.188, "sc": "s3b"}, {"w": "the", "s": 64.188, "e": 64.248, "sc": "s3b"}, {"w": "chat", "s": 64.248, "e": 65.058, "sc": "s3b"}, {"w": "assistants", "s": 65.058, "e": 65.073, "sc": "s3b"}, {"w": "you've", "s": 65.088, "e": 65.488, "sc": "s3b"}, {"w": "already", "s": 65.488, "e": 66.208, "sc": "s3b"}, {"w": "used.", "s": 66.208, "e": 66.428, "sc": "s3b"}, {"w": "It's", "s": 66.428, "e": 66.668, "sc": "s3b"}, {"w": "great", "s": 66.668, "e": 66.968, "sc": "s3b"}, {"w": "at", "s": 66.968, "e": 67.088, "sc": "s3b"}, {"w": "understanding", "s": 67.088, "e": 67.888, "sc": "s3b"}, {"w": "messy,", "s": 67.888, "e": 68.858, "sc": "s3b"}, {"w": "real", "s": 68.858, "e": 69.038, "sc": "s3b"}, {"w": "human", "s": 69.038, "e": 69.468, "sc": "s3b"}, {"w": "messages,", "s": 69.468, "e": 70.188, "sc": "s3b"}, {"w": "typos", "s": 70.188, "e": 70.668, "sc": "s3b"}, {"w": "and", "s": 70.668, "e": 71.248, "sc": "s3b"}, {"w": "all.", "s": 71.248, "e": 71.568, "sc": "s3b"}, {"w": "But", "s": 71.568, "e": 71.808, "sc": "s3b"}, {"w": "on", "s": 71.808, "e": 71.968, "sc": "s3b"}, {"w": "its", "s": 71.968, "e": 72.208, "sc": "s3b"}, {"w": "own,", "s": 72.208, "e": 72.708, "sc": "s3b"}, {"w": "it", "s": 72.708, "e": 72.758, "sc": "s3b"}, {"w": "knows", "s": 72.758, "e": 73.078, "sc": "s3b"}, {"w": "nothing", "s": 73.078, "e": 73.298, "sc": "s3b"}, {"w": "about", "s": 73.298, "e": 73.998, "sc": "s3b"}, {"w": "your", "s": 73.998, "e": 74.118, "sc": "s3b"}, {"w": "business.", "s": 74.118, "e": 74.868, "sc": "s3b"}, {"w": "Ask", "s": 74.868, "e": 75.088, "sc": "s3b"}, {"w": "it", "s": 75.088, "e": 75.163, "sc": "s3b"}, {"w": "your", "s": 75.238, "e": 75.508, "sc": "s3b"}, {"w": "opening", "s": 75.508, "e": 76.028, "sc": "s3b"}, {"w": "hours,", "s": 76.028, "e": 76.428, "sc": "s3b"}, {"w": "and", "s": 76.428, "e": 76.638, "sc": "s3b"}, {"w": "it'll", "s": 76.638, "e": 77.298, "sc": "s3b"}, {"w": "happily", "s": 77.298, "e": 77.528, "sc": "s3b"}, {"w": "guess.", "s": 77.528, "e": 77.908, "sc": "s3b"}, {"w": "Which", "s": 78.515, "e": 78.755, "sc": "s3c"}, {"w": "is", "s": 78.755, "e": 78.905, "sc": "s3c"}, {"w": "why", "s": 78.905, "e": 79.175, "sc": "s3c"}, {"w": "part", "s": 79.175, "e": 79.595, "sc": "s3c"}, {"w": "three", "s": 79.595, "e": 79.795, "sc": "s3c"}, {"w": "matters", "s": 79.795, "e": 80.345, "sc": "s3c"}, {"w": "most:", "s": 80.345, "e": 80.805, "sc": "s3c"}, {"w": "the", "s": 80.805, "e": 81.235, "sc": "s3c"}, {"w": "knowledge", "s": 81.235, "e": 81.645, "sc": "s3c"}, {"w": "base.", "s": 81.645, "e": 82.145, "sc": "s3c"}, {"w": "You", "s": 82.805, "e": 82.805, "sc": "s3c"}, {"w": "give", "s": 82.805, "e": 82.845, "sc": "s3c"}, {"w": "the", "s": 82.845, "e": 82.935, "sc": "s3c"}, {"w": "agent", "s": 82.935, "e": 83.195, "sc": "s3c"}, {"w": "your", "s": 83.195, "e": 83.475, "sc": "s3c"}, {"w": "own", "s": 83.475, "e": 83.685, "sc": "s3c"}, {"w": "information:", "s": 83.685, "e": 84.645, "sc": "s3c"}, {"w": "services,", "s": 84.645, "e": 85.655, "sc": "s3c"}, {"w": "prices,", "s": 85.655, "e": 86.325, "sc": "s3c"}, {"w": "hours,", "s": 86.325, "e": 87.265, "sc": "s3c"}, {"w": "policies.", "s": 87.265, "e": 87.965, "sc": "s3c"}, {"w": "When", "s": 88.545, "e": 88.545, "sc": "s3c"}, {"w": "a", "s": 88.545, "e": 88.675, "sc": "s3c"}, {"w": "question", "s": 88.675, "e": 89.125, "sc": "s3c"}, {"w": "comes", "s": 89.125, "e": 89.555, "sc": "s3c"}, {"w": "in,", "s": 89.555, "e": 89.945, "sc": "s3c"}, {"w": "the", "s": 89.945, "e": 90.165, "sc": "s3c"}, {"w": "system", "s": 90.165, "e": 90.595, "sc": "s3c"}, {"w": "first", "s": 90.595, "e": 90.935, "sc": "s3c"}, {"w": "finds", "s": 90.935, "e": 91.395, "sc": "s3c"}, {"w": "the", "s": 91.395, "e": 91.535, "sc": "s3c"}, {"w": "few", "s": 91.535, "e": 91.755, "sc": "s3c"}, {"w": "passages", "s": 91.755, "e": 92.355, "sc": "s3c"}, {"w": "that", "s": 92.355, "e": 93.005, "sc": "s3c"}, {"w": "actually", "s": 93.005, "e": 93.155, "sc": "s3c"}, {"w": "answer", "s": 93.155, "e": 93.565, "sc": "s3c"}, {"w": "it,", "s": 93.565, "e": 93.925, "sc": "s3c"}, {"w": "and", "s": 93.925, "e": 94.115, "sc": "s3c"}, {"w": "hands", "s": 94.115, "e": 94.445, "sc": "s3c"}, {"w": "only", "s": 94.445, "e": 94.685, "sc": "s3c"}, {"w": "those", "s": 94.685, "e": 94.995, "sc": "s3c"}, {"w": "to", "s": 94.995, "e": 95.255, "sc": "s3c"}, {"w": "the", "s": 95.255, "e": 95.315, "sc": "s3c"}, {"w": "brain.", "s": 95.315, "e": 95.865, "sc": "s3c"}, {"w": "Engineers", "s": 96.425, "e": 96.635, "sc": "s3c"}, {"w": "call", "s": 96.635, "e": 96.975, "sc": "s3c"}, {"w": "this", "s": 96.975, "e": 97.315, "sc": "s3c"}, {"w": "retrieval-augmented", "s": 97.315, "e": 98.08, "sc": "s3c"}, {"w": "generation,", "s": 98.845, "e": 99.915, "sc": "s3c"}, {"w": "R-A-G.", "s": 99.915, "e": 100.425, "sc": "s3c"}, {"w": "In", "s": 100.985, "e": 100.995, "sc": "s3c"}, {"w": "plain", "s": 100.995, "e": 101.115, "sc": "s3c"}, {"w": "words:", "s": 101.115, "e": 101.565, "sc": "s3c"}, {"w": "the", "s": 101.565, "e": 101.805, "sc": "s3c"}, {"w": "AI", "s": 101.805, "e": 101.965, "sc": "s3c"}, {"w": "looks", "s": 101.965, "e": 102.375, "sc": "s3c"}, {"w": "it", "s": 102.375, "e": 102.535, "sc": "s3c"}, {"w": "up", "s": 102.535, "e": 102.695, "sc": "s3c"}, {"w": "before", "s": 102.695, "e": 103.175, "sc": "s3c"}, {"w": "it", "s": 103.175, "e": 103.395, "sc": "s3c"}, {"w": "speaks.", "s": 103.395, "e": 104.125, "sc": "s3c"}, {"w": "That's", "s": 104.575, "e": 104.875, "sc": "s3c"}, {"w": "the", "s": 104.875, "e": 105.095, "sc": "s3c"}, {"w": "difference", "s": 105.095, "e": 105.825, "sc": "s3c"}, {"w": "between", "s": 105.825, "e": 106.335, "sc": "s3c"}, {"w": "\"I", "s": 106.335, "e": 106.405, "sc": "s3c"}, {"w": "think", "s": 106.405, "e": 106.765, "sc": "s3c"}, {"w": "we're", "s": 106.765, "e": 107.295, "sc": "s3c"}, {"w": "open", "s": 107.295, "e": 107.415, "sc": "s3c"}, {"w": "Sundays\"", "s": 107.415, "e": 107.935, "sc": "s3c"}, {"w": "and", "s": 107.935, "e": 108.145, "sc": "s3c"}, {"w": "\"We're", "s": 108.145, "e": 108.795, "sc": "s3c"}, {"w": "open", "s": 108.795, "e": 108.905, "sc": "s3c"}, {"w": "Sundays,", "s": 108.905, "e": 109.305, "sc": "s3c"}, {"w": "ten", "s": 109.305, "e": 109.525, "sc": "s3c"}, {"w": "to", "s": 109.745, "e": 109.975, "sc": "s3c"}, {"w": "four.\"", "s": 109.975, "e": 110.363, "sc": "s3c"}, {"w": "Part", "s": 111.241, "e": 111.591, "sc": "s3d"}, {"w": "four:", "s": 111.591, "e": 111.711, "sc": "s3d"}, {"w": "actions.", "s": 111.831, "e": 112.881, "sc": "s3d"}, {"w": "Answering", "s": 113.561, "e": 113.631, "sc": "s3d"}, {"w": "questions", "s": 113.631, "e": 114.371, "sc": "s3d"}, {"w": "is", "s": 114.371, "e": 114.701, "sc": "s3d"}, {"w": "nice,", "s": 114.701, "e": 115.061, "sc": "s3d"}, {"w": "but", "s": 115.061, "e": 115.271, "sc": "s3d"}, {"w": "the", "s": 115.271, "e": 115.821, "sc": "s3d"}, {"w": "goal", "s": 115.821, "e": 115.911, "sc": "s3d"}, {"w": "is", "s": 115.911, "e": 115.971, "sc": "s3d"}, {"w": "the", "s": 115.971, "e": 116.201, "sc": "s3d"}, {"w": "lead.", "s": 116.201, "e": 116.761, "sc": "s3d"}, {"w": "A", "s": 117.261, "e": 117.261, "sc": "s3d"}, {"w": "good", "s": 117.261, "e": 117.301, "sc": "s3d"}, {"w": "receptionist", "s": 117.301, "e": 117.861, "sc": "s3d"}, {"w": "collects", "s": 117.861, "e": 118.401, "sc": "s3d"}, {"w": "the", "s": 118.401, "e": 118.571, "sc": "s3d"}, {"w": "customer's", "s": 118.571, "e": 119.501, "sc": "s3d"}, {"w": "name,", "s": 119.501, "e": 119.681, "sc": "s3d"}, {"w": "what", "s": 119.681, "e": 120.001, "sc": "s3d"}, {"w": "they", "s": 120.001, "e": 120.341, "sc": "s3d"}, {"w": "need,", "s": 120.341, "e": 120.801, "sc": "s3d"}, {"w": "and", "s": 120.801, "e": 121.011, "sc": "s3d"}, {"w": "how", "s": 121.011, "e": 121.211, "sc": "s3d"}, {"w": "to", "s": 121.211, "e": 121.531, "sc": "s3d"}, {"w": "reach", "s": 121.531, "e": 121.751, "sc": "s3d"}, {"w": "them,", "s": 121.751, "e": 122.171, "sc": "s3d"}, {"w": "and", "s": 122.171, "e": 122.361, "sc": "s3d"}, {"w": "sends", "s": 122.361, "e": 122.621, "sc": "s3d"}, {"w": "it", "s": 122.621, "e": 122.721, "sc": "s3d"}, {"w": "straight", "s": 122.721, "e": 123.221, "sc": "s3d"}, {"w": "to", "s": 123.221, "e": 123.451, "sc": "s3d"}, {"w": "the", "s": 123.451, "e": 123.461, "sc": "s3d"}, {"w": "owner's", "s": 123.461, "e": 123.851, "sc": "s3d"}, {"w": "inbox.", "s": 123.851, "e": 124.341, "sc": "s3d"}, {"w": "You", "s": 124.921, "e": 124.921, "sc": "s3d"}, {"w": "wake", "s": 124.921, "e": 124.961, "sc": "s3d"}, {"w": "up", "s": 124.961, "e": 125.061, "sc": "s3d"}, {"w": "to", "s": 125.061, "e": 125.211, "sc": "s3d"}, {"w": "booked", "s": 125.211, "e": 126.061, "sc": "s3d"}, {"w": "conversations,", "s": 126.061, "e": 126.911, "sc": "s3d"}, {"w": "not", "s": 126.911, "e": 127.271, "sc": "s3d"}, {"w": "missed", "s": 127.271, "e": 127.621, "sc": "s3d"}, {"w": "ones.", "s": 127.621, "e": 128.221, "sc": "s3d"}, {"w": "Now,", "s": 129.351, "e": 129.721, "sc": "s4"}, {"w": "we've", "s": 129.721, "e": 130.301, "sc": "s4"}, {"w": "all", "s": 130.301, "e": 130.491, "sc": "s4"}, {"w": "met", "s": 130.491, "e": 130.781, "sc": "s4"}, {"w": "a", "s": 130.781, "e": 130.871, "sc": "s4"}, {"w": "bad", "s": 130.871, "e": 131.151, "sc": "s4"}, {"w": "chatbot.", "s": 131.151, "e": 132.071, "sc": "s4"}, {"w": "So", "s": 132.071, "e": 132.121, "sc": "s4"}, {"w": "here's", "s": 132.121, "e": 132.501, "sc": "s4"}, {"w": "the", "s": 132.501, "e": 132.661, "sc": "s4"}, {"w": "checklist.", "s": 132.661, "e": 133.561, "sc": "s4"}, {"w": "One:", "s": 133.561, "e": 134.091, "sc": "s4"}, {"w": "it", "s": 134.621, "e": 134.691, "sc": "s4"}, {"w": "answers", "s": 134.691, "e": 135.151, "sc": "s4"}, {"w": "only", "s": 135.151, "e": 135.411, "sc": "s4"}, {"w": "from", "s": 135.411, "e": 135.661, "sc": "s4"}, {"w": "your", "s": 135.661, "e": 136.391, "sc": "s4"}, {"w": "information,", "s": 136.391, "e": 136.681, "sc": "s4"}, {"w": "and", "s": 136.681, "e": 136.881, "sc": "s4"}, {"w": "says", "s": 136.881, "e": 137.151, "sc": "s4"}, {"w": "\"I", "s": 137.151, "e": 137.261, "sc": "s4"}, {"w": "don't", "s": 137.261, "e": 137.851, "sc": "s4"}, {"w": "know\"", "s": 137.851, "e": 137.941, "sc": "s4"}, {"w": "instead", "s": 137.941, "e": 138.501, "sc": "s4"}, {"w": "of", "s": 138.501, "e": 138.831, "sc": "s4"}, {"w": "guessing.", "s": 138.831, "e": 139.081, "sc": "s4"}, {"w": "Two:", "s": 139.081, "e": 139.401, "sc": "s4"}, {"w": "it", "s": 139.721, "e": 139.831, "sc": "s4"}, {"w": "hands", "s": 139.831, "e": 140.131, "sc": "s4"}, {"w": "off", "s": 140.131, "e": 140.411, "sc": "s4"}, {"w": "to", "s": 140.411, "e": 140.531, "sc": "s4"}, {"w": "a", "s": 140.531, "e": 140.611, "sc": "s4"}, {"w": "human", "s": 140.611, "e": 141.021, "sc": "s4"}, {"w": "for", "s": 141.021, "e": 141.261, "sc": "s4"}, {"w": "anything", "s": 141.261, "e": 141.921, "sc": "s4"}, {"w": "it", "s": 141.921, "e": 142.551, "sc": "s4"}, {"w": "shouldn't", "s": 142.551, "e": 142.821, "sc": "s4"}, {"w": "decide.", "s": 142.821, "e": 143.401, "sc": "s4"}, {"w": "Three:", "s": 143.401, "e": 143.761, "sc": "s4"}, {"w": "it", "s": 144.121, "e": 144.231, "sc": "s4"}, {"w": "captures", "s": 144.231, "e": 144.811, "sc": "s4"}, {"w": "the", "s": 144.811, "e": 144.981, "sc": "s4"}, {"w": "lead", "s": 144.981, "e": 145.311, "sc": "s4"}, {"w": "every", "s": 145.311, "e": 145.731, "sc": "s4"}, {"w": "time,", "s": 145.731, "e": 146.221, "sc": "s4"}, {"w": "not", "s": 146.221, "e": 146.461, "sc": "s4"}, {"w": "just", "s": 146.461, "e": 146.951, "sc": "s4"}, {"w": "the", "s": 146.951, "e": 147.051, "sc": "s4"}, {"w": "conversation.", "s": 147.051, "e": 148.361, "sc": "s4"}, {"w": "Get", "s": 149.081, "e": 149.081, "sc": "s4"}, {"w": "those", "s": 149.081, "e": 149.191, "sc": "s4"}, {"w": "three", "s": 149.191, "e": 149.321, "sc": "s4"}, {"w": "right,", "s": 149.321, "e": 149.831, "sc": "s4"}, {"w": "and", "s": 149.831, "e": 150.141, "sc": "s4"}, {"w": "customers", "s": 150.141, "e": 150.711, "sc": "s4"}, {"w": "barely", "s": 150.711, "e": 151.151, "sc": "s4"}, {"w": "notice", "s": 151.151, "e": 151.881, "sc": "s4"}, {"w": "they're", "s": 151.881, "e": 152.101, "sc": "s4"}, {"w": "talking", "s": 152.101, "e": 152.601, "sc": "s4"}, {"w": "to", "s": 152.601, "e": 152.751, "sc": "s4"}, {"w": "an", "s": 152.751, "e": 152.891, "sc": "s4"}, {"w": "AI.", "s": 152.891, "e": 153.321, "sc": "s4"}, {"w": "This", "s": 154.232, "e": 154.422, "sc": "s5"}, {"w": "is", "s": 154.422, "e": 154.552, "sc": "s5"}, {"w": "exactly", "s": 154.552, "e": 155.032, "sc": "s5"}, {"w": "how", "s": 155.032, "e": 155.232, "sc": "s5"}, {"w": "we", "s": 155.232, "e": 155.362, "sc": "s5"}, {"w": "built", "s": 155.362, "e": 155.832, "sc": "s5"}, {"w": "ClientFalcon", "s": 155.832, "e": 156.167, "sc": "s5"}, {"w": "Voice", "s": 156.502, "e": 156.852, "sc": "s5"}, {"w": "at", "s": 156.852, "e": 156.982, "sc": "s5"}, {"w": "iAgentice:", "s": 156.982, "e": 157.637, "sc": "s5"}, {"w": "voice", "s": 158.292, "e": 158.292, "sc": "s5"}, {"w": "and", "s": 158.292, "e": 158.372, "sc": "s5"}, {"w": "chat", "s": 158.372, "e": 158.562, "sc": "s5"}, {"w": "assistants", "s": 158.562, "e": 159.262, "sc": "s5"}, {"w": "trained", "s": 159.262, "e": 159.722, "sc": "s5"}, {"w": "on", "s": 159.722, "e": 159.852, "sc": "s5"}, {"w": "a", "s": 159.852, "e": 159.972, "sc": "s5"}, {"w": "business's", "s": 159.972, "e": 160.602, "sc": "s5"}, {"w": "own", "s": 160.602, "e": 160.792, "sc": "s5"}, {"w": "information,", "s": 160.792, "e": 161.752, "sc": "s5"}, {"w": "answering", "s": 162.352, "e": 162.422, "sc": "s5"}, {"w": "website", "s": 162.422, "e": 162.892, "sc": "s5"}, {"w": "visitors", "s": 162.892, "e": 163.462, "sc": "s5"}, {"w": "and", "s": 163.462, "e": 163.672, "sc": "s5"}, {"w": "WhatsApp", "s": 163.672, "e": 164.242, "sc": "s5"}, {"w": "messages", "s": 164.242, "e": 164.812, "sc": "s5"}, {"w": "around", "s": 164.812, "e": 165.232, "sc": "s5"}, {"w": "the", "s": 165.232, "e": 165.442, "sc": "s5"}, {"w": "clock,", "s": 165.442, "e": 165.832, "sc": "s5"}, {"w": "and", "s": 165.832, "e": 166.032, "sc": "s5"}, {"w": "sending", "s": 166.032, "e": 166.482, "sc": "s5"}, {"w": "every", "s": 166.482, "e": 166.822, "sc": "s5"}, {"w": "lead", "s": 166.822, "e": 167.082, "sc": "s5"}, {"w": "to", "s": 167.082, "e": 167.212, "sc": "s5"}, {"w": "the", "s": 167.212, "e": 167.412, "sc": "s5"}, {"w": "owner's", "s": 167.412, "e": 167.932, "sc": "s5"}, {"w": "inbox.", "s": 167.932, "e": 168.432, "sc": "s5"}, {"w": "If", "s": 168.932, "e": 168.932, "sc": "s5"}, {"w": "you", "s": 168.932, "e": 169.012, "sc": "s5"}, {"w": "want", "s": 169.012, "e": 169.082, "sc": "s5"}, {"w": "one", "s": 169.082, "e": 169.302, "sc": "s5"}, {"w": "for", "s": 169.302, "e": 169.522, "sc": "s5"}, {"w": "your", "s": 169.522, "e": 169.812, "sc": "s5"}, {"w": "business,", "s": 169.812, "e": 170.452, "sc": "s5"}, {"w": "or", "s": 170.452, "e": 170.612, "sc": "s5"}, {"w": "want", "s": 170.612, "e": 170.812, "sc": "s5"}, {"w": "us", "s": 170.812, "e": 170.932, "sc": "s5"}, {"w": "to", "s": 170.932, "e": 171.052, "sc": "s5"}, {"w": "build", "s": 171.052, "e": 171.362, "sc": "s5"}, {"w": "a", "s": 171.362, "e": 171.412, "sc": "s5"}, {"w": "custom", "s": 171.412, "e": 171.812, "sc": "s5"}, {"w": "agent,", "s": 171.812, "e": 172.252, "sc": "s5"}, {"w": "the", "s": 172.612, "e": 172.612, "sc": "s5"}, {"w": "link's", "s": 172.612, "e": 172.692, "sc": "s5"}, {"w": "in", "s": 172.692, "e": 172.742, "sc": "s5"}, {"w": "the", "s": 172.742, "e": 172.872, "sc": "s5"}, {"w": "description.", "s": 172.872, "e": 173.552, "sc": "s5"}, {"w": "And", "s": 174.132, "e": 174.132, "sc": "s5"}, {"w": "if", "s": 174.132, "e": 174.132, "sc": "s5"}, {"w": "you'd", "s": 174.132, "e": 174.272, "sc": "s5"}, {"w": "like", "s": 174.272, "e": 174.562, "sc": "s5"}, {"w": "to", "s": 174.562, "e": 174.702, "sc": "s5"}, {"w": "see", "s": 174.702, "e": 174.922, "sc": "s5"}, {"w": "the", "s": 174.922, "e": 175.142, "sc": "s5"}, {"w": "build", "s": 175.142, "e": 175.512, "sc": "s5"}, {"w": "itself,", "s": 175.512, "e": 175.952, "sc": "s5"}, {"w": "step", "s": 175.952, "e": 176.242, "sc": "s5"}, {"w": "by", "s": 176.242, "e": 176.412, "sc": "s5"}, {"w": "step,", "s": 176.412, "e": 176.912, "sc": "s5"}, {"w": "subscribe.", "s": 176.912, "e": 177.512, "sc": "s5"}, {"w": "That's", "s": 178.092, "e": 178.162, "sc": "s5"}, {"w": "the", "s": 178.162, "e": 178.172, "sc": "s5"}, {"w": "next", "s": 178.172, "e": 178.452, "sc": "s5"}, {"w": "video.", "s": 178.452, "e": 179.072, "sc": "s5"}], "cues": {"s1_msg": 2.92, "s1_who": 4.58, "s1_nobody": 6.47, "s1_else": 11.05, "s1_title": 12.15, "s1_good": 18.3, "s2_forty": 23.192, "s2_168": 26.752, "s2_evenings": 27.802, "s2_web": 33.302, "s2_wa": 34.072, "s2_phone": 35.172, "s2_all": 37.122, "s2_shift": 39.282, "a_part": 41.598, "a_chat": 46.598, "a_voice": 48.898, "a_wa": 50.428, "a_single": 53.998, "a_same": 56.108, "b_part": 58.538, "b_messy": 67.888, "b_nothing": 73.078, "b_ask": 74.868, "b_guess": 77.528, "c_kb": 81.235, "c_services": 84.645, "c_prices": 85.655, "c_hours": 86.325, "c_policies": 87.265, "c_question": 88.675, "c_finds": 90.935, "c_hands": 94.115, "c_rag": 97.315, "c_looks": 101.965, "c_think": 106.405, "c_were2": 106.765, "d_part": 111.241, "d_lead": 116.201, "d_name": 119.501, "d_need": 120.341, "d_reach": 121.531, "d_inbox": 123.851, "d_wake": 124.921, "g_bad": 130.871, "g_one": 133.561, "g_two": 139.081, "g_three": 143.401, "g_right": 149.321, "f_cf": 155.832, "f_web": 162.422, "f_wa": 163.672, "f_lead": 166.822, "f_want": 169.012, "f_link": 172.612, "f_sub": 176.912}};
+          const C = V.cues, S = V.scenes;
+          const tl = gsap.timeline({ paused: true });
+          const q = (s) => document.querySelector(s);
+          const fade = (el, t, d = 0.45) => tl.fromTo(el, { autoAlpha: 0 }, { autoAlpha: 1, duration: d, ease: "power2.out" }, t);
+          const out = (el, t, d = 0.35) => tl.to(el, { autoAlpha: 0, duration: d, ease: "power2.in" }, t);
+          const rise = (el, t, y = 40, d = 0.55) => tl.fromTo(el, { autoAlpha: 0, y }, { autoAlpha: 1, y: 0, duration: d, ease: "power3.out" }, t);
+          const pop = (el, t) => tl.fromTo(el, { autoAlpha: 0, scale: 0.6 }, { autoAlpha: 1, scale: 1, duration: 0.45, ease: "back.out(2)" }, t);
+          const dim = (el, t, v = 0.55) => tl.to(el, { opacity: v, duration: 0.4 }, t);
+          const sceneWin = [
+            ["#sc1", "#lbl1", 0, S.s2.start - 0.4],
+            ["#sc2", "#lbl2", S.s2.start - 0.4, S.s3a.start - 0.4],
+            ["#sc3", "#lbl3", S.s3a.start - 0.4, S.s4.start - 0.4],
+            ["#sc4", "#lbl4", S.s4.start - 0.4, S.s5.start - 0.4],
+            ["#sc5", "#lbl5", S.s5.start - 0.4, V.total],
+          ];
+          sceneWin.forEach(([sc, lb, a, b], i) => {
+            if (i) tl.fromTo(sc, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5 }, a); else tl.set(sc, { autoAlpha: 1 }, 0);
+            if (i) tl.fromTo(lb, { opacity: 0 }, { opacity: 1, duration: 0.4 }, a + 0.2); else tl.set(lb, { opacity: 1 }, 0);
+            if (b < V.total) { tl.to(sc, { autoAlpha: 0, duration: 0.4 }, b - 0.4); tl.to(lb, { opacity: 0, duration: 0.3 }, b - 0.4); }
+          });
+
+          // ---------- Scene 1 ----------
+          ["#s1-msg", "#s1-status", "#s1-timer", "#rival", "#title-card", "#title-line"].forEach((s) => tl.set(s, { autoAlpha: 0 }, 0));
+          rise("#s1-msg", C.s1_msg - 0.2, 30);
+          fade("#s1-status", C.s1_who);
+          fade("#s1-timer", C.s1_nobody);
+          rise("#rival", C.s1_else - 0.3, 50);
+          ["#phone", "#clock", "#clock-sub", "#rival"].forEach((s) => out(s, C.s1_title - 0.6, 0.4));
+          rise("#title-card", C.s1_title - 0.1, 30, 0.7);
+          tl.fromTo("#title-line", { scaleX: 0, autoAlpha: 0 }, { scaleX: 1, autoAlpha: 1, duration: 0.9, ease: "power3.inOut" }, C.s1_title + 0.3);
+
+          // ---------- Scene 2 ----------
+          const dots = q("#dots");
+          [19.5, 21, 22.5, 23.4, 0.6, 1.8, 3, 4.6, 6.2, 7.4, 18.4, 20.2, 2.4, 13.2, 16.5, 10.3].forEach((h, i) => {
+            const a = ((h / 24) * 360 - 90) * Math.PI / 180;
+            const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            c.setAttribute("cx", 300 + 230 * Math.cos(a)); c.setAttribute("cy", 300 + 230 * Math.sin(a));
+            c.setAttribute("r", 11); c.setAttribute("fill", h > 9 && h < 17 ? "#0a0d0b" : "#ff6b57");
+            c.setAttribute("stroke", "#e8ede6"); c.setAttribute("stroke-width", 3); c.setAttribute("opacity", 0);
+            dots.appendChild(c);
+            tl.fromTo(c, { opacity: 0, scale: 0, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(3)" }, C.s2_evenings + i * 0.12);
+          });
+          ["#rc-40", "#rc-168", "#rc-247", "#ch-web", "#ch-wa", "#ch-ph", "#s2-head"].forEach((s) => tl.set(s, { autoAlpha: 0 }, 0));
+          tl.to("#ring-open", { strokeDashoffset: 0, duration: 1.0, ease: "power2.inOut" }, C.s2_forty - 0.4);
+          rise("#rc-40", C.s2_forty - 0.2, 20);
+          out("#rc-40", C.s2_168 - 0.3, 0.25); rise("#rc-168", C.s2_168 - 0.1, 20);
+          fade("#s2-head", C.s2_web - 0.4);
+          rise("#ch-web", C.s2_web, 20); rise("#ch-wa", C.s2_wa, 20); rise("#ch-ph", C.s2_phone, 20);
+          tl.to("#ring-all", { strokeDashoffset: 0, duration: 1.6, ease: "power2.inOut" }, C.s2_all);
+          out("#rc-168", C.s2_shift - 0.3, 0.25); pop("#rc-247", C.s2_shift);
+
+          // ---------- Scene 3 ----------
+          const s3hidden = ["#b-ch", "#c-chat", "#c-voice", "#c-wa", "#w1", "#w2", "#w3", "#brain", "#b-kb", "#b-act", "#lead",
+            "#msg-messy", "#msg-q", "#ans-guess", "#stamp-guess", "#ans-think", "#ans-right", "#snippet", "#rag", "#inbox-badge",
+            "#d-serv", "#d-price", "#d-hours", "#d-pol", "#lead-name", "#lead-need", "#lead-reach"];
+          s3hidden.forEach((s) => tl.set(s, { autoAlpha: 0 }, 0));
+          // 3a channels
+          fade("#b-ch", C.a_part);
+          rise("#c-chat", C.a_chat, 24); rise("#c-voice", C.a_voice, 24); rise("#c-wa", C.a_wa, 24);
+          tl.set("#w1", { autoAlpha: 1 }, C.a_single - 0.2);
+          tl.fromTo("#w1", { scaleY: 0 }, { scaleY: 1, duration: 0.6, ease: "power2.out" }, C.a_single - 0.2);
+          fade("#brain", C.a_single, 0.5); dim("#brain", C.a_single + 0.5, 0.55);
+          // 3b brain
+          dim("#b-ch", C.b_part, 0.55); dim("#w1", C.b_part, 0.55);
+          tl.to("#brain", { opacity: 1, duration: 0.4 }, C.b_part);
+          tl.fromTo("#brain-core", { scale: 0.85 }, { scale: 1, duration: 0.8, ease: "elastic.out(1, 0.5)" }, C.b_part);
+          rise("#msg-messy", C.b_messy - 0.3, 20);
+          tl.to("#msg-messy", { y: 150, scale: 0.4, autoAlpha: 0, duration: 0.9, ease: "power2.in" }, C.b_messy + 1.3);
+          tl.fromTo("#brain-core", { scale: 1 }, { scale: 1.08, duration: 0.25, yoyo: true, repeat: 1 }, C.b_messy + 2.1);
+          rise("#ans-guess", C.b_ask, 20);
+          pop("#stamp-guess", C.b_guess - 0.15);
+          out("#ans-guess", S.s3c.start - 0.3); out("#stamp-guess", S.s3c.start - 0.3);
+          // 3c knowledge base
+          dim("#brain", C.c_kb - 0.2, 0.5);
+          fade("#b-kb", C.c_kb - 0.1); tl.set("#w3", { autoAlpha: 1 }, C.c_kb + 0.3);
+          tl.fromTo("#w3", { scaleY: 0 }, { scaleY: 1, duration: 0.5 }, C.c_kb + 0.3);
+          pop("#d-serv", C.c_services); pop("#d-price", C.c_prices); pop("#d-hours", C.c_hours); pop("#d-pol", C.c_policies);
+          rise("#msg-q", C.c_question - 0.2, 20);
+          tl.to("#msg-q", { y: 150, scale: 0.4, autoAlpha: 0, duration: 0.8, ease: "power2.in" }, C.c_question + 1.0);
+          tl.to("#hours-hl", { opacity: 1, duration: 0.3 }, C.c_finds);
+          tl.fromTo("#snippet", { autoAlpha: 0, y: 0 }, { autoAlpha: 1, duration: 0.3 }, C.c_hands - 0.2);
+          tl.to("#snippet", { y: -260, duration: 0.9, ease: "power2.inOut" }, C.c_hands + 0.3);
+          tl.to("#snippet", { autoAlpha: 0, scale: 0.5, duration: 0.3 }, C.c_hands + 1.2);
+          tl.to("#brain", { opacity: 1, duration: 0.3 }, C.c_hands + 1.0);
+          tl.fromTo("#brain-core", { scale: 1 }, { scale: 1.08, duration: 0.25, yoyo: true, repeat: 1 }, C.c_hands + 1.1);
+          rise("#rag", C.c_rag - 0.2, 20);
+          rise("#ans-think", C.c_think - 0.2, 20);
+          rise("#ans-right", C.c_were2 - 0.1, 20);
+          tl.to("#ans-think", { opacity: 0.35, duration: 0.4 }, C.c_were2 + 0.2);
+          ["#ans-think", "#ans-right", "#rag"].forEach((s) => out(s, S.s3d.start - 0.3));
+          tl.to("#hours-hl", { opacity: 0, duration: 0.3 }, S.s3d.start - 0.3);
+          // 3d actions
+          dim("#b-kb", C.d_part, 0.55); dim("#w3", C.d_part, 0.55); dim("#brain", C.d_part, 0.5);
+          tl.set("#w2", { autoAlpha: 1 }, C.d_part);
+          tl.fromTo("#w2", { scaleY: 0 }, { scaleY: 1, duration: 0.6 }, C.d_part);
+          fade("#b-act", C.d_part + 0.3);
+          rise("#lead", C.d_lead - 0.2, 30);
+          rise("#lead-name", C.d_name - 0.1, 10); rise("#lead-need", C.d_need - 0.1, 10); rise("#lead-reach", C.d_reach - 0.1, 10);
+          tl.to("#lead", { y: -220, scale: 0.3, autoAlpha: 0, duration: 0.7, ease: "power2.in" }, C.d_inbox - 0.3);
+          pop("#inbox-badge", C.d_inbox + 0.35);
+          ["#b-ch", "#w1", "#w2", "#w3", "#brain", "#b-kb"].forEach((s) => tl.to(s, { opacity: 1, duration: 0.6 }, C.d_wake));
+
+          // ---------- Scene 4 ----------
+          ["#col-bad", "#col-good", "#bad1", "#bad2", "#bad3", "#good1", "#good2", "#good3"].forEach((s) => tl.set(s, { autoAlpha: 0 }, 0));
+          fade("#col-bad", C.g_bad - 0.3);
+          rise("#bad1", C.g_bad, 20); rise("#bad2", C.g_bad + 0.5, 20); rise("#bad3", C.g_bad + 1.0, 20);
+          fade("#col-good", C.g_one - 0.6);
+          rise("#good1", C.g_one, 24); rise("#good2", C.g_two, 24); rise("#good3", C.g_three, 24);
+          dim("#col-bad", C.g_right, 0.5);
+
+          // ---------- Scene 5 ----------
+          ["#cf-logo", "#cf-name", "#cf-by", "#cf-c1", "#cf-c2", "#cf-c3", "#cf-c4", "#cf-flow", "#url", "#endcard"].forEach((s) => tl.set(s, { autoAlpha: 0 }, 0));
+          pop("#cf-logo", C.f_cf - 0.4); rise("#cf-name", C.f_cf - 0.1, 24); fade("#cf-by", C.f_cf + 0.4);
+          rise("#cf-c1", C.f_web - 0.1, 16); rise("#cf-c2", C.f_web + 0.2, 16); rise("#cf-c3", C.f_wa - 0.1, 16); rise("#cf-c4", C.f_wa + 0.3, 16);
+          rise("#cf-flow", C.f_lead - 0.3, 20);
+          out("#cf-group", C.f_want - 0.4);
+          rise("#url", C.f_want - 0.1, 30);
+          out("#url", C.f_sub - 1.2);
+          fade("#endcard", C.f_sub - 0.8, 0.6);
+          tl.fromTo("#sub-btn", { scale: 1 }, { scale: 1.08, duration: 0.3, yoyo: true, repeat: 3, ease: "sine.inOut" }, C.f_sub);
+
+          // ---------- Captions ----------
+          const box = q("#captions");
+          const phrases = [];
+          let cur = [];
+          V.words.forEach((w, i) => {
+            cur.push(w);
+            const next = V.words[i + 1];
+            const brk = /[.,?!:;]$/.test(w.w) || cur.length >= 5 || !next || next.sc !== w.sc || next.s - w.e > 0.6;
+            if (brk) { phrases.push(cur); cur = []; }
+          });
+          phrases.forEach((p, i) => {
+            const el = document.createElement("div");
+            el.className = "cap";
+            p.forEach((w, j) => {
+              const s = document.createElement("span");
+              s.textContent = w.w + (j < p.length - 1 ? " " : "");
+              el.appendChild(s);
+              tl.to(s, { opacity: 1, duration: 0.08, className: "+=active" }, w.s);
+            });
+            box.appendChild(el);
+            const start = p[0].s - 0.05;
+            const nxt = phrases[i + 1];
+            const end = Math.min(p[p.length - 1].e + 0.35, nxt ? nxt[0].s - 0.06 : V.total);
+            tl.set(el, { autoAlpha: 1 }, start);
+            tl.set(el, { autoAlpha: 0 }, end);
+          });
+
+          tl.set({}, {}, V.total);
+          window.__timelines = window.__timelines || {};
+          window.__timelines["master"] = tl;
+        })();
+      </script>
+    </div>
+  </body>
+</html>

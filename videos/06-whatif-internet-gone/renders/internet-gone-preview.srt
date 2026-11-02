@@ -1,0 +1,485 @@
+1
+00:00:00,120 --> 00:00:04,917
+Imagine you wake up tomorrow, reach for
+your phone, and nothing loads.
+
+2
+00:00:05,187 --> 00:00:09,983
+Not your Wi-Fi. Not your phone company.
+The entire internet is gone.
+
+3
+00:00:10,253 --> 00:00:13,883
+And it's not coming back for one whole
+year.
+
+4
+00:00:14,153 --> 00:00:20,117
+Five and a half billion people just lost
+the first thing they check every morning.
+
+5
+00:00:20,387 --> 00:00:26,717
+So what would actually happen? On day one,
+in week one, and over the whole year?
+
+6
+00:00:26,987 --> 00:00:32,950
+First, the rules. Electricity still works.
+So do radio, TV broadcasts, and old
+landline phones.
+
+7
+00:00:33,220 --> 00:00:39,183
+But anything that sends data over the
+internet, from apps to bank transfers,
+simply stops.
+
+8
+00:00:39,453 --> 00:00:43,483
+Let's start at seven a.m. on the very
+first morning.
+
+9
+00:00:43,753 --> 00:00:48,150
+Pip's first move is the same as yours.
+Restart the router.
+
+10
+00:00:48,420 --> 00:00:52,050
+Twice. Then a third time, a little more
+angrily.
+
+11
+00:00:52,320 --> 00:00:56,717
+Across the street, every neighbor is doing
+exactly the same thing.
+
+12
+00:00:56,987 --> 00:01:01,783
+Then Pip switches on an old radio, and
+hears news nobody expected.
+
+13
+00:01:02,053 --> 00:01:06,450
+It's global. Every country, every network,
+all at the same moment.
+
+14
+00:01:06,720 --> 00:01:13,450
+That's stranger than it sounds. Almost all
+data between continents travels through
+cables on the ocean floor.
+
+15
+00:01:13,720 --> 00:01:18,117
+They carry video calls, card payments,
+stock trades, even this video.
+
+16
+00:01:18,387 --> 00:01:20,083
+Today, they carry nothing.
+
+17
+00:01:20,353 --> 00:01:23,617
+By eight a.m., the morning commute falls
+apart.
+
+18
+00:01:23,887 --> 00:01:27,517
+Ride apps are dead. Ticket gates won't
+read phones.
+
+19
+00:01:27,787 --> 00:01:34,117
+Millions of people realize they don't
+actually know the way to work without a
+map app.
+
+20
+00:01:34,387 --> 00:01:41,117
+GPS satellites still work, by the way. But
+without data, most maps can't even load
+the streets.
+
+21
+00:01:41,387 --> 00:01:46,183
+So people do something they haven't done
+in years. They ask strangers.
+
+22
+00:01:46,453 --> 00:01:50,083
+Then comes the first real shock. Paying
+for things.
+
+23
+00:01:50,353 --> 00:01:55,550
+Card machines need a network to check your
+bank. No network, no payment.
+
+24
+00:01:55,820 --> 00:02:01,783
+Some shops can accept cards offline, but
+only small amounts, and only for a while.
+
+25
+00:02:02,053 --> 00:02:06,850
+Everyone else needs cash. And everyone
+needs it at the same time.
+
+26
+00:02:07,120 --> 00:02:13,083
+Many cash machines run on networks too, so
+the lines move to the bank branches.
+
+27
+00:02:13,353 --> 00:02:18,550
+By lunchtime, a handful of cash is the
+most valuable thing in town.
+
+28
+00:02:18,820 --> 00:02:23,217
+Pip works from home, on video calls. Or
+rather, used to.
+
+29
+00:02:23,487 --> 00:02:30,617
+Offices, schools and online stores go
+quiet. Online shopping alone is worth
+around six trillion dollars a year.
+
+30
+00:02:30,887 --> 00:02:34,150
+Every one of those orders just froze, mid-
+click.
+
+31
+00:02:34,420 --> 00:02:40,383
+Airports have it even worse. Flights
+depend on networks for booking, check-in
+and crew schedules.
+
+32
+00:02:40,653 --> 00:02:49,717
+We've had a preview. In 2024, one faulty
+software update crashed about eight and a
+half million computers and grounded
+thousands of flights.
+
+33
+00:02:49,987 --> 00:02:54,383
+That chaos lasted a few days. This one
+lasts a year.
+
+34
+00:02:54,653 --> 00:02:58,283
+Hospitals still have power, and doctors
+still know medicine.
+
+35
+00:02:58,553 --> 00:03:02,950
+But patient records, lab results and
+prescriptions live in connected systems.
+
+36
+00:03:03,220 --> 00:03:08,417
+So they switch to backups. Printed charts,
+handwritten orders, and runners carrying
+folders.
+
+37
+00:03:08,687 --> 00:03:11,950
+By the first night, the city feels
+strange.
+
+38
+00:03:12,220 --> 00:03:17,017
+The lights are on. But the windows don't
+glow blue with screens.
+
+39
+00:03:17,287 --> 00:03:23,617
+Pip lies in bed, picks up the phone out of
+habit, and puts it back down.
+
+40
+00:03:23,887 --> 00:03:26,750
+Week one is when things get serious.
+
+41
+00:03:27,020 --> 00:03:29,117
+Supermarket shelves start running thin.
+
+42
+00:03:29,387 --> 00:03:34,950
+Not because the food ran out, but because
+ordering it ran on the internet.
+
+43
+00:03:35,220 --> 00:03:40,783
+Stores normally reorder stock
+automatically, often every day. Trucks
+follow routes planned by software.
+
+44
+00:03:41,053 --> 00:03:46,617
+Now managers phone suppliers on landlines,
+and fax machines wake up from long naps.
+
+45
+00:03:46,887 --> 00:03:49,350
+Yes. The fax machine is back.
+
+46
+00:03:49,620 --> 00:03:55,583
+But the bigger problem is information.
+Without the internet, how do you know
+what's true?
+
+47
+00:03:55,853 --> 00:04:01,050
+Rumors fly. It'll be back tomorrow. The
+banks are closing. Aliens did it.
+
+48
+00:04:01,320 --> 00:04:06,517
+So people turn to the oldest networks we
+have. Radio, TV and newspapers.
+
+49
+00:04:06,787 --> 00:04:11,983
+Printed newspapers, which had been
+shrinking for years, sell out by nine a.m.
+
+50
+00:04:12,253 --> 00:04:16,650
+Town halls pin notices to boards, just
+like a century ago.
+
+51
+00:04:16,920 --> 00:04:20,183
+But what about talking to people far away?
+
+52
+00:04:20,453 --> 00:04:27,583
+Most mobile calls now travel as data.
+Whether they still work depends on how
+each carrier routes them.
+
+53
+00:04:27,853 --> 00:04:33,050
+Old landlines hold up better, and lines
+form at the last few payphones.
+
+54
+00:04:33,320 --> 00:04:35,783
+And then, something surprising happens.
+Letters.
+
+55
+00:04:36,053 --> 00:04:43,950
+The U.S. Postal Service already moves over
+a hundred billion pieces of mail a year.
+Now it becomes the internet.
+
+56
+00:04:44,220 --> 00:04:51,350
+Pip writes a letter for the first time
+since school. It takes forty minutes.
+Mostly crossing things out.
+
+57
+00:04:51,620 --> 00:04:56,017
+By the end of the first month, panic turns
+into routine.
+
+58
+00:04:56,287 --> 00:05:01,850
+Shops run on cash and paper receipts.
+Banks process transfers on paper again,
+slowly.
+
+59
+00:05:02,120 --> 00:05:07,317
+Companies send couriers on motorbikes
+between offices, carrying hard drives full
+of data.
+
+60
+00:05:07,587 --> 00:05:16,250
+Engineers have a name for this:
+sneakernet. And for huge amounts of data,
+a truck full of drives can beat the
+internet.
+
+61
+00:05:16,520 --> 00:05:21,317
+Engineers race to build private links
+between hospitals, banks and power grids.
+
+62
+00:05:21,587 --> 00:05:27,550
+But rebuilding something the size of the
+internet? That takes far longer than a
+year.
+
+63
+00:05:27,820 --> 00:05:29,517
+So who struggles most?
+
+64
+00:05:29,787 --> 00:05:34,983
+Online businesses, delivery drivers, app
+makers and creators lose their income
+almost overnight.
+
+65
+00:05:35,253 --> 00:05:41,983
+People far from family feel it most. A
+weekly video call becomes a letter every
+two weeks.
+
+66
+00:05:42,253 --> 00:05:43,950
+And who suddenly thrives?
+
+67
+00:05:44,220 --> 00:05:49,017
+Libraries. Bookshops. Local markets. Radio
+stations. Anyone who can fix old machines.
+
+68
+00:05:49,287 --> 00:05:54,850
+Amateur radio operators, once a quiet
+hobby, become a lifeline for messages
+between towns.
+
+69
+00:05:55,120 --> 00:05:57,217
+And paper maps become bestsellers.
+
+70
+00:05:57,487 --> 00:06:01,883
+Six months in, something unexpected
+happens. People get used to it.
+
+71
+00:06:02,153 --> 00:06:11,217
+Studies of people who quit social media or
+block mobile internet for a while often
+find they sleep better and feel less
+anxious.
+
+72
+00:06:11,487 --> 00:06:16,283
+Not everyone, and not right away. But the
+constant buzzing is gone.
+
+73
+00:06:16,553 --> 00:06:22,117
+Neighbors talk more, because they have to.
+Streets fill with swap markets and clubs.
+
+74
+00:06:22,387 --> 00:06:29,117
+Pip and Momo start a weekly news sheet for
+their block. Two hundred copies, delivered
+by hand.
+
+75
+00:06:29,387 --> 00:06:34,583
+Kids go back to encyclopedias, and argue
+about facts nobody can look up.
+
+76
+00:06:34,853 --> 00:06:38,117
+Still, let's be honest. The cost is
+enormous.
+
+77
+00:06:38,387 --> 00:06:45,117
+The world economy is built for speed.
+Without the internet, trade, research and
+medicine all slow down.
+
+78
+00:06:45,387 --> 00:06:49,417
+Scientists can't share data instantly.
+Weather forecasts get less precise.
+
+79
+00:06:49,687 --> 00:06:53,717
+Many jobs disappear, and millions of
+people need new ones.
+
+80
+00:06:53,987 --> 00:06:59,550
+The world doesn't collapse. But it gets
+poorer, slower, and a lot more local.
+
+81
+00:06:59,820 --> 00:07:02,683
+Then, after three hundred and sixty-five
+days...
+
+82
+00:07:02,953 --> 00:07:06,583
+A tiny icon appears on Pip's phone. One
+bar.
+
+83
+00:07:06,853 --> 00:07:08,550
+The internet is back.
+
+84
+00:07:08,820 --> 00:07:12,450
+And a year's worth of notifications arrive
+at once.
+
+85
+00:07:12,720 --> 00:07:17,117
+Would we go right back to normal?
+Probably, within a week.
+
+86
+00:07:17,387 --> 00:07:19,483
+But some things might stick.
+
+87
+00:07:19,753 --> 00:07:25,717
+Companies would build better backups, so
+one failure can't stop a hospital or an
+airport.
+
+88
+00:07:25,987 --> 00:07:33,483
+People might keep some cash at home, a
+paper map in the car, and a radio in the
+drawer.
+
+89
+00:07:33,753 --> 00:07:39,317
+And Pip? Pip keeps writing letters to
+Momo. Even though they live next door.
+
+90
+00:07:39,587 --> 00:07:45,150
+Because the strangest part of a year
+without the internet wasn't what we lost.
+
+91
+00:07:45,420 --> 00:07:49,450
+It was what we found when we finally
+looked up.
+
+92
+00:07:49,720 --> 00:07:57,217
+Now it's your turn. Could you last one
+year offline? Or even one week? Tell me in
+the comments.
+
+93
+00:07:57,487 --> 00:08:04,617
+And if you were the only person on Earth
+still online... well, that's a story for
+next time.

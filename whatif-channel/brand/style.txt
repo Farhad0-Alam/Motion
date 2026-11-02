@@ -1,0 +1,4 @@
+# Appended to every image prompt by videos/lib/whatif.py. Keep it one paragraph.
+# Deliberately unlike the reference channel (black silhouettes with huge white eyes, glossy 3D-ish cities):
+# ours is flat cut paper, coloured pebble people, tiny dot eyes.
+Style: flat 2D cut-paper illustration, layered paper shapes with subtle paper grain and soft drop shadows between layers, simple rounded geometry, warm limited palette of cream, teal, coral, mustard yellow and deep navy, gentle cinematic lighting with one warm key light. All people are "pebble people": smooth rounded pebble-shaped bodies with no neck, solid pastel colours (each person a different colour), two tiny black dot eyes, small expressive eyebrows, a simple line mouth only when emotion needs it, short stubby arms and legs, no clothes except small accessories. Wide 16:9 composition with clear foreground subject and readable silhouette. No text, no letters, no numbers, no logos, no watermark.

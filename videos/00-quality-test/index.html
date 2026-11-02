@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>iAgentice - 4K Razor-Sharp Quality Showcase</title>
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Instrument Sans";
+        font-weight: 400 700;
+        src: url("assets/fonts/InstrumentSans-400_700.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "IBM Plex Mono";
+        font-weight: 400;
+        src: url("assets/fonts/IBMPlexMono-400.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "IBM Plex Mono";
+        font-weight: 500;
+        src: url("assets/fonts/IBMPlexMono-500.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "IBM Plex Mono";
+        font-weight: 600;
+        src: url("assets/fonts/IBMPlexMono-600.woff2") format("woff2");
+      }
+
+      :root {
+        --bg: #12171a;
+        --fg: #f3f6f1;
+        --muted: #b9c3ba;
+        --faint: #9ba89c;
+        --lime: #c8f04f;
+        --gold: #f0c05f;
+        --night: #9385ff;
+        --teal: #4ecdc4;
+        --slate: #1b2126;
+        --slate2: #232a31;
+        --slate3: #2b333b;
+        --hair: #ffffff1c;
+        --hair2: #ffffff3d;
+        --sans: "Instrument Sans", "Noto Sans", sans-serif;
+        --mono: "IBM Plex Mono", monospace;
+      }
+
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--bg);
+      }
+
+      #root {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: radial-gradient(ellipse at 50% 45%, #182326 0%, #12171a 60%, #0a0d0e 100%);
+        font-family: var(--sans);
+        color: var(--fg);
+      }
+
+      .grid {
+        position: absolute;
+        inset: 0;
+        background-image: linear-gradient(var(--hair) 1px, transparent 1px),
+                          linear-gradient(90deg, var(--hair) 1px, transparent 1px);
+        background-size: 96px 96px;
+        background-position: -1px -1px;
+        opacity: 0.6;
+      }
+
+      .vignette {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse at 50% 50%, transparent 60%, #00000088 100%);
+        pointer-events: none;
+      }
+
+      .mono {
+        font-family: var(--mono);
+      }
+
+      /* Top HUD */
+      #hud-bar {
+        position: absolute;
+        top: 48px;
+        left: 64px;
+        right: 64px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--hair2);
+        padding-bottom: 16px;
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .hud-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .hud-left img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .hud-tag {
+        font-family: var(--mono);
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--lime);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .hud-right {
+        font-family: var(--mono);
+        font-size: 16px;
+        color: var(--muted);
+        letter-spacing: 0.08em;
+      }
+
+      /* Center Hero Block */
+      #center-stage {
+        position: absolute;
+        top: 260px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .title-sub {
+        font-family: var(--mono);
+        font-size: 24px;
+        font-weight: 500;
+        color: var(--lime);
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+
+      .title-main {
+        font-size: 104px;
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+        margin: 16px 0 0;
+      }
+
+      .title-desc {
+        font-size: 32px;
+        color: var(--muted);
+        max-width: 980px;
+        margin: 20px auto 0;
+        line-height: 1.35;
+      }
+
+      /* Telemetry Cards */
+      #telemetry-deck {
+        position: absolute;
+        bottom: 84px;
+        left: 64px;
+        right: 64px;
+        display: flex;
+        gap: 24px;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .tele-card {
+        flex: 1;
+        max-width: 560px;
+        background: var(--slate);
+        border: 1px solid var(--hair2);
+        border-radius: 20px;
+        padding: 24px 28px;
+        box-shadow: 0 16px 40px #00000044;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        opacity: 0;
+      }
+
+      .tele-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: var(--mono);
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--muted);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--lime);
+        font-weight: 600;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--lime);
+        box-shadow: 0 0 12px var(--lime);
+      }
+
+      .tele-val {
+        font-size: 36px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        color: var(--fg);
+      }
+
+      .tele-sub {
+        font-family: var(--mono);
+        font-size: 16px;
+        color: var(--faint);
+      }
+
+      /* SVG Rotating Vector Radar */
+      #radar-svg {
+        position: absolute;
+        top: 180px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 720px;
+        height: 720px;
+        pointer-events: none;
+        opacity: 0.35;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="root" data-duration="6.0" data-width="1920" data-height="1080">
+      <div class="grid"></div>
+
+      <!-- Vector Radar Graphic Behind Text -->
+      <svg id="radar-svg" viewBox="0 0 720 720" data-layout-allow-overflow>
+        <circle id="radar-ring-1" cx="360" cy="360" r="340" fill="none" stroke="#ffffff1c" stroke-width="2" stroke-dasharray="8 8" />
+        <circle id="radar-ring-2" cx="360" cy="360" r="260" fill="none" stroke="#c8f04f44" stroke-width="2" stroke-dasharray="16 12" />
+        <circle id="radar-ring-3" cx="360" cy="360" r="180" fill="none" stroke="#ffffff22" stroke-width="1.5" />
+        <line x1="360" y1="20" x2="360" y2="700" stroke="#ffffff15" stroke-width="1" />
+        <line x1="20" y1="360" x2="700" y2="360" stroke="#ffffff15" stroke-width="1" />
+      </svg>
+
+      <!-- HUD Header -->
+      <div id="hud-bar">
+        <div class="hud-left">
+          <img src="assets/brand/icon.svg" alt="iAgentice" id="hud-icon" />
+          <span class="hud-tag" id="hud-tag">[SYS.01 // CODE_DIRECTED_4K]</span>
+        </div>
+        <div class="hud-right" id="hud-stats">
+          <span>FPS: 60</span> &nbsp;•&nbsp; <span>RESOLUTION: 3840×2160 (4K UHD)</span> &nbsp;•&nbsp; <span>ZERO DIFFUSION BLUR</span>
+        </div>
+      </div>
+
+      <!-- Center Stage -->
+      <div id="center-stage">
+        <div class="title-sub" id="hero-sub">[ MATHEMATICAL PRECISION ]</div>
+        <h1 class="title-main" id="hero-title">Razor-Sharp Code Motion</h1>
+        <p class="title-desc" id="hero-desc">
+          Rendered deterministically through headless Chrome and SVG vectors. Every edge is mathematically crisp at native 4K.
+        </p>
+      </div>
+
+      <!-- Telemetry Cards -->
+      <div id="telemetry-deck">
+        <div class="tele-card" id="card-1">
+          <div class="tele-header">
+            <span>Voice Infrastructure</span>
+            <div class="status-pill"><div class="status-dot"></div> ACTIVE</div>
+          </div>
+          <div class="tele-val">+1 (469) 728-8899</div>
+          <div class="tele-sub">Dallas, TX • Latency &lt; 450ms</div>
+        </div>
+
+        <div class="tele-card" id="card-2">
+          <div class="tele-header">
+            <span>Automated CalDAV Sync</span>
+            <div class="status-pill"><div class="status-dot"></div> SYNCED</div>
+          </div>
+          <div class="tele-val">FORD Conversations</div>
+          <div class="tele-sub">Google Sheets → iCloud 30m Blocks</div>
+        </div>
+
+        <div class="tele-card" id="card-3">
+          <div class="tele-header">
+            <span>Vector Density</span>
+            <div class="status-pill"><div class="status-dot"></div> 2.0x DPI</div>
+          </div>
+          <div class="tele-val">100% Vector Crisp</div>
+          <div class="tele-sub">No artifacting • No melting text</div>
+        </div>
+      </div>
+
+      <div class="vignette"></div>
+
+      <!-- GSAP Animation -->
+      <script>
+        (function () {
+          // Set initial offsets outside the timeline so frame 0 renders cleanly
+          gsap.set("#hero-title", { y: 30, opacity: 0 });
+          gsap.set("#hero-sub", { y: -20, opacity: 0 });
+          gsap.set("#hero-desc", { y: 20, opacity: 0 });
+          gsap.set(".tele-card", { y: 40, opacity: 0 });
+
+          const tl = gsap.timeline({ paused: true });
+
+          // Entrance (0.0s - 1.2s)
+          tl.to("#hud-bar", { autoAlpha: 1, duration: 0.6, ease: "power2.out" }, 0.2);
+          tl.to("#center-stage", { autoAlpha: 1, duration: 0.1 }, 0.3);
+          tl.to("#hero-sub", { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, 0.4);
+          tl.to("#hero-title", { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }, 0.6);
+          tl.to("#hero-desc", { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" }, 0.9);
+
+          // Radar Rotation
+          tl.to("#radar-ring-1", { rotation: 360, transformOrigin: "50% 50%", duration: 6, ease: "none" }, 0);
+          tl.to("#radar-ring-2", { rotation: -360, transformOrigin: "50% 50%", duration: 6, ease: "none" }, 0);
+
+          // Telemetry Cards Stagger In (1.6s - 2.5s)
+          tl.to("#telemetry-deck", { autoAlpha: 1, duration: 0.1 }, 1.5);
+          tl.to("#card-1", { y: 0, opacity: 1, duration: 0.6, ease: "back.out(1.4)" }, 1.7);
+          tl.to("#card-2", { y: 0, opacity: 1, duration: 0.6, ease: "back.out(1.4)" }, 1.9);
+          tl.to("#card-3", { y: 0, opacity: 1, duration: 0.6, ease: "back.out(1.4)" }, 2.1);
+
+          // Accent pulses (2.5s - 4.5s)
+          tl.fromTo(".status-dot", { scale: 1 }, { scale: 1.5, repeat: 4, yoyo: true, duration: 0.3, ease: "sine.inOut" }, 2.5);
+          tl.to("#hero-title", { scale: 1.02, duration: 2.0, ease: "sine.inOut" }, 2.5);
+
+          // Hold cleanly through 6.0s
+          tl.set({}, {}, 6.0);
+
+          window.__timelines = window.__timelines || {};
+          window.__timelines["root"] = tl;
+        })();
+      </script>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,4 @@
+# Recurring cast. "Name: description" - whatif.py inserts a description whenever the name appears in a scene's IMG line.
+# Generate each character's reference sheet first (prompts.md, top) and attach it to every scene that names them.
+Pip: a small teal pebble person, slightly taller than wide, with a mustard-yellow knitted scarf, curious arched eyebrows and a tiny freckle under the left eye; the everyday hero.
+Momo: a rounder, older coral pebble person with small round navy glasses and a cream cardigan-style shawl, calm half-lidded eyes; Pip's next-door neighbour.

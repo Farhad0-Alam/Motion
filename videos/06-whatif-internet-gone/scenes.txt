@@ -1,0 +1,388 @@
+# What if the Internet Disappeared for a Year?  (whatif-channel ep 1)
+# Single source for the episode. Format (see ../lib/whatif.py):
+#   == Chapter title          starts a YouTube chapter at the next scene
+#   NNN | camera [| sfx]      camera: static push-in pull-out pan-right pan-left rise
+#                             sfx: whoosh thud boing poof dizzy scrape riser ding
+#   VO:  narration (one breath, ~8-16 words, one picture's worth)
+#   IMG: what the still shows (named cast get their description added automatically)
+# Fact checks for every number are in notes.md.
+
+== The day it all stopped
+001 | push-in
+VO: Imagine you wake up tomorrow, reach for your phone, and nothing loads.
+IMG: Pip in bed at dawn, groggy, holding up a glowing phone whose screen shows only a spinning loading circle, soft morning light through the window.
+
+002 | static | ding
+VO: Not your Wi-Fi. Not your phone company. The entire internet is gone.
+IMG: extreme close-up of Pip's face lit blue by the phone, eyebrows shooting up in shock.
+
+003 | pull-out
+VO: And it's not coming back for one whole year.
+IMG: Pip standing at a bedroom window looking out over a city street where dozens of pebble people stand frozen, all staring at dark phones.
+
+004 | push-in
+VO: Five and a half billion people just lost the first thing they check every morning.
+IMG: the Earth from space at night, cities glowing as tiny lights, and thin glowing threads between the cities snapping and fading out.
+
+005 | static
+VO: So what would actually happen? On day one, in week one, and over the whole year?
+IMG: Pip sitting cross-legged on top of a giant paper wall calendar, chin on hand, a thought cloud above shaped like a question mark.
+
+006 | static
+VO: First, the rules. Electricity still works. So do radio, TV broadcasts, and old landline phones.
+IMG: Pip presenting like a teacher beside four floating paper icons: a light bulb, a retro radio, an old box television and a corded telephone.
+
+007 | pan-right
+VO: But anything that sends data over the internet, from apps to bank transfers, simply stops.
+IMG: a long shelf of devices, a laptop, a phone, a card payment terminal and a smart speaker, all with dark screens and little paper sleep-cloud puffs drifting up.
+
+008 | push-in
+VO: Let's start at seven a.m. on the very first morning.
+IMG: Pip's cosy kitchen at sunrise, toast popping from a toaster, a kettle steaming, a dark phone lying face-up on the table.
+
+009 | static
+VO: Pip's first move is the same as yours. Restart the router.
+IMG: Pip crouched behind a sofa, pulling the plug out of a small router with blinking lights.
+
+010 | static | boing
+VO: Twice. Then a third time, a little more angrily.
+IMG: Pip shaking the router hard with both stubby arms, comic steam puffs above the head, motion lines.
+
+011 | pan-left
+VO: Across the street, every neighbor is doing exactly the same thing.
+IMG: cut-away view of an apartment building, every window showing a different coloured pebble person holding a router up in the air.
+
+012 | push-in
+VO: Then Pip switches on an old radio, and hears news nobody expected.
+IMG: Pip turning the big knob of a chunky retro radio on a shelf, curved sound-wave paper strips coming out of the speaker.
+
+013 | static
+VO: It's global. Every country, every network, all at the same moment.
+IMG: an old box television showing a pebble news anchor at a desk, a world map behind them, the anchor looking very worried.
+
+014 | pull-out
+VO: That's stranger than it sounds. Almost all data between continents travels through cables on the ocean floor.
+IMG: underwater cut-away of thick cables running across the sandy seabed, fish and seaweed around them, faint glowing pulses inside the cables.
+
+015 | static
+VO: They carry video calls, card payments, stock trades, even this video.
+IMG: inside a transparent cable, tiny paper envelopes, coins and play-button triangles rushing along as streaks of light.
+
+016 | static
+VO: Today, they carry nothing.
+IMG: the same seabed cable now dark and silent, a small round fish peering at it curiously.
+
+== Chaos on the streets
+017 | pan-right | thud
+VO: By eight a.m., the morning commute falls apart.
+IMG: a busy city intersection with cars stopped in every direction, pebble drivers standing beside their open car doors looking around.
+
+018 | static
+VO: Ride apps are dead. Ticket gates won't read phones.
+IMG: a crowd of pebble commuters stuck at closed subway turnstiles, waving dark phones at the scanners.
+
+019 | push-in | dizzy
+VO: Millions of people realize they don't actually know the way to work without a map app.
+IMG: Pip at a street corner spinning in a circle, phone held up to the sky, tall buildings leaning in from all sides.
+
+020 | static
+VO: GPS satellites still work, by the way. But without data, most maps can't even load the streets.
+IMG: split picture: above, a cheerful satellite beaming down a signal; below, a phone showing an empty grey grid with a single blue dot.
+
+021 | static
+VO: So people do something they haven't done in years. They ask strangers.
+IMG: Pip shyly asking Momo for directions on the sidewalk, Momo holding a folded newspaper and pointing down the street.
+
+== Cash is king
+022 | push-in
+VO: Then comes the first real shock. Paying for things.
+IMG: Pip at a cafe counter holding out a payment card, the card terminal screen dark, the barista pebble shrugging.
+
+023 | static
+VO: Card machines need a network to check your bank. No network, no payment.
+IMG: close-up of a card terminal with a dark screen and a red glow, a few coins scattered on the wooden counter.
+
+024 | static
+VO: Some shops can accept cards offline, but only small amounts, and only for a while.
+IMG: a shopkeeper pebble carefully writing in a paper ledger behind the till, paper receipts pinned on a string behind them.
+
+025 | pan-left
+VO: Everyone else needs cash. And everyone needs it at the same time.
+IMG: a very long line of colourful pebble people snaking around a whole city block toward a single cash machine in a wall.
+
+026 | static
+VO: Many cash machines run on networks too, so the lines move to the bank branches.
+IMG: a crowd pressed against the glass doors of a bank, a nervous bank-teller pebble peeking out through the glass.
+
+027 | push-in
+VO: By lunchtime, a handful of cash is the most valuable thing in town.
+IMG: Pip hugging a small stack of paper bills to the chest, little sparkles around the money, other pebble people staring jealously.
+
+== Work, shops and flights
+028 | static
+VO: Pip works from home, on video calls. Or rather, used to.
+IMG: Pip at a home desk in front of a laptop whose screen shows a frozen grid of empty video-call squares.
+
+029 | pan-right
+VO: Offices, schools and online stores go quiet. Online shopping alone is worth around six trillion dollars a year.
+IMG: a huge warehouse with stopped conveyor belts, cardboard parcels piled high, worker pebbles sitting idle on boxes.
+
+030 | static
+VO: Every one of those orders just froze, mid-click.
+IMG: a giant paper mouse-pointer hand frozen just above a big round glowing button, dust drifting in the air.
+
+031 | push-in
+VO: Airports have it even worse. Flights depend on networks for booking, check-in and crew schedules.
+IMG: an airport departure hall packed with pebble travellers and suitcases, the departure board completely blank, planes parked outside the window.
+
+032 | static
+VO: We've had a preview. In 2024, one faulty software update crashed about eight and a half million computers and grounded thousands of flights.
+IMG: a wall of office computer screens all showing solid blue, staff pebbles holding their heads in their hands.
+
+033 | static
+VO: That chaos lasted a few days. This one lasts a year.
+IMG: Pip looking from a tiny desk calendar up to an impossibly tall tower of calendar pages disappearing into the clouds.
+
+034 | push-in
+VO: Hospitals still have power, and doctors still know medicine.
+IMG: a bright hospital corridor, a doctor pebble in a small white coat with a stethoscope walking with confidence.
+
+035 | static
+VO: But patient records, lab results and prescriptions live in connected systems.
+IMG: a nurse station with a dark computer screen, a nurse pebble frowning at it.
+
+036 | static | whoosh
+VO: So they switch to backups. Printed charts, handwritten orders, and runners carrying folders.
+IMG: a nurse pebble running down a hospital corridor with a tall stack of paper folders, loose pages flying behind.
+
+037 | pull-out
+VO: By the first night, the city feels strange.
+IMG: a city skyline at dusk, warm lights on in the windows but the streets below dim and quiet.
+
+038 | static
+VO: The lights are on. But the windows don't glow blue with screens.
+IMG: looking into lit apartment windows at night: pebble families playing a board game, one reading a book, two chatting by a lamp.
+
+039 | push-in
+VO: Pip lies in bed, picks up the phone out of habit, and puts it back down.
+IMG: Pip lying in bed in the dark, the phone face-down on the nightstand, staring up at the ceiling.
+
+== Week one
+040 | static | riser
+VO: Week one is when things get serious.
+IMG: Pip standing small in front of seven giant paper calendar pages fanned out like a wall, dramatic low light.
+
+041 | pan-right
+VO: Supermarket shelves start running thin.
+IMG: a supermarket aisle with half-empty shelves, a few lonely cans left, a pebble shopper with an empty basket.
+
+042 | static
+VO: Not because the food ran out, but because ordering it ran on the internet.
+IMG: a paper diorama of a farm, a delivery truck and a shop joined by a dotted line that is torn apart in the middle.
+
+043 | static
+VO: Stores normally reorder stock automatically, often every day. Trucks follow routes planned by software.
+IMG: a delivery truck driver pebble scratching their head while holding a huge unfolded paper road map that covers the windscreen.
+
+044 | push-in
+VO: Now managers phone suppliers on landlines, and fax machines wake up from long naps.
+IMG: a dusty old fax machine covered in cobwebs suddenly spitting out paper, an office manager pebble jumping back in surprise.
+
+045 | static | poof
+VO: Yes. The fax machine is back.
+IMG: Pip proudly holding a curled fax page high above the head like a trophy, sparkles around it.
+
+046 | pull-out
+VO: But the bigger problem is information. Without the internet, how do you know what's true?
+IMG: a town square full of pebble people whispering into each other's ears, scribbled speech bubbles everywhere.
+
+047 | static
+VO: Rumors fly. It'll be back tomorrow. The banks are closing. Aliens did it.
+IMG: three small pebble people gossiping in a huddle, thought bubbles above them showing a calendar, a bank with a padlock, and a flying saucer.
+
+048 | push-in
+VO: So people turn to the oldest networks we have. Radio, TV and newspapers.
+IMG: a big newspaper printing press running at full speed, printed sheets flying off the rollers.
+
+049 | static
+VO: Printed newspapers, which had been shrinking for years, sell out by nine a.m.
+IMG: a street newsstand mobbed by pebble people grabbing the last newspapers, the vendor pebble beaming.
+
+050 | static
+VO: Town halls pin notices to boards, just like a century ago.
+IMG: Pip and Momo reading a big cork notice board covered in pinned paper notices and hand-drawn maps.
+
+051 | push-in
+VO: But what about talking to people far away?
+IMG: Pip holding a framed photo of a faraway pebble friend, looking wistful, rain on the window behind.
+
+052 | static
+VO: Most mobile calls now travel as data. Whether they still work depends on how each carrier routes them.
+IMG: a cell tower on a hill, its signal waves fizzling into little sparks halfway out.
+
+053 | static
+VO: Old landlines hold up better, and lines form at the last few payphones.
+IMG: a queue of pebble people waiting patiently outside a red telephone booth on a street corner.
+
+054 | pan-right
+VO: And then, something surprising happens. Letters.
+IMG: a post office counter piled with mountains of envelopes, a postal-worker pebble half buried in mail but smiling.
+
+055 | static
+VO: The U.S. Postal Service already moves over a hundred billion pieces of mail a year. Now it becomes the internet.
+IMG: a giant mail sorting hall with conveyor belts of envelopes, rows of mail trucks waiting at loading docks.
+
+056 | push-in | scrape
+VO: Pip writes a letter for the first time since school. It takes forty minutes. Mostly crossing things out.
+IMG: Pip at a desk with a pen, tongue poking out in concentration, crumpled paper balls all around the floor.
+
+== Month one: the new normal
+057 | static
+VO: By the end of the first month, panic turns into routine.
+IMG: Pip calmly strolling down a sunny street carrying a paper bag of groceries, relaxed.
+
+058 | pan-left
+VO: Shops run on cash and paper receipts. Banks process transfers on paper again, slowly.
+IMG: a bank interior where clerk pebbles stamp paper forms with rubber stamps, towers of paper on every desk.
+
+059 | static | whoosh
+VO: Companies send couriers on motorbikes between offices, carrying hard drives full of data.
+IMG: a courier pebble on a scooter zooming through traffic, a box of hard drives strapped to the back, speed lines.
+
+060 | static
+VO: Engineers have a name for this: sneakernet. And for huge amounts of data, a truck full of drives can beat the internet.
+IMG: a delivery truck on a highway with its back doors open showing neatly stacked hard drives, speed lines behind it.
+
+061 | push-in
+VO: Engineers race to build private links between hospitals, banks and power grids.
+IMG: engineer pebbles in hard hats up on a utility pole connecting thick cables, small sparks flying.
+
+062 | static
+VO: But rebuilding something the size of the internet? That takes far longer than a year.
+IMG: a tiny engineer pebble looking up at an enormous tangled ball of cables as big as a building.
+
+063 | static
+VO: So who struggles most?
+IMG: a split picture: on the left a busy little corner shop, on the right a dark empty office tower.
+
+064 | pan-right
+VO: Online businesses, delivery drivers, app makers and creators lose their income almost overnight.
+IMG: a content-creator pebble sitting in a small home studio with a ring light and a dark camera, shoulders slumped.
+
+065 | static
+VO: People far from family feel it most. A weekly video call becomes a letter every two weeks.
+IMG: a grandmother pebble with a knitted shawl reading a letter by a window, smiling softly with one tear.
+
+066 | static | ding
+VO: And who suddenly thrives?
+IMG: Pip peeking around the corner of a building with raised eyebrows and a curious little smile.
+
+067 | pan-left
+VO: Libraries. Bookshops. Local markets. Radio stations. Anyone who can fix old machines.
+IMG: a packed public library with pebble people at every table and a librarian pebble balancing a tall stack of books, delighted.
+
+068 | static
+VO: Amateur radio operators, once a quiet hobby, become a lifeline for messages between towns.
+IMG: a ham radio operator pebble wearing big headphones at a desk full of radio equipment, a tall antenna outside the window.
+
+069 | static
+VO: And paper maps become bestsellers.
+IMG: a shop window display stacked with folded paper maps, a crowd of pebble people pressing their faces to the glass.
+
+== Month six: getting used to it
+070 | push-in
+VO: Six months in, something unexpected happens. People get used to it.
+IMG: Pip on a park bench reading a paperback book, birds hopping nearby, autumn leaves, calm.
+
+071 | static
+VO: Studies of people who quit social media or block mobile internet for a while often find they feel calmer and focus better.
+IMG: Pip sleeping peacefully in bed, a crescent moon outside the window, no phone anywhere in sight.
+
+072 | static
+VO: Not everyone, and not right away. But the constant buzzing is gone.
+IMG: a phone lying in an open drawer covered in a thin layer of dust, a small spider web on it.
+
+073 | pan-right
+VO: Neighbors talk more, because they have to. Streets fill with swap markets and clubs.
+IMG: a lively street fair with paper bunting, stalls trading books and vegetables, kid pebbles playing hopscotch.
+
+074 | static
+VO: Pip and Momo start a weekly news sheet for their block. Two hundred copies, delivered by hand.
+IMG: Pip and Momo cranking an old copy machine, stacks of freshly printed sheets around them, ink smudges on their faces.
+
+075 | static
+VO: Kids go back to encyclopedias, and argue about facts nobody can look up.
+IMG: two kid pebbles arguing and pointing at a giant open encyclopedia on the floor between them.
+
+076 | pull-out
+VO: Still, let's be honest. The cost is enormous.
+IMG: a city skyline under heavy grey clouds, a big paper arrow bent downward hanging over it.
+
+077 | static
+VO: The world economy is built for speed. Without the internet, trade, research and medicine all slow down.
+IMG: a cargo port with a huge ship waiting, shipping containers piled high, the cranes standing idle.
+
+078 | static
+VO: Scientists can't share data instantly. Weather forecasts get less precise.
+IMG: a meteorologist pebble squinting at a paper weather chart, puzzled, storm clouds through the window behind.
+
+079 | static
+VO: Many jobs disappear, and millions of people need new ones.
+IMG: a job board covered in pinned paper postings, a long line of pebble people reading it.
+
+080 | push-in
+VO: The world doesn't collapse. But it gets poorer, slower, and a lot more local.
+IMG: the Earth as a paper globe dotted with small warm glowing towns, but no lines connecting them.
+
+== Day 365
+081 | static | riser
+VO: Then, after three hundred and sixty-five days...
+IMG: Pip tearing the very last page off a wall calendar, dramatic light from the window.
+
+082 | push-in
+VO: A tiny icon appears on Pip's phone. One bar.
+IMG: extreme close-up of a phone screen showing a single glowing signal bar, Pip's face reflected faintly in the glass.
+
+083 | pull-out | whoosh
+VO: The internet is back.
+IMG: the city at night lighting up as glowing threads shoot between every building, paper fireworks bursting in the sky.
+
+084 | static | poof
+VO: And a year's worth of notifications arrive at once.
+IMG: Pip buried up to the eyes under an avalanche of glowing round notification bubbles.
+
+085 | static
+VO: Would we go right back to normal? Probably, within a week.
+IMG: pebble passengers on a city bus, every one of them looking down at a glowing phone again.
+
+086 | static
+VO: But some things might stick.
+IMG: Pip placing a phone face-down on a table next to a handwritten letter and a cup of tea.
+
+087 | static
+VO: Companies would build better backups, so one failure can't stop a hospital or an airport.
+IMG: an engineer pebble in a server room locking a sturdy metal box marked with a shield shape.
+
+088 | static
+VO: People might keep some cash at home, a paper map in the car, and a radio in the drawer.
+IMG: an open kitchen drawer seen from above holding a small radio, a folded paper map, a few paper bills and a flashlight.
+
+089 | static
+VO: And Pip? Pip keeps writing letters to Momo. Even though they live next door.
+IMG: Pip sliding a letter under Momo's front door while Momo peeks out of the next window, smiling.
+
+090 | push-in
+VO: Because the strangest part of a year without the internet wasn't what we lost.
+IMG: Pip and Momo sitting on a rooftop at sunset, looking out over the city.
+
+091 | rise
+VO: It was what we found when we finally looked up.
+IMG: a park at night full of pebble people lying on the grass, all looking up at a sky full of paper-cut stars.
+
+092 | static
+VO: Now it's your turn. Could you last one year offline? Or even one week? Tell me in the comments.
+IMG: Pip facing the viewer, leaning in close and pointing straight at the camera with a playful grin.
+
+093 | push-in
+VO: And if you were the only person on Earth still online... well, that's a story for next time.
+IMG: a lone pebble person in a dark room lit only by a single glowing laptop screen, mysterious mood.

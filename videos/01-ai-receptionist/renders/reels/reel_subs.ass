@@ -1,0 +1,29 @@
+[Script Info]
+Title: iAgentice Reel Subtitles
+ScriptType: v4.00+
+WrapStyle: 0
+ScaledBorderAndShadow: yes
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: ReelSub,Instrument Sans,58,&H00FFFFFF,&H000000FF,&H00000000,&H90000000,-1,0,0,0,100,100,0,0,1,6,3,2,60,60,490,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.65,0:00:01.85,ReelSub,,0,0,0,,It's {\c&H0049F3D1&}3 in the morning{\c&H00FFFFFF&},
+Dialogue: 0,0:00:01.85,0:00:04.30,ReelSub,,0,0,0,,and a customer just {\c&H0049F3D1&}messaged{\c&H00FFFFFF&} your business.
+Dialogue: 0,0:00:04.45,0:00:05.50,ReelSub,,0,0,0,,{\c&H0049F3D1&}Who answers?{\c&H00FFFFFF&}
+Dialogue: 0,0:00:05.75,0:00:07.95,ReelSub,,0,0,0,,If the answer is "{\c&H0049F3D1&}nobody until nine{\c&H00FFFFFF&},"
+Dialogue: 0,0:00:08.10,0:00:11.60,ReelSub,,0,0,0,,that customer is {\c&H0049F3D1&}already talking to someone else{\c&H00FFFFFF&}.
+Dialogue: 0,0:00:12.00,0:00:13.00,ReelSub,,0,0,0,,In the next few minutes,
+Dialogue: 0,0:00:13.00,0:00:17.00,ReelSub,,0,0,0,,here's exactly how an {\c&H0049F3D1&}AI receptionist{\c&H00FFFFFF&} answers,
+Dialogue: 0,0:00:17.05,0:00:20.40,ReelSub,,0,0,0,,and what separates a {\c&H0049F3D1&}good one{\c&H00FFFFFF&} from an {\c&H0049F3D1&}annoying one{\c&H00FFFFFF&}.
+Dialogue: 0,0:00:21.00,0:00:24.50,ReelSub,,0,0,0,,Most businesses are open {\c&H0049F3D1&}40 hours{\c&H00FFFFFF&} a week.
+Dialogue: 0,0:00:24.55,0:00:27.50,ReelSub,,0,0,0,,Customers message {\c&H0049F3D1&}all 168{\c&H00FFFFFF&}.
+Dialogue: 0,0:00:27.60,0:00:31.00,ReelSub,,0,0,0,,{\c&H0049F3D1&}Evenings,{\c&H00FFFFFF&} {\c&H0049F3D1&}weekends,{\c&H00FFFFFF&} other time zones.
+Dialogue: 0,0:00:31.00,0:00:32.90,ReelSub,,0,0,0,,And every channel is different:
+Dialogue: 0,0:00:32.90,0:00:35.80,ReelSub,,0,0,0,,your {\c&H0049F3D1&}website,{\c&H00FFFFFF&} {\c&H0049F3D1&}WhatsApp,{\c&H00FFFFFF&} the {\c&H0049F3D1&}phone.{\c&H00FFFFFF&}
+Dialogue: 0,0:00:35.80,0:00:38.90,ReelSub,,0,0,0,,An AI receptionist sits on {\c&H0049F3D1&}all of them at once,{\c&H00FFFFFF&}
+Dialogue: 0,0:00:38.95,0:00:40.80,ReelSub,,0,0,0,,and {\c&H0049F3D1&}never goes off shift.{\c&H00FFFFFF&}
